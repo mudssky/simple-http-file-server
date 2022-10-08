@@ -16,7 +16,7 @@ pub struct FileItem {
 }
 
 impl FileItem {
-    pub fn new(path: &str) -> Result<Self> {
+    pub fn from_path(path: &str) -> Result<Self> {
         let filemeta = fs::metadata(&path)?;
         Ok(FileItem {
             path: path.to_string(),
@@ -47,16 +47,16 @@ pub enum FileListSource {
 // #[derive(Copy)]
 pub struct FileList(Vec<FileItem>);
 impl FileList {
-    pub fn new(pathlist: &Vec<String>) -> Self {
+    pub fn from_pathlist(pathlist: &Vec<String>) -> Self {
         let mut res = Vec::new();
         for path in pathlist.into_iter() {
-            res.push(FileItem::new(path).expect("generate fileitem error"))
+            res.push(FileItem::from_path(path).expect("generate fileitem error"))
         }
         FileList(res)
     }
     pub fn from_folder_name(folder_name: &str) -> Self {
         let list = getfolderlist(folder_name);
-    Self::new(&list.unwrap())
+        Self::from_pathlist(&list.unwrap())
     }
     pub fn get(self) -> Vec<FileItem> {
         self.0

@@ -12,7 +12,7 @@ use tracing::debug;
 pub async fn get_root_list() -> impl IntoResponse {
     let root_string_list = vec!["E:/Share".to_string()];
     if root_string_list.len() < 1 {
-        return FileList::new(&Vec::new());
+        return FileList::from_pathlist(&Vec::new());
     }
     let root_path_list: Vec<&Path> = root_string_list
         .iter()
@@ -23,12 +23,12 @@ pub async fn get_root_list() -> impl IntoResponse {
     if root_path_list.len() == 1 {
         if root_path_list[0].is_file() {
             //   是文件的情况只返回当前文件的json
-            return FileList::new(&root_string_list);
+            return FileList::from_pathlist(&root_string_list);
         } else {
             return FileList::from_folder_name(&root_string_list[0]);
         }
     }
-    FileList::new(&root_string_list)
+    FileList::from_pathlist(&root_string_list)
 }
 
 #[cfg(test)]
