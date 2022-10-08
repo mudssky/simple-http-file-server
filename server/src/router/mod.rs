@@ -1,11 +1,6 @@
-//! This is my first rust crate
-use axum::{
-    http::StatusCode,
-    response::IntoResponse,
-    routing::{get, post},
-    Json, Router,
-};
-use serde::{Deserialize, Serialize};
+// 路由设置
+use axum::{routing::get, Router};
+
 pub fn init_router() -> Router {
     Router::new()
         .route("/", get(root))
