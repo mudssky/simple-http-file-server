@@ -1,3 +1,4 @@
+use anyhow::Result;
 use dotenv::dotenv;
 use once_cell::sync::OnceCell;
 use std::env;
@@ -27,7 +28,7 @@ pub fn init_env_config() {
             _ => Level::TRACE,
         },
     });
-    println!("load_env_config: {:?}", ENV_CONFIG)
+    println!("load_env_config: {:?}", ENV_CONFIG);
 }
 
 pub fn init_global_config() {
