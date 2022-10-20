@@ -1,0 +1,12 @@
+port: 7861
+
+zap:
+  level: info
+  prefix: '[gfs]'
+  format: console
+  director: log
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  max-age: 0
+  show-line: true
+  log-in-console: true
