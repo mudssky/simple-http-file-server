@@ -3,13 +3,15 @@ package global
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
-	"github.com/mudssky/simple-http-file-server/goserver/util"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var (
@@ -45,16 +47,12 @@ func initViper() {
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("配置文件变动：", e)
 		loadViper()
-		fmt.Println("当前配置", Config)
+		// fmt.Println("当前配置", Config)
+		fmt.Printf("当前配置:%#v", Config)
 	})
 }
 
-func initLogger() {
-	logger, _ := zap.NewProduction()
-	defer logger.Sync() // flushes buffe
-}
-
-// 当前viper配置转为结构体
+// 当前viper配置加载到结构体
 func loadViper() {
 	if err := Viper.Unmarshal(&Config); err != nil {
 		fmt.Println(err)
@@ -62,16 +60,66 @@ func loadViper() {
 }
 
 func initZap() {
-	if ok, _ := util.PathExists(Config.Zap.Directory); !ok { // 判断是否有Director文件夹
-		fmt.Printf("create %v directory\n", Config.Zap.Directory)
-		_ = os.Mkdir(Config.Zap.Directory, os.ModePerm)
-	}
-	Logger, _ = zap.NewProduction()
-	// cores := internal.Zap.GetZapCores()
-	// logger = zap.New(zapcore.NewTee(cores...))
+	// The bundled Config struct only supports the most common configuration
+	// options. More complex needs, like splitting logs between multiple files
+	// or writing to non-file outputs, require use of the zapcore package.
+	//
+	// In this example, imagine we're both sending our logs to Kafka and writing
+	// them to the console. We'd like to encode the console output and the Kafka
+	// topics differently, and we'd also like special treatment for
+	// high-priority logs.
 
-	// if global.GVA_CONFIG.Zap.ShowLine {
-	// 	logger = logger.WithOptions(zap.AddCaller())
-	// }
-	// return logger
+	// First, define our level-handling logic.
+	highPriority := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= zapcore.ErrorLevel
+	})
+	lowPriority := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl < zapcore.ErrorLevel
+	})
+
+	// High-priority output should also go to standard error, and low-priority
+	// output should also go to standard out.
+	consoleDebugging := zapcore.Lock(os.Stdout)
+	consoleErrors := zapcore.Lock(os.Stderr)
+	zapConfig := zapcore.EncoderConfig{
+		MessageKey:    "message",
+		LevelKey:      "level",
+		TimeKey:       "time",
+		NameKey:       "logger",
+		CallerKey:     "caller",
+		StacktraceKey: Config.Zap.StacktraceKey,
+		LineEnding:    zapcore.DefaultLineEnding,
+		EncodeLevel:   Config.Zap.ZapEncodeLevel(),
+		EncodeTime: func(t time.Time, pae zapcore.PrimitiveArrayEncoder) {
+			pae.AppendString(Config.Zap.Prefix + t.Format("2006/01/02 - 15:04:05.000"))
+		},
+		EncodeDuration: zapcore.SecondsDurationEncoder,
+		EncodeCaller:   zapcore.FullCallerEncoder,
+	}
+	fileWriteSync := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   Config.Zap.Filename,
+		MaxSize:    Config.Zap.MaxSize, // megabytes
+		MaxBackups: Config.Zap.MaxBackups,
+		MaxAge:     Config.Zap.MaxAge, // days
+	})
+
+	// Optimize the Kafka output for machine consumption and the console output
+	// for human operators.
+	// fileEncoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+	// fileEncoder := zapcore.NewJSONEncoder(zapConfig)
+	fileEncoder := zapcore.NewConsoleEncoder(zapConfig)
+	consoleEncoder := zapcore.NewConsoleEncoder(zapConfig)
+
+	// Join the outputs, encoders, and level-handling functions into
+	// zapcore.Cores, then tee the four cores together.
+	core := zapcore.NewTee(
+		zapcore.NewCore(fileEncoder, fileWriteSync, Config.Zap.GetLevelPriority()),
+		zapcore.NewCore(consoleEncoder, consoleDebugging, lowPriority),
+		zapcore.NewCore(consoleEncoder, consoleErrors, highPriority),
+	)
+
+	// From a zapcore.Core, it's easy to construct a Logger.
+	Logger = zap.New(core)
+	defer Logger.Sync()
+	Logger.Info("constructed a logger")
 }
