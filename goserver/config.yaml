@@ -1,5 +1,4 @@
-port: 7862
-
+port: 8792
 zap:
   level: info
   prefix: '[gfs]'
