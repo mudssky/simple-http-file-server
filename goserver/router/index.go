@@ -4,12 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mudssky/simple-http-file-server/goserver/global"
+	"github.com/mudssky/simple-http-file-server/goserver/api"
 	"github.com/mudssky/simple-http-file-server/goserver/middleware"
 )
 
 func InitRouter() *gin.Engine {
-	var l = global.Logger
 	var r = gin.New()
 	r.Use(middleware.ZapLogger(), middleware.ZapRecovery(true))
 	// r := gin.Default()
@@ -19,11 +18,11 @@ func InitRouter() *gin.Engine {
 		})
 
 	})
+
+	// fileListApi := new(api.FileListAPI)
 	// GET local
-	r.GET("/files", func(ctx *gin.Context) {
-		path := ctx.Query("path")
-		l.Debug("path:" + path)
-	})
+	fileListAPI := api.ApiGroupApp.FileListAPI
+	r.GET("/filelist", fileListAPI.GetFileList)
 
 	return r
 

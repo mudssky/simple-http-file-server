@@ -10,3 +10,8 @@ GET http://{{ $dotenv HOST}}/ping HTTP/1.1
 ###
 
 GET http://{{ $dotenv HOST}}/files?path=/dsadassda HTTP/1.1
+
+
+###
+
+GET http://{{ $dotenv HOST}}/filelist HTTP/1.1

@@ -1,6 +1,8 @@
 port: 8792
+folderlist:
+  # - 'C:/coding'
 zap:
-  level: info
+  level: debug
   prefix: '[gfs]'
   format: console
   encode-level: LowercaseColorLevelEncoder

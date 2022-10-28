@@ -1,11 +1,10 @@
 package util
 
 import (
+	"errors"
 	"os"
-"errors"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: PathExists
 //@description: 文件目录是否存在
 //@param: path string
