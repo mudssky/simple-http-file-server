@@ -15,3 +15,8 @@ GET http://{{ $dotenv HOST}}/files?path=/dsadassda HTTP/1.1
 ###
 
 GET http://{{ $dotenv HOST}}/filelist HTTP/1.1
+
+
+###
+
+POST http://{{ $dotenv HOST}}/filelist HTTP/1.1
