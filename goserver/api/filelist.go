@@ -2,43 +2,108 @@ package api
 
 import (
 	"fmt"
+	"path"
+
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
-	"github.com/mudssky/simple-http-file-server/goserver/modal/common/response"
-	"go.uber.org/zap"
+	"github.com/mudssky/simple-http-file-server/goserver/modal/request"
+	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
+	"github.com/mudssky/simple-http-file-server/goserver/util"
+	"github.com/samber/lo"
 )
 
 type FileListAPI struct{}
 
+func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo, err error) {
+	dirEntryList, err := os.ReadDir(pathname)
+	if err != nil {
+		return nil, err
+	}
+	reslist := []response.FileInfo{}
+	for _, dirEntry := range dirEntryList {
+		fileinfo, err := dirEntry.Info()
+		if err != nil {
+			return nil, err
+		}
+		reslist = append(reslist, response.FileInfo{
+			Name:        fileinfo.Name(),
+			LastModTime: fileinfo.ModTime().Unix(),
+			Path:        path.Join(pathname, fileinfo.Name()),
+			IsFolder:    fileinfo.IsDir(),
+			Size:        fileinfo.Size(),
+		})
+	}
+	return reslist, nil
+
+}
+
+// GetFileList
+// @Summary      传入文件夹路径获取文件列表，不传参时返回根列表
+// @Description  传入路径获取文件列表，不传参时返回根列表
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.FileListReq  false "文件列表路径"
+// @Success      200  {object}  response.FileList "返回列表成功"
+// @Router       /filelist [post]
 func (f *FileListAPI) GetFileList(c *gin.Context) {
 	l := global.Logger
-	// var path string
-	pathParam := c.Query("path")
-	l.Debug("测试参数",
-		zap.String("path", pathParam),
-	)
-	if pathParam == "" {
-		// 先判断文件路径列表是否有值,没有值返回错误
+	var req request.FileListReq
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage("json解析错误", c)
+		return
+	}
+	if req.Path == "" {
+		// 获取不到路径的情况，采用程序配置的路径
 		if len(global.Config.FolderList) < 1 {
 			response.FailWithMessage("没有设置文件路径", c)
 			return
 		}
+		l.Debug(fmt.Sprintf("global config : %v", global.Config.FolderList))
+		response.SuccessWithData(lo.Map(global.Config.FolderList, func(item string, index int) response.FileInfo {
+			return response.FileInfo{
+				Name:     item,
+				IsFolder: true,
+			}
+		}), c)
+		return
+	} else {
+		l.Debug("查找文件路径")
+		isExist, err := util.PathExists(req.Path)
+		if err != nil {
+			errmsg := fmt.Sprintf("检测文件是否存在时报错：%v", err)
+			l.Warn(errmsg)
+			response.FailWithMessage(errmsg, c)
+			return
+		}
+		// l.Debug("文件路径是否存在", zap.Bool("is exist", isExist))
+		// 文件路径不存在时
+		if !isExist {
+			response.FailWithMessage("文件不存在", c)
+			return
+		}
 
-		// l.Debug(global.Config.FolderList[0])
-		// response.SuccessWithData()
-		fmt.Println("配置:%v", global.Config.FolderList)
+		filestat, err := os.Stat(req.Path)
+		if err != nil {
+			response.FailWithMessage(fmt.Sprintf("获取文件状态出错%v", err), c)
+			return
+		}
+		// 是文件夹的情况获取文件夹列表
+		if filestat.IsDir() {
+			reslist, err := f.ReadDir(req.Path)
+			// dirEntryList, err := os.ReadDir(req.Path)
+			if err != nil {
+				response.FailWithMessage(fmt.Sprintf("读取文件列表失败%v", err), c)
+				return
+			}
+			response.SuccessWithData(reslist, c)
+			// fmt.Printf("f : %+v\n", dirEntryList)
+		} else {
+			response.FailWithMessage("不支持文件路径", c)
+		}
+
 	}
-	// if isPathExist, err := util.PathExists(pathParam); err != nil {
-
-	// 	if isPathExist {
-	// 	}
-	// 	c.JSON(200, gin.H{
-	// 		"message": "pong",
-	// 	})
-	// 	return
-	// }
-	// // path :=
-	// l.Debug("path:" + path)
-	// testpath := "D:\\Share"
 }

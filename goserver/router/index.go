@@ -22,7 +22,7 @@ func InitRouter() *gin.Engine {
 	// fileListApi := new(api.FileListAPI)
 	// GET local
 	fileListAPI := api.ApiGroupApp.FileListAPI
-	r.GET("/filelist", fileListAPI.GetFileList)
+	r.POST("/filelist", fileListAPI.GetFileList)
 
 	return r
 
