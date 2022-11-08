@@ -11,11 +11,13 @@
   "dependencies": {
     "antd": "^4.23.4",
     "lodash-es": "^4.17.21",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2"
   },
   "devDependencies": {
+    "@types/node": "^18.11.9",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.39.0",

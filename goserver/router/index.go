@@ -12,6 +12,7 @@ func InitRouter() *gin.Engine {
 	var r = gin.New()
 	r.Use(middleware.ZapLogger(), middleware.ZapRecovery(true))
 	// r := gin.Default()
+	r.Use(middleware.Cors())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
