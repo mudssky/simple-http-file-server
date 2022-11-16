@@ -29,7 +29,7 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 		}
 		reslist = append(reslist, response.FileInfo{
 			Name:        fileinfo.Name(),
-			LastModTime: fileinfo.ModTime().Unix(),
+			LastModTime: fileinfo.ModTime().UnixMilli(),
 			Path:        path.Join(pathname, fileinfo.Name()),
 			IsFolder:    fileinfo.IsDir(),
 			Size:        fileinfo.Size(),
@@ -65,8 +65,9 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 		l.Debug(fmt.Sprintf("global config : %v", global.Config.FolderList))
 		response.SuccessWithData(lo.Map(global.Config.FolderList, func(item string, index int) response.FileInfo {
 			return response.FileInfo{
-				Name:     item,
+				Path:     item,
 				IsFolder: true,
+				Name:     path.Base(item),
 			}
 		}), c)
 		return
