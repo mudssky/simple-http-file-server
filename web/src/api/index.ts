@@ -10,5 +10,7 @@ export interface FileItem {
   size: number
 }
 export const getFileList = async (): PromiseResponseData<FileItem[]> => {
-  return post(`${SERVER_URL}/filelist`)
+  return post(`${SERVER_URL}/filelist`, {
+    path: 'D:/coding',
+  })
 }
