@@ -24,6 +24,7 @@ export default defineConfig(({ mode }) => {
          * @default: body-last
          */
         // inject: 'body-last' | 'body-first',
+        // inject: 'body-first',
         /**
          * custom dom id
          * @default: __svg__icons__dom__

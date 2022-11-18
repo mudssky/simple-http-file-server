@@ -9,8 +9,8 @@ export interface FileItem {
   isFolder: boolean
   size: number
 }
-export const getFileList = async (): PromiseResponseData<FileItem[]> => {
-  return post(`${SERVER_URL}/filelist`, {
-    path: 'D:/coding',
-  })
+export const getFileList = async (params: {
+  path: string
+}): PromiseResponseData<FileItem[]> => {
+  return post(`${SERVER_URL}/filelist`, params)
 }
