@@ -1,0 +1,18 @@
+@import './variable.scss';
+
+// .#{$antd-prefix}-message-custom-content {
+//   display: flex;
+//   align-items: center;
+// }
+
+// 面包屑
+.#{$antd-prefix}-breadcrumb {
+  .#{$antd-prefix}-breadcrumb-link {
+    cursor: pointer;
+  }
+  li:last-child {
+    .#{$antd-prefix}-breadcrumb-link {
+      cursor: auto;
+    }
+  }
+}

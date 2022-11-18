@@ -1,6 +1,6 @@
 port: 8792
 folderlist:
-  - 'C:/coding'
+  - 'D:/coding'
 zap:
   level: debug
   prefix: '[gfs]'

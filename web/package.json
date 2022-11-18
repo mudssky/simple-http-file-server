@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "antd": "^4.23.4",
+    "@reduxjs/toolkit": "^1.9.0",
+    "antd": "5.x",
+    "dayjs": "^1.11.6",
     "lodash-es": "^4.17.21",
-    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.2"
   },
   "devDependencies": {
