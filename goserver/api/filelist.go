@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	myerror "github.com/mudssky/simple-http-file-server/goserver/error"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/request"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
@@ -46,14 +47,14 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 // @Accept       application/json
 // @Produce      application/json
 // @Param        data   body  request.FileListReq  false "文件列表路径"
-// @Success      200  {object}  response.FileList "返回列表成功"
+// @Success      200  {object}  response.Response{data=[]response.FileInfo} "文件列表信息"
 // @Router       /filelist [post]
 func (f *FileListAPI) GetFileList(c *gin.Context) {
 	l := global.Logger
 	var req request.FileListReq
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		response.FailWithMessage("json解析错误", c)
+		response.FailWithMessage(myerror.JsonParseError, c)
 		return
 	}
 	if req.Path == "" {
@@ -107,4 +108,39 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 		}
 
 	}
+}
+
+// MakeDir
+// @Summary      新建文件夹
+// @Description  传入当前所在路径和文件夹的名字，新建文件夹
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.NewFolderReq false "目录信息"
+// @Success      200  {object}  any "返回列表成功"
+// @Router       /mkdir [post]
+func (f *FileListAPI) MakeDir(c *gin.Context) {
+	// l := global.Logger
+	var req request.NewFolderReq
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	// fmt.Println("req:", req)
+	if req.FolderPath == "" {
+		response.FailWithMessage("路径不能为空", c)
+		return
+	}
+	// 检测路径是否已经存在
+	// if isNewfolderExist,err:=util.PathExists(req.FolderPath); isNewfolderExist|| err!=nil{
+	// 	response.FailWithMessage("不合法的路径", c)
+	// 	return
+	// }
+	if err := os.Mkdir(req.FolderPath, os.ModeDir); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	response.Success(c)
+
 }
