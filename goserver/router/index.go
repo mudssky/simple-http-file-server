@@ -24,7 +24,7 @@ func InitRouter() *gin.Engine {
 	// GET local
 	fileListAPI := api.ApiGroupApp.FileListAPI
 	r.POST("/filelist", fileListAPI.GetFileList)
-
+	r.POST("/mkdir", fileListAPI.MakeDir)
 	return r
 
 }
