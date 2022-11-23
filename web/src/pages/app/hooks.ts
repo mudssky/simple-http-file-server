@@ -1,6 +1,6 @@
-import { message } from 'antd'
+import { Form, message, Modal } from 'antd'
 import { useEffect } from 'react'
-import { FileItem, getFileList } from '../../api'
+import { createTxt, FileItem, getFileList, mkdir, removeItem } from '../../api'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   BreadcrumbItem,
@@ -8,13 +8,22 @@ import {
   setBreadcrumbitemList,
   setFileList,
   setIsNewFolderModalVisible,
+  setIsNewTextModalVisible,
+  setNewFolderName,
 } from '../../store/reducer/homeReducer'
+import { checkResponse } from '../../util/util'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
   const dispatch = useAppDispatch()
-  const { fileList, breadcrumbitemList, isNewFolderModalVisible } = state
-
+  const {
+    fileList,
+    breadcrumbitemList,
+    isNewFolderModalVisible,
+    newFolderName,
+    isNewTextModalVisible,
+  } = state
+  const [newTextForm] = Form.useForm()
   const getData = async () => {
     await enterFolder({ path: '' })
   }
@@ -31,6 +40,12 @@ export default function useSetupHook() {
     } else {
       message.error(res.msg)
     }
+  }
+  const refreshCurentWorkDir = async () => {
+    const currentWorkDir = getCurrentWorkDir()
+    enterFolder({
+      path: currentWorkDir,
+    })
   }
   const handleFileClick = async (record: FileItem) => {
     if (!record.isFolder) {
@@ -78,6 +93,64 @@ export default function useSetupHook() {
   const cancelNewFolderModal = () => {
     dispatch(setIsNewFolderModalVisible(false))
   }
+
+  const showNewTextModal = () => {
+    dispatch(setIsNewTextModalVisible(true))
+  }
+  const cancelNewTextModal = () => {
+    dispatch(setIsNewTextModalVisible(false))
+  }
+  const handleCreateNewText = async () => {
+    const formValues = await newTextForm.validateFields()
+    console.log('formValues', formValues)
+
+    const res = await createTxt({
+      path: `${getCurrentWorkDir()}/${formValues.filename}.txt`,
+      content: formValues.content,
+    })
+    checkResponse(res, {
+      successCallback: () => {
+        refreshCurentWorkDir()
+        cancelNewTextModal()
+      },
+    })
+  }
+  // const handleNewTextChange = (e: { target: { value: string } }) => {
+  //   dispatch(setNewTextContent(e.target.value))
+  // }
+  const handleNewFolderNameChange = (e: { target: { value: string } }) => {
+    dispatch(setNewFolderName(e.target.value))
+  }
+  const getCurrentWorkDir = () => {
+    return breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key
+  }
+  const handleCreateNewFolder = async () => {
+    const currentWorkDir = getCurrentWorkDir()
+    const res = await mkdir({
+      path: currentWorkDir + '/' + newFolderName,
+    })
+    checkResponse(res, {
+      successCallback: () => {
+        cancelNewFolderModal()
+        dispatch(setNewFolderName(''))
+        refreshCurentWorkDir()
+      },
+    })
+  }
+  const handleDeleteItem = async (record: FileItem) => {
+    Modal.confirm({
+      title: `确认删除${record.isFolder ? '文件夹' : '文件'}`,
+      content: `${record.path}`,
+      onOk: async () => {
+        const res = await removeItem({
+          path: record.path,
+        })
+        checkResponse(res, {
+          successCallback: refreshCurentWorkDir,
+        })
+      },
+    })
+  }
   useEffect(() => {
     getData()
     return () => {}
@@ -86,10 +159,20 @@ export default function useSetupHook() {
     breadcrumbitemList,
     fileList,
     isNewFolderModalVisible,
+    isNewTextModalVisible,
+    newFolderName,
+    newTextForm,
+    cancelNewTextModal,
     handleFileClick,
     handleBreadcrumbJump,
     handleBackToParent,
     showNewFolderModal,
     cancelNewFolderModal,
+    handleNewFolderNameChange,
+    handleCreateNewFolder,
+    handleDeleteItem,
+    showNewTextModal,
+    handleCreateNewText,
+    refreshCurentWorkDir,
   }
 }
