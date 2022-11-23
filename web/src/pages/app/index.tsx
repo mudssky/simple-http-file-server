@@ -1,7 +1,7 @@
 import { Breadcrumb, Button, Form, Input, Modal, Space, Table } from 'antd'
 import { filesizeFomatter, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
-
+import { DeleteTwoTone } from '@ant-design/icons'
 import useSetupHook from './hooks'
 
 import dayjs from 'dayjs'
@@ -12,12 +12,23 @@ export default function App() {
     breadcrumbitemList,
     fileList,
     isNewFolderModalVisible,
+    isNewTextModalVisible,
+    newFolderName,
+    newTextForm,
+    cancelNewTextModal,
     cancelNewFolderModal,
     showNewFolderModal,
+    showNewTextModal,
     handleFileClick,
     handleBreadcrumbJump,
     handleBackToParent,
+    handleNewFolderNameChange,
+    handleCreateNewFolder,
+    handleDeleteItem,
+    handleCreateNewText,
+    refreshCurentWorkDir,
   } = useSetupHook()
+
   const columns = [
     {
       title: '文件名',
@@ -64,7 +75,15 @@ export default function App() {
     {
       title: '操作',
       render: (text: any, record: any, index: number) => {
-        return <span> text</span>
+        return (
+          <Space>
+            <DeleteTwoTone
+              twoToneColor={'#ff0000'}
+              className="cursor-pointer text-xl "
+              onClick={() => handleDeleteItem(record)}
+            />
+          </Space>
+        )
       },
     },
   ]
@@ -72,26 +91,37 @@ export default function App() {
     <div>
       <div className="mx-auto w-3/4 min-w-[800px]">
         <div className="py-1">
-          <Space>
-            <Button onClick={showNewFolderModal}>新建目录</Button>
-          </Space>
+          {/* 根目录不能操作 */}
+          {breadcrumbitemList.length > 1 ? (
+            <Space>
+              <Button onClick={showNewFolderModal}>新建目录</Button>
+              <Button onClick={showNewTextModal}>新建文本</Button>
+            </Space>
+          ) : null}
         </div>
-        <Breadcrumb>
-          <Breadcrumb.Item separator="|" onClick={handleBackToParent}>
-            <span className="text-blue-500">返回上一层</span>
+        <Space>
+          <div onClick={refreshCurentWorkDir}>
+            <span className="text-blue-500 cursor-pointer">刷新</span>
             <span className="p-1 text-black">|</span>
-          </Breadcrumb.Item>
-          {breadcrumbitemList.map((item, index) => {
-            return (
-              <Breadcrumb.Item
-                key={item.key}
-                onClick={() => handleBreadcrumbJump(index, item)}
-              >
-                {item.name}
-              </Breadcrumb.Item>
-            )
-          })}
-        </Breadcrumb>
+          </div>
+          <div onClick={handleBackToParent}>
+            <span className="text-blue-500 cursor-pointer">返回上一层</span>
+            <span className="p-1 text-black">|</span>
+          </div>
+          <Breadcrumb>
+            {breadcrumbitemList.map((item, index) => {
+              return (
+                <Breadcrumb.Item
+                  key={item.key}
+                  onClick={() => handleBreadcrumbJump(index, item)}
+                >
+                  {item.name}
+                </Breadcrumb.Item>
+              )
+            })}
+          </Breadcrumb>
+        </Space>
+
         <Table
           dataSource={fileList}
           columns={columns}
@@ -101,10 +131,30 @@ export default function App() {
       </div>
       <Modal
         title="新建目录"
-        visible={isNewFolderModalVisible}
+        open={isNewFolderModalVisible}
         onCancel={cancelNewFolderModal}
+        onOk={handleCreateNewFolder}
       >
-        <Input placeholder="请输入目录名称"></Input>
+        <Input
+          placeholder="请输入目录名称"
+          value={newFolderName}
+          onChange={handleNewFolderNameChange}
+        ></Input>
+      </Modal>
+      <Modal
+        title="新建文本"
+        open={isNewTextModalVisible}
+        onCancel={cancelNewTextModal}
+        onOk={handleCreateNewText}
+      >
+        <Form form={newTextForm} layout="vertical">
+          <Form.Item label="文件名" name="filename">
+            <Input></Input>
+          </Form.Item>
+          <Form.Item label="内容" name="content">
+            <Input.TextArea showCount rows={6}></Input.TextArea>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   )

@@ -10,6 +10,8 @@ interface State {
   fileList: FileItem[]
   breadcrumbitemList: BreadcrumbItem[]
   isNewFolderModalVisible: boolean
+  newFolderName: string //创建新目录的名字
+  isNewTextModalVisible: boolean
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -20,6 +22,8 @@ const initialState: State = {
   fileList: [],
   breadcrumbitemList: [rootBreadcrumbItem],
   isNewFolderModalVisible: false,
+  newFolderName: '',
+  isNewTextModalVisible: false,
 }
 export const homeSlice = createSlice({
   name: 'counter',
@@ -35,6 +39,12 @@ export const homeSlice = createSlice({
     setIsNewFolderModalVisible: (state, action: PayloadAction<boolean>) => {
       state.isNewFolderModalVisible = action.payload
     },
+    setNewFolderName: (state, action: PayloadAction<string>) => {
+      state.newFolderName = action.payload
+    },
+    setIsNewTextModalVisible: (state, action: PayloadAction<boolean>) => {
+      state.isNewTextModalVisible = action.payload
+    },
   },
 })
 
@@ -42,9 +52,11 @@ export const {
   setFileList,
   setBreadcrumbitemList,
   setIsNewFolderModalVisible,
+  setNewFolderName,
+  setIsNewTextModalVisible,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCount = (state: RootState) => state.home
+export const homeState = (state: RootState) => state.home
 
 export default homeSlice.reducer

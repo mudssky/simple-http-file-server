@@ -2,6 +2,8 @@ package api
 
 import (
 	"fmt"
+	"io/fs"
+	"io/ioutil"
 	"path"
 
 	"os"
@@ -46,12 +48,12 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 // @Tags         filelist
 // @Accept       application/json
 // @Produce      application/json
-// @Param        data   body  request.FileListReq  false "文件列表路径"
+// @Param        data   body  request.FilePath  true "文件列表路径"
 // @Success      200  {object}  response.Response{data=[]response.FileInfo} "文件列表信息"
 // @Router       /filelist [post]
 func (f *FileListAPI) GetFileList(c *gin.Context) {
 	l := global.Logger
-	var req request.FileListReq
+	var req request.FilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(myerror.JsonParseError, c)
@@ -112,23 +114,23 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 
 // MakeDir
 // @Summary      新建文件夹
-// @Description  传入当前所在路径和文件夹的名字，新建文件夹
+// @Description  传入文件夹的路径，新建文件夹
 // @Tags         filelist
 // @Accept       application/json
 // @Produce      application/json
-// @Param        data   body  request.NewFolderReq false "目录信息"
-// @Success      200  {object}  any "返回列表成功"
+// @Param        data   body  request.FilePath true "目录信息"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /mkdir [post]
 func (f *FileListAPI) MakeDir(c *gin.Context) {
 	// l := global.Logger
-	var req request.NewFolderReq
+	var req request.FilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	// fmt.Println("req:", req)
-	if req.FolderPath == "" {
+	if req.Path == "" {
 		response.FailWithMessage("路径不能为空", c)
 		return
 	}
@@ -137,10 +139,77 @@ func (f *FileListAPI) MakeDir(c *gin.Context) {
 	// 	response.FailWithMessage("不合法的路径", c)
 	// 	return
 	// }
-	if err := os.Mkdir(req.FolderPath, os.ModeDir); err != nil {
+	if err := os.Mkdir(req.Path, os.ModeDir); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	response.Success(c)
 
+}
+
+// removeItem
+// @Summary      删除目录或文件
+// @Description  传入路径，删除目录或文件
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.FilePath true "路径"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /removeItem [post]
+func (f *FileListAPI) RemoveItem(c *gin.Context) {
+	// l := global.Logger
+	var req request.FilePath
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if req.Path == "" {
+		response.FailWithMessage("路径不能为空", c)
+		return
+	}
+
+	if err := os.RemoveAll(req.Path); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	response.Success(c)
+
+}
+
+// createTxt
+// @Summary      创建txt文本文件
+// @Description  传入文件名和内容，创建txt文本文件
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.TxtFile true "创建txt需要的参数"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /removeItem [post]
+func (f *FileListAPI) CreateTxt(c *gin.Context) {
+	// l := global.Logger
+	var req request.TxtFile
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if req.Path == "" {
+		response.FailWithMessage("文件路径不能为空", c)
+		return
+	}
+	if isExist, err := util.PathExists(req.Path); isExist || err != nil {
+		if isExist {
+			response.FailWithMessage("文件已存在", c)
+			return
+		}
+		response.FailWithMessage(err.Error(), c)
+		return
+
+	}
+	if err := ioutil.WriteFile(req.Path, []byte(req.Content), fs.ModePerm); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	response.Success(c)
 }
