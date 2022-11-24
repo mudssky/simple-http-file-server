@@ -213,3 +213,44 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 	}
 	response.Success(c)
 }
+
+// uploadMulti
+// @Summary      多文件上传
+// @Description  传入文件名和内容，创建txt文本文件
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.TxtFile true "创建txt需要的参数"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /removeItem [post]
+func (f *FileListAPI) UploadMulti(c *gin.Context) {
+	// l := global.Logger
+	fmt.Println("enter upload multi")
+	// Multipart form
+	form, err := c.MultipartForm()
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	fmt.Printf("%+v\n", form)
+	fmt.Printf("%+v\n", form.Value["path"])
+	files := form.File["file"]
+	uploadDir := form.Value["path"][0]
+	for _, file := range files {
+		newpath := path.Join(uploadDir, files[0].Filename)
+		// 检查文件是否存在，已经存在的部分会中断上传
+		isExist, err := util.PathExists(newpath)
+		if err != nil {
+			response.FailWithMessage(err.Error(), c)
+		}
+		if isExist {
+			response.FailWithMessage(myerror.FileAlreadyExistError, c)
+			return
+		}
+
+		// 上传文件至指定目录
+		c.SaveUploadedFile(file, newpath)
+	}
+	// c.SaveUploadedFile(form.File["files"][0], "./ddd.png")
+	// c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
+}

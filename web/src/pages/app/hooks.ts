@@ -1,6 +1,14 @@
 import { Form, message, Modal } from 'antd'
-import { useEffect } from 'react'
-import { createTxt, FileItem, getFileList, mkdir, removeItem } from '../../api'
+import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
+import { useEffect, useMemo } from 'react'
+import {
+  createTxt,
+  FileItem,
+  getFileList,
+  mkdir,
+  removeItem,
+  SERVER_URL,
+} from '../../api'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   BreadcrumbItem,
@@ -11,6 +19,7 @@ import {
   setIsNewTextModalVisible,
   setNewFolderName,
 } from '../../store/reducer/homeReducer'
+import { uploadFiles } from '../../util/request'
 import { checkResponse } from '../../util/util'
 
 export default function useSetupHook() {
@@ -24,6 +33,10 @@ export default function useSetupHook() {
     isNewTextModalVisible,
   } = state
   const [newTextForm] = Form.useForm()
+  const currentWorkDir = useMemo(
+    () => breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key,
+    [breadcrumbitemList]
+  )
   const getData = async () => {
     await enterFolder({ path: '' })
   }
@@ -42,7 +55,7 @@ export default function useSetupHook() {
     }
   }
   const refreshCurentWorkDir = async () => {
-    const currentWorkDir = getCurrentWorkDir()
+    // const currentWorkDir = getCurrentWorkDir()
     enterFolder({
       path: currentWorkDir,
     })
@@ -105,7 +118,7 @@ export default function useSetupHook() {
     console.log('formValues', formValues)
 
     const res = await createTxt({
-      path: `${getCurrentWorkDir()}/${formValues.filename}.txt`,
+      path: `${currentWorkDir}/${formValues.filename}.txt`,
       content: formValues.content,
     })
     checkResponse(res, {
@@ -121,11 +134,9 @@ export default function useSetupHook() {
   const handleNewFolderNameChange = (e: { target: { value: string } }) => {
     dispatch(setNewFolderName(e.target.value))
   }
-  const getCurrentWorkDir = () => {
-    return breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key
-  }
+
   const handleCreateNewFolder = async () => {
-    const currentWorkDir = getCurrentWorkDir()
+    // const currentWorkDir = getCurrentWorkDir()
     const res = await mkdir({
       path: currentWorkDir + '/' + newFolderName,
     })
@@ -151,6 +162,25 @@ export default function useSetupHook() {
       },
     })
   }
+  const handleUpoadFiles = async (file: RcFile, files: RcFile[]) => {
+    await uploadFiles(`${SERVER_URL}/uploadMulti`, files, {
+      onProgress: (loaded, total) => {
+        console.log(`${loaded}/${total}`)
+      },
+      infoDict: {
+        path: 'ceads',
+      },
+    })
+
+    return false
+  }
+  const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    console.log('info', info)
+
+    if (info?.event) {
+      // 有event表示下载开始
+    }
+  }
   useEffect(() => {
     getData()
     return () => {}
@@ -162,6 +192,7 @@ export default function useSetupHook() {
     isNewTextModalVisible,
     newFolderName,
     newTextForm,
+    currentWorkDir,
     cancelNewTextModal,
     handleFileClick,
     handleBreadcrumbJump,
@@ -174,5 +205,7 @@ export default function useSetupHook() {
     showNewTextModal,
     handleCreateNewText,
     refreshCurentWorkDir,
+    handleUpoadFiles,
+    handleUploadChange,
   }
 }

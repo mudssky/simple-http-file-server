@@ -27,6 +27,11 @@ func InitRouter() *gin.Engine {
 	r.POST("/mkdir", fileListAPI.MakeDir)
 	r.POST("/removeItem", fileListAPI.RemoveItem)
 	r.POST("/createTxt", fileListAPI.CreateTxt)
+
+	// 设置默认上传大小限制1gb（不设置的情况下默认是32gb）
+	r.MaxMultipartMemory = 1 << 30
+	r.POST("/uploadMulti", fileListAPI.UploadMulti)
+	// r.POST("/uploadSingle", fileListAPI.UploadSingle)
 	return r
 
 }

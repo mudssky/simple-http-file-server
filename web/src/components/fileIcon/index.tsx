@@ -70,8 +70,9 @@ const getIcon = (params: Props) => {
       `${fileTypeFolder}-picture`
     ),
   }
-  if (ext in iconDict) {
-    return <SvgIcon name={iconDict[ext as FileExt]}></SvgIcon>
+  const lowExt = ext.toLowerCase()
+  if (lowExt in iconDict) {
+    return <SvgIcon name={iconDict[lowExt as FileExt]}></SvgIcon>
   }
   return <SvgIcon name="filetype-unknown"></SvgIcon>
 }
