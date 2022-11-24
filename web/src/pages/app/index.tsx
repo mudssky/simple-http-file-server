@@ -1,11 +1,20 @@
-import { Breadcrumb, Button, Form, Input, Modal, Space, Table } from 'antd'
+import {
+  Breadcrumb,
+  Button,
+  Form,
+  Input,
+  Modal,
+  Space,
+  Table,
+  Upload,
+} from 'antd'
 import { filesizeFomatter, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import { DeleteTwoTone } from '@ant-design/icons'
 import useSetupHook from './hooks'
 
 import dayjs from 'dayjs'
-import { FileItem } from '../../api'
+import { FileItem, SERVER_URL } from '../../api'
 
 export default function App() {
   const {
@@ -15,6 +24,7 @@ export default function App() {
     isNewTextModalVisible,
     newFolderName,
     newTextForm,
+    currentWorkDir,
     cancelNewTextModal,
     cancelNewFolderModal,
     showNewFolderModal,
@@ -27,6 +37,7 @@ export default function App() {
     handleDeleteItem,
     handleCreateNewText,
     refreshCurentWorkDir,
+    handleUploadChange,
   } = useSetupHook()
 
   const columns = [
@@ -96,6 +107,20 @@ export default function App() {
             <Space>
               <Button onClick={showNewFolderModal}>新建目录</Button>
               <Button onClick={showNewTextModal}>新建文本</Button>
+              <Upload
+                action={`${SERVER_URL}/uploadMulti`}
+                name="file"
+                data={{
+                  path: currentWorkDir,
+                }}
+                multiple={true}
+                method="POST"
+                // 不显示文件列表，当作一个普通的下载按钮使用
+                showUploadList={false}
+                onChange={handleUploadChange}
+              >
+                <Button>上传文件</Button>
+              </Upload>
             </Space>
           ) : null}
         </div>
@@ -148,7 +173,16 @@ export default function App() {
         onOk={handleCreateNewText}
       >
         <Form form={newTextForm} layout="vertical">
-          <Form.Item label="文件名" name="filename">
+          <Form.Item
+            label="文件名"
+            name="filename"
+            rules={[
+              {
+                required: true,
+                whitespace: true,
+              },
+            ]}
+          >
             <Input></Input>
           </Form.Item>
           <Form.Item label="内容" name="content">
@@ -156,6 +190,7 @@ export default function App() {
           </Form.Item>
         </Form>
       </Modal>
+      <Modal title="上传文件"></Modal>
     </div>
   )
 }

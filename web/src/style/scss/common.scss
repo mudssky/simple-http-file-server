@@ -7,12 +7,10 @@
 
 // 面包屑
 .#{$antd-prefix}-breadcrumb {
-  .#{$antd-prefix}-breadcrumb-link {
-    cursor: pointer;
-  }
-  li:last-child {
+  li:not(:last-child) {
     .#{$antd-prefix}-breadcrumb-link {
-      cursor: auto;
+      cursor: pointer;
+      color: rgb(59, 130, 246);
     }
   }
 }
