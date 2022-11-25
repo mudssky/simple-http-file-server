@@ -35,6 +35,14 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(env.VITE_PORT),
     },
+    build: {
+      // target: 'esnext',
+      // 设置打包警告上限为1500kb，因为antd随便一打包就有900多kb大小，远超默认的500kb限制。
+      chunkSizeWarningLimit: 1500,
+      rollupOptions: {
+        output: {},
+      },
+    },
   }
   // if (mode == 'development') {
   //   return {
