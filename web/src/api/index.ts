@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PromiseResponseData } from '../global'
-import { post } from '../util/request'
+import { request } from '../util/request'
 
 export const SERVER_URL = 'http://127.0.0.1:7888'
 
@@ -16,10 +17,10 @@ export interface FileItem {
  * @param params
  * @returns
  */
-export const getFileList = async (params: {
+export const getFileList = async (data: {
   path: string
 }): PromiseResponseData<FileItem[]> => {
-  return post(`${SERVER_URL}/filelist`, params)
+  return request.post(`${SERVER_URL}/filelist`, data)
 }
 
 /**
@@ -27,10 +28,10 @@ export const getFileList = async (params: {
  * @param params
  * @returns
  */
-export const mkdir = async (params: {
+export const mkdir = async (data: {
   path: string //文件夹路径
 }): PromiseResponseData<any> => {
-  return post(`${SERVER_URL}/mkdir`, params)
+  return request.post(`${SERVER_URL}/mkdir`, data)
 }
 
 /**
@@ -38,19 +39,19 @@ export const mkdir = async (params: {
  * @param params
  * @returns
  */
-export const removeItem = async (params: {
+export const removeItem = async (data: {
   path: string
 }): PromiseResponseData<any> => {
-  return post(`${SERVER_URL}/removeItem`, params)
+  return request.post(`${SERVER_URL}/removeItem`, data)
 }
 /**
  * 创建txt文件
  * @param params
  * @returns
  */
-export const createTxt = async (params: {
+export const createTxt = async (data: {
   path: string //文件路径
   content: string //文件内容
 }): PromiseResponseData<any> => {
-  return post(`${SERVER_URL}/createTxt`, params)
+  return request.post(`${SERVER_URL}/createTxt`, data)
 }

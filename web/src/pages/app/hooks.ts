@@ -19,7 +19,7 @@ import {
   setIsNewTextModalVisible,
   setNewFolderName,
 } from '../../store/reducer/homeReducer'
-import { uploadFiles } from '../../util/request'
+import { uploadFile } from '../../util/request'
 import { checkResponse } from '../../util/util'
 
 export default function useSetupHook() {
@@ -162,19 +162,21 @@ export default function useSetupHook() {
       },
     })
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpoadFiles = async (file: RcFile, files: RcFile[]) => {
-    await uploadFiles(`${SERVER_URL}/uploadMulti`, files, {
-      onProgress: (loaded, total) => {
-        console.log(`${loaded}/${total}`)
-      },
-      infoDict: {
-        path: 'ceads',
-      },
-    })
+    await uploadFile(`${SERVER_URL}/uploadMulti`, file)
+    // {
+    //   onUploadProgress: (loaded, total) => {
+    //     console.log(`${loaded}/${total}`)
+    //   },
+    //   // infoDict: {
+    //   //   path: 'ceads',
+    //   // },
+    // })
 
     return false
   }
-  const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
+  const handleUploadChange = (info: UploadChangeParam<UploadFile<unknown>>) => {
     console.log('info', info)
 
     if (info?.event) {
@@ -183,7 +185,6 @@ export default function useSetupHook() {
   }
   useEffect(() => {
     getData()
-    return () => {}
   }, [])
   return {
     breadcrumbitemList,
