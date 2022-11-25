@@ -1,87 +1,83 @@
-function objToUrlparam(obj: any) {
-  const list = Object.keys(obj).map((key) => {
-    return `${key}=${obj[key]}`
+import { notification } from 'antd'
+import axios, {
+  AxiosInstance,
+  AxiosProgressEvent,
+  AxiosRequestConfig,
+} from 'axios'
+
+export function createGlobalAxiosWithInterceptors(
+  config?: AxiosRequestConfig
+): AxiosInstance {
+  const axiosInstance = axios.create({
+    timeout: 3000, //超时配置
+    withCredentials: true, //跨域携带cookie
+    ...config, // 自定义配置覆盖基本配置
   })
-  if ((list.length = 0)) {
-    return ''
-  } else {
-    return '?' + encodeURIComponent(list.join('&'))
-  }
+  // 添加请求拦截器
+  axiosInstance.interceptors.request.use(
+    function (config) {
+      // 在发送请求之前做些什么
+      //   console.log('config:', config)
+      return config
+    },
+    function (error) {
+      // 对请求错误做些什么
+      return Promise.reject(error)
+    }
+  )
+
+  // 添加响应拦截器
+  axiosInstance.interceptors.response.use(
+    function (response) {
+      // 对响应数据做点什么
+      console.log(response.config.url, response.data, { response })
+      return response.data
+    },
+    function (error) {
+      // 任何超过2xx范围的状态码，会触发这个函数
+      console.error({
+        ...error,
+      })
+      if (error.response) {
+        notification.error({
+          message: error.response.status,
+          description: error?.response?.data?.message ?? '服务端异常',
+        })
+        // switch (error.response.status) {
+        // }
+      }
+      return Promise.reject(error)
+    }
+  )
+  return axiosInstance
 }
-const fetchBaseConfig: RequestInit = {
-  mode: 'cors',
+
+export type ContentType = 'multipart/form-data' | 'application/json'
+
+export const request = createGlobalAxiosWithInterceptors()
+
+export const BaseHeader = {
   headers: {
     'Content-Type': 'application/json',
     accept: 'application/json',
   },
 }
-export type ContentType = 'multipart/form-data' | 'application/json'
-export async function get(url: string, param?: any) {
-  return (
-    await fetch(url + param ? objToUrlparam(param) : '', {
-      method: 'GET',
-      ...fetchBaseConfig,
-    })
-  ).json()
-}
 
-export async function post(
+export function uploadFile(
   url: string,
-  body?: any,
-  contentType: ContentType = 'application/json'
+  file: unknown,
+  options?: {
+    fieldName?: string
+    onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
+  }
 ) {
-  console.log({ url, body })
-  const data = await fetch(url, {
-    method: 'POST',
-    body: body ? JSON.stringify(body) : '{}',
-    headers: {
-      'Content-Type': contentType,
+  const { fieldName = 'file', onUploadProgress } = options ?? {}
+  const formData = new FormData()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  formData.append(fieldName, file as any)
+  return request.post(url, formData, {
+    onUploadProgress: (e) => {
+      console.log({ e })
     },
   })
-  const json = await data.json()
-  // console.log('json', json)
-  return json
 }
-
-/**
- * 因为fetch api没有支持上传进度，所以用xhr封装了一个上传的函数
- * @param url
- * @param files
- * @param onProgress
- * @returns
- */
-export const uploadFiles = (
-  url: string,
-  files: any,
-  options?: {
-    onProgress?: (loaded: number, total: number) => void
-    infoDict?: { [key: string]: string } //后端需要的信息，比如文件保存的路径
-  }
-) =>
-  new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest()
-    xhr.upload.addEventListener('progress', (e) =>
-      options?.onProgress?.(e.loaded, e.total)
-    )
-    xhr.addEventListener('load', () =>
-      resolve({ status: xhr.status, body: xhr.responseText })
-    )
-    xhr.addEventListener('error', () => reject(new Error('File upload failed')))
-    xhr.addEventListener('abort', () =>
-      reject(new Error('File upload aborted'))
-    )
-    xhr.open('POST', url, true)
-    // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
-    const formData = new FormData()
-    console.log('files', files)
-    if (options) {
-      Object.keys(options.infoDict ?? {}).forEach((key: string) => {
-        formData.append(key, options?.infoDict?.[key] ?? '')
-      })
-    }
-
-    Array.from(files).forEach((file: any, index) =>
-      formData.append(index.toString(), file)
-    )
-    xhr.send(formData)
-  })

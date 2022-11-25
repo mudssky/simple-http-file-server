@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Breadcrumb,
   Button,
@@ -12,7 +13,6 @@ import { filesizeFomatter, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import { DeleteTwoTone } from '@ant-design/icons'
 import useSetupHook from './hooks'
-
 import dayjs from 'dayjs'
 import { FileItem, SERVER_URL } from '../../api'
 

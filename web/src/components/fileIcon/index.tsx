@@ -1,8 +1,13 @@
+import React from 'react'
 import SvgIcon from '../svgIcon'
 type FileExt =
   | 'txt'
-  | 'png'
   | 'epub'
+  | 'pdf'
+  // word文档
+  | 'doc'
+  | 'docx'
+  | 'ppt'
   | 'xlxs'
   // 视频格式
   | 'mp4'
@@ -35,7 +40,7 @@ interface Props {
 
 const fileTypeFolder = 'filetype'
 const convertIconDict = (extArr: FileExt[], str: string) => {
-  const res: any = {}
+  const res: { [key: string]: string } = {}
   extArr.forEach((key) => {
     res[key] = str
   })
@@ -48,7 +53,7 @@ const getIcon = (params: Props) => {
   }
 
   const iconDict: {
-    [key in FileExt]: string
+    [key in FileExt]?: string
   } = {
     rar: `${fileTypeFolder}-compress`,
     zip: `${fileTypeFolder}-compress`,
@@ -72,11 +77,11 @@ const getIcon = (params: Props) => {
   }
   const lowExt = ext.toLowerCase()
   if (lowExt in iconDict) {
-    return <SvgIcon name={iconDict[lowExt as FileExt]}></SvgIcon>
+    return <SvgIcon name={iconDict[lowExt as FileExt] ?? ''}></SvgIcon>
   }
   return <SvgIcon name="filetype-unknown"></SvgIcon>
 }
 export default function FileIcon(props: Props) {
-  const { isFolder = false, ext } = props
+  // const { isFolder = false, ext } = props
   return getIcon(props)
 }
