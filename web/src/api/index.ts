@@ -2,7 +2,7 @@
 import { PromiseResponseData } from '../global'
 import { request } from '../util/request'
 
-export const SERVER_URL = 'http://127.0.0.1:7888'
+export const SERVER_URL = '/api'
 
 export interface FileItem {
   name: string
