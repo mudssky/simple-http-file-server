@@ -5,6 +5,7 @@ import {
   Form,
   Input,
   Modal,
+  Progress,
   Space,
   Table,
   Upload,
@@ -16,7 +17,7 @@ import useSetupHook from './hooks'
 import dayjs from 'dayjs'
 import { FileItem, SERVER_URL } from '../../api'
 
-export default function App() {
+export default function FileList() {
   const {
     breadcrumbitemList,
     fileList,
@@ -25,6 +26,8 @@ export default function App() {
     newFolderName,
     newTextForm,
     currentWorkDir,
+    state,
+    currentUploadFileList,
     cancelNewTextModal,
     cancelNewFolderModal,
     showNewFolderModal,
@@ -39,7 +42,7 @@ export default function App() {
     refreshCurentWorkDir,
     handleUploadChange,
   } = useSetupHook()
-
+  const { uploadProgressModalOptions } = state
   const columns = [
     {
       title: '文件名',
@@ -117,6 +120,7 @@ export default function App() {
                 method="POST"
                 // 不显示文件列表，当作一个普通的下载按钮使用
                 showUploadList={false}
+                fileList={currentUploadFileList}
                 onChange={handleUploadChange}
               >
                 <Button>上传文件</Button>
@@ -190,7 +194,27 @@ export default function App() {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal title="上传文件"></Modal>
+      <Modal title="上传文件" {...uploadProgressModalOptions} footer={null}>
+        {currentUploadFileList.map((item) => {
+          return (
+            <div key={item.uid}>
+              <div>
+                <Space>
+                  <span>{item.name}</span>
+                  <span>{filesizeFomatter(item.size ?? 0)}</span>
+                  {/* <span>{dayjs(item.lastModified).format()}</span> */}
+                </Space>
+              </div>
+              <div>
+                <Progress
+                  percent={Math.round(item.percent ?? 0)}
+                  status={item.status === 'error' ? 'exception' : 'normal'}
+                />
+              </div>
+            </div>
+          )
+        })}
+      </Modal>
     </div>
   )
 }

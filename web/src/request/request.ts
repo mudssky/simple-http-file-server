@@ -30,7 +30,14 @@ export function createGlobalAxiosWithInterceptors(
   axiosInstance.interceptors.response.use(
     function (response) {
       // 对响应数据做点什么
-      console.log(response.config.url, response.data, { response })
+      console.log(
+        `%c${response.config.url}`,
+        'background:#2d8cf0; padding: 2px; border-radius: 4px;color: #fff;',
+        response.data,
+        {
+          response,
+        }
+      )
       return response.data
     },
     function (error) {

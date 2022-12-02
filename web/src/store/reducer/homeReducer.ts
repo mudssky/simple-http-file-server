@@ -1,17 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { UploadFile } from 'antd'
+import React from 'react'
 import { FileItem } from '../../api'
+import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
 
 export interface BreadcrumbItem {
   key: string
   name: string
 }
+export type UploadProgressItem = Omit<
+  UploadFile<unknown>,
+  'lastModifiedDate' | 'originFileObj' | 'xhr'
+>
 interface State {
   fileList: FileItem[]
   breadcrumbitemList: BreadcrumbItem[]
   isNewFolderModalVisible: boolean
   newFolderName: string //创建新目录的名字
   isNewTextModalVisible: boolean
+  uploadProgressModalOptions: ModalOptions
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -24,6 +32,7 @@ const initialState: State = {
   isNewFolderModalVisible: false,
   newFolderName: '',
   isNewTextModalVisible: false,
+  uploadProgressModalOptions: DefaultModalOptions,
 }
 export const homeSlice = createSlice({
   name: 'counter',
@@ -45,6 +54,12 @@ export const homeSlice = createSlice({
     setIsNewTextModalVisible: (state, action: PayloadAction<boolean>) => {
       state.isNewTextModalVisible = action.payload
     },
+    setUploadProgressModalOptions: (
+      state,
+      action: PayloadAction<ModalOptions>
+    ) => {
+      ;(state.uploadProgressModalOptions as ModalOptions) = action.payload
+    },
   },
 })
 
@@ -54,6 +69,7 @@ export const {
   setIsNewFolderModalVisible,
   setNewFolderName,
   setIsNewTextModalVisible,
+  setUploadProgressModalOptions,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
