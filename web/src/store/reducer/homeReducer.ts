@@ -19,6 +19,7 @@ interface State {
   newFolderName: string //创建新目录的名字
   isNewTextModalVisible: boolean
   uploadProgressModalOptions: ModalOptions
+  renameModalOptions: ModalOptions
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -32,6 +33,7 @@ const initialState: State = {
   newFolderName: '',
   isNewTextModalVisible: false,
   uploadProgressModalOptions: DefaultModalOptions,
+  renameModalOptions: DefaultModalOptions,
 }
 export const homeSlice = createSlice({
   name: 'counter',
@@ -59,6 +61,12 @@ export const homeSlice = createSlice({
     ) => {
       ;(state.uploadProgressModalOptions as ModalOptions) = action.payload
     },
+    setRenameModalOptionsAction: (
+      state,
+      action: PayloadAction<ModalOptions>
+    ) => {
+      ;(state.renameModalOptions as ModalOptions) = action.payload
+    },
   },
 })
 
@@ -69,6 +77,7 @@ export const {
   setNewFolderName,
   setIsNewTextModalVisible,
   setUploadProgressModalOptions,
+  setRenameModalOptionsAction,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
