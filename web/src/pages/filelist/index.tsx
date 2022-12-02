@@ -11,13 +11,16 @@ import {
 } from 'antd'
 import { filesizeFomatter, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
-import { DeleteTwoTone } from '@ant-design/icons'
+import { DeleteTwoTone, EditOutlined } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
 import { FileItem, SERVER_URL } from '../../api'
 import { ColumnsType } from 'antd/es/table'
+import { useAppDispatch } from '../../store/hooks'
+import { setRenameModalOptionsAction } from '../../store/reducer/homeReducer'
 
 export default function FileList() {
+  const dispatch = useAppDispatch()
   const {
     breadcrumbitemList,
     fileList,
@@ -41,8 +44,9 @@ export default function FileList() {
     handleCreateNewText,
     refreshCurentWorkDir,
     handleUploadChange,
+    handleRenameSubmit,
   } = useSetupHook()
-  const { uploadProgressModalOptions } = state
+  const { uploadProgressModalOptions, renameModalOptions } = state
   const columns: ColumnsType<FileItem> = [
     {
       title: '文件名',
@@ -95,6 +99,16 @@ export default function FileList() {
               twoToneColor={'#ff0000'}
               className="cursor-pointer text-xl "
               onClick={() => handleDeleteItem(record)}
+            />
+            <EditOutlined
+              onClick={() =>
+                dispatch(
+                  setRenameModalOptionsAction({
+                    ...renameModalOptions,
+                    open: true,
+                  })
+                )
+              }
             />
           </Space>
         )
@@ -163,6 +177,25 @@ export default function FileList() {
         open={isNewFolderModalVisible}
         onCancel={cancelNewFolderModal}
         onOk={handleCreateNewFolder}
+      >
+        <Input
+          placeholder="请输入目录名称"
+          value={newFolderName}
+          onChange={handleNewFolderNameChange}
+        ></Input>
+      </Modal>
+      <Modal
+        title="重命名"
+        {...renameModalOptions}
+        onCancel={() =>
+          dispatch(
+            setRenameModalOptionsAction({
+              ...renameModalOptions,
+              open: false,
+            })
+          )
+        }
+        onOk={handleRenameSubmit}
       >
         <Input
           placeholder="请输入目录名称"

@@ -219,6 +219,9 @@ export default function useSetupHook() {
       }, 2000)
     }
   }
+  const handleRenameSubmit = async () => {
+    console.log('21')
+  }
   useEffect(() => {
     getData()
   }, [])
@@ -246,5 +249,6 @@ export default function useSetupHook() {
     refreshCurentWorkDir,
     handleUpoadFiles,
     handleUploadChange,
+    handleRenameSubmit,
   }
 }
