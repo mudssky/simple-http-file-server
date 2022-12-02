@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Breadcrumb,
   Button,
@@ -16,6 +15,7 @@ import { DeleteTwoTone } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
 import { FileItem, SERVER_URL } from '../../api'
+import { ColumnsType } from 'antd/es/table'
 
 export default function FileList() {
   const {
@@ -43,11 +43,11 @@ export default function FileList() {
     handleUploadChange,
   } = useSetupHook()
   const { uploadProgressModalOptions } = state
-  const columns = [
+  const columns: ColumnsType<FileItem> = [
     {
       title: '文件名',
       dataIndex: 'name',
-      render: (text: any, record: any, index: number) => {
+      render: (value: unknown, record: FileItem) => {
         return (
           <div>
             <Space>
@@ -56,7 +56,7 @@ export default function FileList() {
                 isFolder={record.isFolder}
               ></FileIcon>
               <Button type="link" onClick={() => handleFileClick(record)}>
-                {text}
+                {value as string}
               </Button>
             </Space>
           </div>
@@ -69,8 +69,8 @@ export default function FileList() {
     {
       title: '大小',
       dataIndex: 'size',
-      render: (text: any, record: any, index: number) => {
-        return filesizeFomatter(text)
+      render: (value: number) => {
+        return filesizeFomatter(value)
       },
       sorter: (a: FileItem, b: FileItem) => {
         return a.size - b.size
@@ -79,8 +79,8 @@ export default function FileList() {
     {
       title: '修改时间',
       dataIndex: 'lastModTime',
-      render: (text: any, record: any, index: number) => {
-        return dayjs(text).format('YYYY-MM-DD hh:mm:ss')
+      render: (value: string) => {
+        return dayjs(value).format('YYYY-MM-DD hh:mm:ss')
       },
       sorter: (a: FileItem, b: FileItem) => {
         return a.lastModTime - b.lastModTime
@@ -88,7 +88,7 @@ export default function FileList() {
     },
     {
       title: '操作',
-      render: (text: any, record: any, index: number) => {
+      render: (value: unknown, record: FileItem) => {
         return (
           <Space>
             <DeleteTwoTone
