@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, message, Modal } from 'antd'
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { useEffect, useMemo, useState } from 'react'
@@ -22,7 +23,6 @@ import {
 } from '../../store/reducer/homeReducer'
 import { uploadFile } from '../../request/request'
 import { checkResponse } from '../../util/util'
-import { omit, pick } from 'lodash-es'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)

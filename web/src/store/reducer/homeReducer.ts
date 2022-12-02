@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UploadFile } from 'antd'
-import React from 'react'
 import { FileItem } from '../../api'
 import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
