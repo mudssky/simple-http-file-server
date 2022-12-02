@@ -1,6 +1,6 @@
 import { Form, message, Modal } from 'antd'
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   createTxt,
   FileItem,
@@ -18,21 +18,28 @@ import {
   setIsNewFolderModalVisible,
   setIsNewTextModalVisible,
   setNewFolderName,
+  setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
-import { uploadFile } from '../../util/request'
+import { uploadFile } from '../../request/request'
 import { checkResponse } from '../../util/util'
+import { omit, pick } from 'lodash-es'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
   const dispatch = useAppDispatch()
+  const [currentUploadFileList, setCurrentUploadFileList] = useState<
+    UploadFile[]
+  >([])
   const {
     fileList,
     breadcrumbitemList,
     isNewFolderModalVisible,
     newFolderName,
     isNewTextModalVisible,
+    uploadProgressModalOptions,
   } = state
   const [newTextForm] = Form.useForm()
+
   const currentWorkDir = useMemo(
     () => breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key,
     [breadcrumbitemList]
@@ -176,11 +183,40 @@ export default function useSetupHook() {
 
     return false
   }
-  const handleUploadChange = (info: UploadChangeParam<UploadFile<unknown>>) => {
-    console.log('info', info)
+  const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    dispatch(
+      setUploadProgressModalOptions({
+        ...uploadProgressModalOptions,
+        open: true,
+      })
+    )
 
-    if (info?.event) {
-      // 有event表示下载开始
+    setCurrentUploadFileList(info.fileList)
+    // dispatch(
+    //   setCurrentUploadProgressList(
+    //     info.fileList.map((item) => {
+    //       return {
+    //         ...omit(item, ['lastModifiedDate', 'originFileObj', 'xhr']),
+    //       } as UploadProgressItem
+    //     })
+    //   )
+    // )
+    if (
+      !info?.event &&
+      info.fileList.every((item) => {
+        return item.status == 'done'
+      })
+    ) {
+      refreshCurentWorkDir()
+      setTimeout(() => {
+        dispatch(
+          setUploadProgressModalOptions({
+            ...uploadProgressModalOptions,
+            open: false,
+          })
+        )
+        setCurrentUploadFileList([])
+      }, 2000)
     }
   }
   useEffect(() => {
@@ -194,6 +230,8 @@ export default function useSetupHook() {
     newFolderName,
     newTextForm,
     currentWorkDir,
+    state,
+    currentUploadFileList,
     cancelNewTextModal,
     handleFileClick,
     handleBreadcrumbJump,

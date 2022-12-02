@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PromiseResponseData } from '../global'
-import { request } from '../util/request'
+import { request } from '../request/request'
 
 export const SERVER_URL = '/api'
 
