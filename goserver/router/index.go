@@ -13,6 +13,8 @@ func InitRouter() *gin.Engine {
 	r.Use(middleware.ZapLogger(), middleware.ZapRecovery(true))
 	// r := gin.Default()
 	r.Use(middleware.Cors())
+	// 设置默认上传大小限制1gb（不设置的情况下默认是32gb）
+	r.MaxMultipartMemory = 1 << 30
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -30,9 +32,8 @@ func InitRouter() *gin.Engine {
 		apiGroup.POST("/removeItem", fileListAPI.RemoveItem)
 		apiGroup.POST("/createTxt", fileListAPI.CreateTxt)
 
-		// 设置默认上传大小限制1gb（不设置的情况下默认是32gb）
-		r.MaxMultipartMemory = 1 << 30
 		apiGroup.POST("/uploadMulti", fileListAPI.UploadMulti)
+		apiGroup.POST("/renameItem", fileListAPI.RenameItem)
 		// r.POST("/uploadSingle", fileListAPI.UploadSingle)
 	}
 

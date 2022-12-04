@@ -11,7 +11,11 @@ import {
 } from 'antd'
 import { filesizeFomatter, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
-import { DeleteTwoTone, EditOutlined } from '@ant-design/icons'
+import {
+  ArrowDownOutlined,
+  DeleteTwoTone,
+  EditOutlined,
+} from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
 import { FileItem, SERVER_URL } from '../../api'
@@ -31,6 +35,8 @@ export default function FileList() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    showRenameModal,
+    handleNewNameChange,
     cancelNewTextModal,
     cancelNewFolderModal,
     showNewFolderModal,
@@ -46,7 +52,7 @@ export default function FileList() {
     handleUploadChange,
     handleRenameSubmit,
   } = useSetupHook()
-  const { uploadProgressModalOptions, renameModalOptions } = state
+  const { uploadProgressModalOptions, renameModalOptions, newName } = state
   const columns: ColumnsType<FileItem> = [
     {
       title: '文件名',
@@ -94,23 +100,22 @@ export default function FileList() {
       title: '操作',
       render: (value: unknown, record: FileItem) => {
         return (
-          <Space>
-            <DeleteTwoTone
-              twoToneColor={'#ff0000'}
-              className="cursor-pointer text-xl "
-              onClick={() => handleDeleteItem(record)}
-            />
-            <EditOutlined
-              onClick={() =>
-                dispatch(
-                  setRenameModalOptionsAction({
-                    ...renameModalOptions,
-                    open: true,
-                  })
-                )
-              }
-            />
-          </Space>
+          <div>
+            {currentWorkDir !== '' ? (
+              <Space>
+                <ArrowDownOutlined className="cursor-pointer text-xl text-green-500" />
+                <DeleteTwoTone
+                  twoToneColor={'#ff0000'}
+                  className="cursor-pointer text-xl"
+                  onClick={() => handleDeleteItem(record)}
+                />
+                <EditOutlined
+                  className="cursor-pointer text-xl text-blue-500"
+                  onClick={() => showRenameModal(record)}
+                />
+              </Space>
+            ) : null}
+          </div>
         )
       },
     },
@@ -142,7 +147,7 @@ export default function FileList() {
             </Space>
           ) : null}
         </div>
-        <Space>
+        <Space className="mb-3">
           <div onClick={refreshCurentWorkDir}>
             <span className="text-blue-500 cursor-pointer">刷新</span>
             <span className="p-1 text-black">|</span>
@@ -164,7 +169,6 @@ export default function FileList() {
             })}
           </Breadcrumb>
         </Space>
-
         <Table
           dataSource={fileList}
           columns={columns}
@@ -198,9 +202,9 @@ export default function FileList() {
         onOk={handleRenameSubmit}
       >
         <Input
-          placeholder="请输入目录名称"
-          value={newFolderName}
-          onChange={handleNewFolderNameChange}
+          placeholder="请输入"
+          value={newName}
+          onChange={handleNewNameChange}
         ></Input>
       </Modal>
       <Modal

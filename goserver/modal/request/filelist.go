@@ -10,3 +10,9 @@ type TxtFile struct {
 	Path    string `json:"path"`    //创建文本文件的路径
 	Content string `json:"content"` //内容
 }
+
+// 重命名一个文件需要的参数
+type Rename struct {
+	Path    string `json:"path"`
+	NewName string `json:"newName"`
+}
