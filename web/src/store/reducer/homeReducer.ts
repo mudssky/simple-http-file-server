@@ -20,6 +20,8 @@ interface State {
   isNewTextModalVisible: boolean
   uploadProgressModalOptions: ModalOptions
   renameModalOptions: ModalOptions
+  newName: string
+  currentRenameItem: FileItem | null
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -34,6 +36,8 @@ const initialState: State = {
   isNewTextModalVisible: false,
   uploadProgressModalOptions: DefaultModalOptions,
   renameModalOptions: DefaultModalOptions,
+  newName: '',
+  currentRenameItem: null,
 }
 export const homeSlice = createSlice({
   name: 'counter',
@@ -67,6 +71,12 @@ export const homeSlice = createSlice({
     ) => {
       ;(state.renameModalOptions as ModalOptions) = action.payload
     },
+    setNewNameAction: (state, action: PayloadAction<string>) => {
+      state.newName = action.payload
+    },
+    setCurrentRenameItemAction: (state, action: PayloadAction<FileItem>) => {
+      state.currentRenameItem = action.payload
+    },
   },
 })
 
@@ -78,6 +88,8 @@ export const {
   setIsNewTextModalVisible,
   setUploadProgressModalOptions,
   setRenameModalOptionsAction,
+  setNewNameAction,
+  setCurrentRenameItemAction,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type

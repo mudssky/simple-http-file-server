@@ -8,6 +8,7 @@ import {
   getFileList,
   mkdir,
   removeItem,
+  renameItem,
   SERVER_URL,
 } from '../../api'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -15,10 +16,13 @@ import {
   BreadcrumbItem,
   rootBreadcrumbItem,
   setBreadcrumbitemList,
+  setCurrentRenameItemAction,
   setFileList,
   setIsNewFolderModalVisible,
   setIsNewTextModalVisible,
   setNewFolderName,
+  setNewNameAction,
+  setRenameModalOptionsAction,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
 import { uploadFile } from '../../request/request'
@@ -37,6 +41,9 @@ export default function useSetupHook() {
     newFolderName,
     isNewTextModalVisible,
     uploadProgressModalOptions,
+    newName,
+    renameModalOptions,
+    currentRenameItem,
   } = state
   const [newTextForm] = Form.useForm()
 
@@ -52,7 +59,7 @@ export default function useSetupHook() {
     success?: () => void
   ) => {
     const res = await getFileList(params)
-    console.log('res', res)
+    // console.log('res', res)
     if (res.code === 0) {
       message.success(res.msg)
       dispatch(setFileList(res.data))
@@ -89,8 +96,7 @@ export default function useSetupHook() {
     if (index >= breadcrumbitemList.length - 1 || index < 0) {
       return
     }
-    console.log({ index, item })
-
+    // console.log({ index, item })
     await enterFolder({ path: item.key }, () => {
       if (item.key === rootBreadcrumbItem.key) {
         dispatch(setBreadcrumbitemList([rootBreadcrumbItem]))
@@ -141,7 +147,9 @@ export default function useSetupHook() {
   const handleNewFolderNameChange = (e: { target: { value: string } }) => {
     dispatch(setNewFolderName(e.target.value))
   }
-
+  const handleNewNameChange = (e: { target: { value: string } }) => {
+    dispatch(setNewNameAction(e.target.value))
+  }
   const handleCreateNewFolder = async () => {
     // const currentWorkDir = getCurrentWorkDir()
     const res = await mkdir({
@@ -219,8 +227,43 @@ export default function useSetupHook() {
       }, 2000)
     }
   }
+  const showRenameModal = (record: FileItem) => {
+    dispatch(
+      setRenameModalOptionsAction({
+        ...renameModalOptions,
+        open: true,
+      })
+    )
+    dispatch(setCurrentRenameItemAction(record))
+    dispatch(setNewNameAction(record.name))
+  }
   const handleRenameSubmit = async () => {
-    console.log('21')
+    dispatch(
+      setRenameModalOptionsAction({
+        ...renameModalOptions,
+        confirmLoading: true,
+      })
+    )
+    const res = await renameItem({
+      path: currentRenameItem?.path ?? '',
+      newName: newName,
+    })
+
+    dispatch(
+      setRenameModalOptionsAction({
+        ...renameModalOptions,
+        confirmLoading: false,
+      })
+    )
+    if (res.code === 0) {
+      dispatch(
+        setRenameModalOptionsAction({
+          open: false,
+          confirmLoading: false,
+        })
+      )
+      refreshCurentWorkDir()
+    }
   }
   useEffect(() => {
     getData()
@@ -235,6 +278,7 @@ export default function useSetupHook() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    handleNewNameChange,
     cancelNewTextModal,
     handleFileClick,
     handleBreadcrumbJump,
@@ -250,5 +294,6 @@ export default function useSetupHook() {
     handleUpoadFiles,
     handleUploadChange,
     handleRenameSubmit,
+    showRenameModal,
   }
 }

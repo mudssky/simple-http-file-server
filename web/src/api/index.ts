@@ -55,3 +55,10 @@ export const createTxt = async (data: {
 }): PromiseResponseData<any> => {
   return request.post(`${SERVER_URL}/createTxt`, data)
 }
+
+export const renameItem = async (data: {
+  path: string //文件路径
+  newName: string //新文件名
+}): PromiseResponseData<any> => {
+  return request.post(`${SERVER_URL}/renameItem`, data)
+}

@@ -185,7 +185,7 @@ func (f *FileListAPI) RemoveItem(c *gin.Context) {
 // @Produce      application/json
 // @Param        data   body  request.TxtFile true "创建txt需要的参数"
 // @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /removeItem [post]
+// @Router       /createTxt [post]
 func (f *FileListAPI) CreateTxt(c *gin.Context) {
 	// l := global.Logger
 	var req request.TxtFile
@@ -222,7 +222,7 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 // @Produce      application/json
 // @Param        data   body  request.TxtFile true "创建txt需要的参数"
 // @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /removeItem [post]
+// @Router       /uploadMulti [post]
 func (f *FileListAPI) UploadMulti(c *gin.Context) {
 	// l := global.Logger
 	fmt.Println("enter upload multi")
@@ -253,4 +253,35 @@ func (f *FileListAPI) UploadMulti(c *gin.Context) {
 	}
 	// c.SaveUploadedFile(form.File["files"][0], "./ddd.png")
 	// c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
+}
+
+// renameItem
+// @Summary      重命名文件或文件夹
+// @Description  传入文件名和路径，重命名文件或文件夹
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.Rename true "重命名需要的参数"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /renameItem [post]
+func (f *FileListAPI) RenameItem(c *gin.Context) {
+	var req request.Rename
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if req.Path == "" || req.NewName == "" {
+		response.FailWithMessage("新文件名或路径不能为空", c)
+		return
+	}
+	dir, _ := path.Split(req.Path)
+
+	if err := os.Rename(req.Path, path.Join(dir, req.NewName)); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	response.Success(c)
+
 }
