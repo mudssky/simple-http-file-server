@@ -35,6 +35,7 @@ export default function FileList() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    cancelUploadProgressModal,
     showRenameModal,
     handleNewNameChange,
     cancelNewTextModal,
@@ -235,7 +236,12 @@ export default function FileList() {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal title="上传文件" {...uploadProgressModalOptions} footer={null}>
+      <Modal
+        title="上传文件"
+        {...uploadProgressModalOptions}
+        footer={null}
+        onCancel={cancelUploadProgressModal}
+      >
         {currentUploadFileList.map((item) => {
           return (
             <div key={item.uid}>

@@ -28,6 +28,7 @@ import {
 } from '../../store/reducer/homeReducer'
 import { uploadFile } from '../../request/request'
 import { checkResponse } from '../../util/util'
+import { flushSync } from 'react-dom'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
@@ -193,23 +194,15 @@ export default function useSetupHook() {
     return false
   }
   const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    console.log('info', info)
     dispatch(
       setUploadProgressModalOptions({
         ...uploadProgressModalOptions,
         open: true,
       })
     )
+    flushSync(() => setCurrentUploadFileList(info.fileList))
 
-    setCurrentUploadFileList(info.fileList)
-    // dispatch(
-    //   setCurrentUploadProgressList(
-    //     info.fileList.map((item) => {
-    //       return {
-    //         ...omit(item, ['lastModifiedDate', 'originFileObj', 'xhr']),
-    //       } as UploadProgressItem
-    //     })
-    //   )
-    // )
     if (
       !info?.event &&
       info.fileList.every((item) => {
@@ -270,6 +263,14 @@ export default function useSetupHook() {
     await DOWNLOAD_ITEM(record)
     // console.log(record)
   }
+  const cancelUploadProgressModal = () => [
+    dispatch(
+      setUploadProgressModalOptions({
+        ...uploadProgressModalOptions,
+        open: false,
+      })
+    ),
+  ]
   useEffect(() => {
     getData()
   }, [])
@@ -283,6 +284,7 @@ export default function useSetupHook() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    cancelUploadProgressModal,
     handleNewNameChange,
     cancelNewTextModal,
     handleFileClick,

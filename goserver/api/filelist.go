@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/fs"
 	"io/ioutil"
-	"net/http"
 	"path"
 
 	"os"
@@ -233,8 +232,8 @@ func (f *FileListAPI) UploadMulti(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	fmt.Printf("%+v\n", form)
-	fmt.Printf("%+v\n", form.Value["path"])
+	// fmt.Printf("%+v\n", form)
+	// fmt.Printf("%+v\n", form.Value["path"])
 	files := form.File["file"]
 	uploadDir := form.Value["path"][0]
 	for _, file := range files {
@@ -300,21 +299,14 @@ func (f *FileListAPI) DownloadItem(c *gin.Context) {
 	var req response.FileInfo
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-
-		c.Status(http.StatusNotFound)
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	if req.Path == "" {
-		// c.Header("error", "路径不能为空")
-		c.Status(http.StatusNotFound)
 		response.FailWithMessage("路径不能为空", c)
 		return
 	}
 	if req.IsFolder {
-		// c.Header("error", "路径不能为文件夹")
-		// c.AbortWithStatus(http.StatusNotFound)
-		c.Status(http.StatusNotFound)
 		response.FailWithMessage("路径不能为文件夹", c)
 		return
 	} else {
