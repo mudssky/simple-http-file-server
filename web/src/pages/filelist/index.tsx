@@ -18,7 +18,7 @@ import {
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
-import { FileItem, SERVER_URL } from '../../api'
+import { FileItem, PROXY_SUFFIX } from '../../api'
 import { ColumnsType } from 'antd/es/table'
 import { useAppDispatch } from '../../store/hooks'
 import { setRenameModalOptionsAction } from '../../store/reducer/homeReducer'
@@ -51,6 +51,7 @@ export default function FileList() {
     refreshCurentWorkDir,
     handleUploadChange,
     handleRenameSubmit,
+    handleDownloadItem,
   } = useSetupHook()
   const { uploadProgressModalOptions, renameModalOptions, newName } = state
   const columns: ColumnsType<FileItem> = [
@@ -103,7 +104,10 @@ export default function FileList() {
           <div>
             {currentWorkDir !== '' ? (
               <Space>
-                <ArrowDownOutlined className="cursor-pointer text-xl text-green-500" />
+                <ArrowDownOutlined
+                  className="cursor-pointer text-xl text-green-500"
+                  onClick={() => handleDownloadItem(record)}
+                />
                 <DeleteTwoTone
                   twoToneColor={'#ff0000'}
                   className="cursor-pointer text-xl"
@@ -130,7 +134,7 @@ export default function FileList() {
               <Button onClick={showNewFolderModal}>新建目录</Button>
               <Button onClick={showNewTextModal}>新建文本</Button>
               <Upload
-                action={`${SERVER_URL}/uploadMulti`}
+                action={`${PROXY_SUFFIX}/uploadMulti`}
                 name="file"
                 data={{
                   path: currentWorkDir,

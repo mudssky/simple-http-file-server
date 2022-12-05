@@ -34,6 +34,7 @@ func InitRouter() *gin.Engine {
 
 		apiGroup.POST("/uploadMulti", fileListAPI.UploadMulti)
 		apiGroup.POST("/renameItem", fileListAPI.RenameItem)
+		apiGroup.POST("/downloadItem", fileListAPI.DownloadItem)
 		// r.POST("/uploadSingle", fileListAPI.UploadSingle)
 	}
 
