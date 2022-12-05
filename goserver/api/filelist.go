@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"io/ioutil"
+	"net/http"
 	"path"
 
 	"os"
@@ -283,5 +284,45 @@ func (f *FileListAPI) RenameItem(c *gin.Context) {
 	}
 
 	response.Success(c)
+
+}
+
+// downloadItem
+// @Summary      下载项目
+// @Description  传入fileitem下载指定项目，文件夹和文件的情况区别处理
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  response.FileInfo true "下载文件对应的信息"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /downloadItem [post]
+func (f *FileListAPI) DownloadItem(c *gin.Context) {
+	var req response.FileInfo
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+
+		c.Status(http.StatusNotFound)
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if req.Path == "" {
+		// c.Header("error", "路径不能为空")
+		c.Status(http.StatusNotFound)
+		response.FailWithMessage("路径不能为空", c)
+		return
+	}
+	if req.IsFolder {
+		// c.Header("error", "路径不能为文件夹")
+		// c.AbortWithStatus(http.StatusNotFound)
+		c.Status(http.StatusNotFound)
+		response.FailWithMessage("路径不能为文件夹", c)
+		return
+	} else {
+		c.Header("Content-Disposition", "attachment; filename="+req.Name)
+		// c.Header("Content-Transfer-Encoding", "binary")
+		// c.Header("Content-Type", "application/octet-stream")
+		c.File(req.Path)
+	}
+	fmt.Println("req", req)
 
 }

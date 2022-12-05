@@ -3,13 +3,14 @@ import { Form, message, Modal } from 'antd'
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { useEffect, useMemo, useState } from 'react'
 import {
-  createTxt,
+  CREATE_TXT,
+  DOWNLOAD_ITEM,
   FileItem,
-  getFileList,
-  mkdir,
-  removeItem,
-  renameItem,
-  SERVER_URL,
+  GET_FILELIST,
+  MKDIR,
+  REMOVE_ITEM,
+  RENAME_ITEM,
+  PROXY_SUFFIX,
 } from '../../api'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
@@ -58,7 +59,7 @@ export default function useSetupHook() {
     params: { path: string },
     success?: () => void
   ) => {
-    const res = await getFileList(params)
+    const res = await GET_FILELIST(params)
     // console.log('res', res)
     if (res.code === 0) {
       message.success(res.msg)
@@ -130,7 +131,7 @@ export default function useSetupHook() {
     const formValues = await newTextForm.validateFields()
     console.log('formValues', formValues)
 
-    const res = await createTxt({
+    const res = await CREATE_TXT({
       path: `${currentWorkDir}/${formValues.filename}.txt`,
       content: formValues.content,
     })
@@ -152,7 +153,7 @@ export default function useSetupHook() {
   }
   const handleCreateNewFolder = async () => {
     // const currentWorkDir = getCurrentWorkDir()
-    const res = await mkdir({
+    const res = await MKDIR({
       path: currentWorkDir + '/' + newFolderName,
     })
     checkResponse(res, {
@@ -168,7 +169,7 @@ export default function useSetupHook() {
       title: `确认删除${record.isFolder ? '文件夹' : '文件'}`,
       content: `${record.path}`,
       onOk: async () => {
-        const res = await removeItem({
+        const res = await REMOVE_ITEM({
           path: record.path,
         })
         checkResponse(res, {
@@ -179,7 +180,7 @@ export default function useSetupHook() {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpoadFiles = async (file: RcFile, files: RcFile[]) => {
-    await uploadFile(`${SERVER_URL}/uploadMulti`, file)
+    await uploadFile(`${PROXY_SUFFIX}/uploadMulti`, file)
     // {
     //   onUploadProgress: (loaded, total) => {
     //     console.log(`${loaded}/${total}`)
@@ -244,7 +245,7 @@ export default function useSetupHook() {
         confirmLoading: true,
       })
     )
-    const res = await renameItem({
+    const res = await RENAME_ITEM({
       path: currentRenameItem?.path ?? '',
       newName: newName,
     })
@@ -264,6 +265,10 @@ export default function useSetupHook() {
       )
       refreshCurentWorkDir()
     }
+  }
+  const handleDownloadItem = async (record: FileItem) => {
+    await DOWNLOAD_ITEM(record)
+    // console.log(record)
   }
   useEffect(() => {
     getData()
@@ -295,5 +300,6 @@ export default function useSetupHook() {
     handleUploadChange,
     handleRenameSubmit,
     showRenameModal,
+    handleDownloadItem,
   }
 }
