@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { message } from 'antd'
+import { AxiosProgressEvent } from 'axios'
 import { PromiseResponseData } from '../global'
 import { downloadFile, request } from '../request/request'
+import { filesizeFomatter, handleDownloadProgress } from '../util/util'
 
 export const PROXY_SUFFIX = '/api'
 
@@ -67,6 +69,7 @@ export const RENAME_ITEM = async (data: {
 export const DOWNLOAD_ITEM = async (data: FileItem): Promise<any> => {
   const res: Blob = await request.post(`${PROXY_SUFFIX}/downloadItem`, data, {
     responseType: 'blob',
+    onDownloadProgress: handleDownloadProgress,
   })
   // json的情况说明是报错
   if (res.type !== 'application/json') {

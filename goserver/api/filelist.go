@@ -15,6 +15,7 @@ import (
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
 	"github.com/samber/lo"
+	"go.uber.org/zap"
 )
 
 type FileListAPI struct{}
@@ -224,7 +225,7 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /uploadMulti [post]
 func (f *FileListAPI) UploadMulti(c *gin.Context) {
-	// l := global.Logger
+	l := global.Logger
 	fmt.Println("enter upload multi")
 	// Multipart form
 	form, err := c.MultipartForm()
@@ -236,17 +237,36 @@ func (f *FileListAPI) UploadMulti(c *gin.Context) {
 	// fmt.Printf("%+v\n", form.Value["path"])
 	files := form.File["file"]
 	uploadDir := form.Value["path"][0]
+	l.Debug("上传参数", zap.String("uploadDir", uploadDir))
+	isExist, err := util.PathExists(uploadDir)
+
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	// 文件夹不存在时，手动创建
+	if !isExist {
+		l.Debug(fmt.Sprintln("创建文件夹:", uploadDir))
+		err := os.MkdirAll(uploadDir, os.ModeDir)
+		if err != nil {
+			response.FailWithMessage(err.Error(), c)
+			return
+		}
+	}
+
 	for _, file := range files {
 		newpath := path.Join(uploadDir, files[0].Filename)
 		// 检查文件是否存在，已经存在的部分会中断上传
 		isExist, err := util.PathExists(newpath)
 		if err != nil {
 			response.FailWithMessage(err.Error(), c)
+			return
 		}
 		if isExist {
 			response.FailWithMessage(myerror.FileAlreadyExistError, c)
 			return
 		}
+		fmt.Println("newpath", newpath)
 
 		// 上传文件至指定目录
 		c.SaveUploadedFile(file, newpath)
