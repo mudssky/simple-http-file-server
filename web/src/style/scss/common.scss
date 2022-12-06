@@ -14,3 +14,15 @@
     }
   }
 }
+
+// 拖拽上传的样式调整
+.#{$antd-prefix}-upload-wrapper {
+  .#{$antd-prefix} {
+    &-upload-drag {
+      border: none;
+    }
+    &-upload-drag-hover {
+      border: 1px dashed #4096ff;
+    }
+  }
+}
