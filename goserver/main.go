@@ -32,6 +32,7 @@ import (
 // @securityDefinitions.basic  BasicAuth
 func main() {
 	// cmd.Execute()
+	global.InitGlobalConfig()
 	var r = router.InitRouter()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
