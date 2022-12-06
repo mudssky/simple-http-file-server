@@ -2,6 +2,7 @@ package util
 
 import (
 	"os"
+	"path"
 )
 
 // @function: PathExists
@@ -28,4 +29,23 @@ func IsFolder(path string) bool {
 		return false
 	}
 	return f.IsDir()
+}
+
+// 从文件夹路径中获取文件夹的名字,传入的需要是文件夹路径
+func FolderName(folderpath string) string {
+	_, file := path.Split(folderpath)
+	return file
+}
+
+// 检查字符串列表是否存在重复
+func HasDup(list []string) bool {
+	m := make(map[string]bool)
+	for _, key := range list {
+		_, ok := m[key]
+		if ok {
+			return false
+		}
+		m[key] = true
+	}
+	return true
 }

@@ -22,7 +22,7 @@ var (
 	Config config.Server
 )
 
-func init() {
+func InitGlobalConfig() {
 	initViper()
 	initZap()
 }
