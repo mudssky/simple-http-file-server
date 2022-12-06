@@ -189,12 +189,27 @@ export default function FileList() {
             })}
           </Breadcrumb>
         </Space>
-        <Table
-          dataSource={currentFileList}
-          columns={columns}
-          pagination={false}
-          rowKey="name"
-        ></Table>
+        <Upload.Dragger
+          className="border-none"
+          openFileDialogOnClick={false}
+          action={`${PROXY_SUFFIX}/uploadMulti`}
+          name="file"
+          data={getUploadFolderData}
+          multiple={true}
+          method="POST"
+          directory={true}
+          // 不显示文件列表，当作一个普通的下载按钮使用
+          showUploadList={false}
+          fileList={currentUploadFileList}
+          onChange={handleUploadChange}
+        >
+          <Table
+            dataSource={currentFileList}
+            columns={columns}
+            pagination={false}
+            rowKey="name"
+          ></Table>
+        </Upload.Dragger>
       </div>
       <Modal
         title="新建目录"

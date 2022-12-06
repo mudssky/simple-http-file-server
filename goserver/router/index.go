@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mudssky/simple-http-file-server/goserver/api"
@@ -20,6 +21,10 @@ func InitRouter() *gin.Engine {
 			"message": "pong",
 		})
 
+	})
+	r.GET("/testshutdown", func(ctx *gin.Context) {
+		time.Sleep(5 * time.Second)
+		ctx.String(http.StatusOK, "gin %s", "ok")
 	})
 
 	apiGroup := r.Group("/api")
