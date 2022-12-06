@@ -22,12 +22,11 @@ import { FileItem, PROXY_SUFFIX } from '../../api'
 import { ColumnsType } from 'antd/es/table'
 import { useAppDispatch } from '../../store/hooks'
 import { setRenameModalOptionsAction } from '../../store/reducer/homeReducer'
-
 export default function FileList() {
   const dispatch = useAppDispatch()
   const {
     breadcrumbitemList,
-    fileList,
+    currentFileList,
     isNewFolderModalVisible,
     isNewTextModalVisible,
     newFolderName,
@@ -35,6 +34,9 @@ export default function FileList() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    getUploadFolderData,
+    handleBeforeUploadFolder,
+    handleUploadFolderChange,
     cancelUploadProgressModal,
     showRenameModal,
     handleNewNameChange,
@@ -149,6 +151,19 @@ export default function FileList() {
               >
                 <Button>上传文件</Button>
               </Upload>
+              <Upload
+                action={`${PROXY_SUFFIX}/uploadMulti`}
+                name="file"
+                data={getUploadFolderData}
+                method="POST"
+                directory={true}
+                // 不显示文件列表，当作一个普通的下载按钮使用
+                showUploadList={false}
+                fileList={currentUploadFileList}
+                onChange={handleUploadChange}
+              >
+                <Button>上传目录</Button>
+              </Upload>
             </Space>
           ) : null}
         </div>
@@ -175,7 +190,7 @@ export default function FileList() {
           </Breadcrumb>
         </Space>
         <Table
-          dataSource={fileList}
+          dataSource={currentFileList}
           columns={columns}
           pagination={false}
           rowKey="name"

@@ -13,7 +13,7 @@ export type UploadProgressItem = Omit<
   'lastModifiedDate' | 'originFileObj' | 'xhr'
 >
 interface State {
-  fileList: FileItem[]
+  currentFileList: FileItem[]
   breadcrumbitemList: BreadcrumbItem[]
   isNewFolderModalVisible: boolean
   newFolderName: string //创建新目录的名字
@@ -29,7 +29,7 @@ export const rootBreadcrumbItem = {
 }
 
 const initialState: State = {
-  fileList: [],
+  currentFileList: [],
   breadcrumbitemList: [rootBreadcrumbItem],
   isNewFolderModalVisible: false,
   newFolderName: '',
@@ -45,7 +45,7 @@ export const homeSlice = createSlice({
   initialState,
   reducers: {
     setFileList: (state, action: PayloadAction<FileItem[]>) => {
-      state.fileList = action.payload
+      state.currentFileList = action.payload
     },
     setBreadcrumbitemList: (state, action: PayloadAction<BreadcrumbItem[]>) => {
       state.breadcrumbitemList = action.payload

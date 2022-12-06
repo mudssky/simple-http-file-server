@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mudssky/simple-http-file-server/goserver/global"
 )
 
 type Response struct {
@@ -24,6 +25,9 @@ func Result(code int, data interface{}, msg string, c *gin.Context) {
 		data,
 		msg,
 	})
+	if code == ERROR {
+		global.Logger.Error(msg)
+	}
 }
 func Success(c *gin.Context) {
 	Result(SUCCESS, map[string]interface{}{}, "操作成功", c)

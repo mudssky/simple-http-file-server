@@ -27,7 +27,7 @@ import {
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
 import { uploadFile } from '../../request/request'
-import { checkResponse } from '../../util/util'
+import { checkResponse, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 
 export default function useSetupHook() {
@@ -37,7 +37,7 @@ export default function useSetupHook() {
     UploadFile[]
   >([])
   const {
-    fileList,
+    currentFileList,
     breadcrumbitemList,
     isNewFolderModalVisible,
     newFolderName,
@@ -193,6 +193,17 @@ export default function useSetupHook() {
 
     return false
   }
+  const getUploadFolderData = (file: any) => {
+    // console.log('dsad')
+    // if (file?.webkitRelativePath) {
+    //   return
+    // }
+    const pathname = path.dirname(file?.webkitRelativePath ?? '')
+    return {
+      path: `${currentWorkDir}/${pathname}`,
+    }
+  }
+
   const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
     console.log('info', info)
     dispatch(
@@ -220,6 +231,22 @@ export default function useSetupHook() {
         setCurrentUploadFileList([])
       }, 2000)
     }
+  }
+  const handleUploadFolderChange = (
+    info: UploadChangeParam<UploadFile<any>>
+  ) => {
+    console.log(info.file.originFileObj?.webkitRelativePath)
+
+    return
+  }
+  /**
+   * 上传目录可以先把文件夹创建好，
+   * @param file
+   * @param FileList
+   */
+  const handleBeforeUploadFolder = (file: RcFile, fileList: RcFile[]) => {
+    console.log(file, fileList)
+    return false
   }
   const showRenameModal = (record: FileItem) => {
     dispatch(
@@ -276,7 +303,7 @@ export default function useSetupHook() {
   }, [])
   return {
     breadcrumbitemList,
-    fileList,
+    currentFileList,
     isNewFolderModalVisible,
     isNewTextModalVisible,
     newFolderName,
@@ -284,6 +311,8 @@ export default function useSetupHook() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    getUploadFolderData,
+    handleUploadFolderChange,
     cancelUploadProgressModal,
     handleNewNameChange,
     cancelNewTextModal,
@@ -303,5 +332,6 @@ export default function useSetupHook() {
     handleRenameSubmit,
     showRenameModal,
     handleDownloadItem,
+    handleBeforeUploadFolder,
   }
 }

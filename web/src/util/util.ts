@@ -1,4 +1,5 @@
 import { message } from 'antd'
+import { AxiosProgressEvent } from 'axios'
 import { ResponseData } from '../global'
 
 export const path = {
@@ -13,6 +14,13 @@ export const path = {
       return ''
     }
     return list.at(-1) ?? ''
+  },
+  dirname: (pathname: string) => {
+    for (let i = pathname.length - 1; i >= 0; i--) {
+      if (pathname[i] === '/') {
+        return pathname.slice(0, i)
+      }
+    }
   },
 }
 
@@ -71,4 +79,24 @@ export function checkResponse<T>(
   } else {
     message.error(res.msg)
   }
+}
+
+/**
+ * 格式化下载进度log信息
+ * @param progressEvent
+ * @returns
+ */
+export function formatProgressMsg(progressEvent: AxiosProgressEvent) {
+  return `下载进度:${((progressEvent.progress ?? 0) * 100).toPrecision(
+    4
+  )}% Speed:${filesizeFomatter(progressEvent.rate ?? 0)}/s`
+}
+
+/**
+ * 通用处理下载进度的函数
+ * @param progressEvent
+ */
+export function handleDownloadProgress(progressEvent: AxiosProgressEvent) {
+  const progressMsg = formatProgressMsg(progressEvent)
+  console.log(progressMsg)
 }
