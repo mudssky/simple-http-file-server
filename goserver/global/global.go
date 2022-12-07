@@ -25,6 +25,7 @@ var (
 func InitGlobalConfig() {
 	initViper()
 	initZap()
+	validateConfig()
 }
 
 // 加载.env文件到全局变量
@@ -137,4 +138,8 @@ func initZap() {
 	Logger = zap.New(core)
 	defer Logger.Sync()
 	Logger.Info("constructed a logger")
+}
+
+func validateConfig() {
+	ValidateFoldernameDup()
 }

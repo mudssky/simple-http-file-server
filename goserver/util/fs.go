@@ -43,9 +43,9 @@ func HasDup(list []string) bool {
 	for _, key := range list {
 		_, ok := m[key]
 		if ok {
-			return false
+			return true
 		}
 		m[key] = true
 	}
-	return true
+	return false
 }
