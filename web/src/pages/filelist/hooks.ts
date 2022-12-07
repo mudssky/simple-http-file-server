@@ -10,7 +10,6 @@ import {
   MKDIR,
   REMOVE_ITEM,
   RENAME_ITEM,
-  PROXY_SUFFIX,
 } from '../../api'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
@@ -21,15 +20,19 @@ import {
   setFileList,
   setIsNewFolderModalVisible,
   setIsNewTextModalVisible,
+  setIsPreviewVisibleAction,
+  setIsTableLoadingAction,
   setNewFolderName,
   setNewNameAction,
+  setPreviewListAction,
   setRenameModalOptionsAction,
   setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
 import { uploadFile } from '../../request/request'
-import { checkResponse, path } from '../../util/util'
+import { checkResponse, isImage, path } from '../../util/util'
 import { flushSync } from 'react-dom'
+import { STATIC_SERVER_PREFIX } from '../../config'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
@@ -61,8 +64,10 @@ export default function useSetupHook() {
     params: { path: string },
     success?: () => void
   ) => {
+    dispatch(setIsTableLoadingAction(true))
     const res = await GET_FILELIST(params)
     // console.log('res', res)
+    dispatch(setIsTableLoadingAction(false))
     if (res.code === 0) {
       message.success(res.msg)
       dispatch(setFileList(res.data))
@@ -193,20 +198,7 @@ export default function useSetupHook() {
       },
     })
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleUpoadFiles = async (file: RcFile, files: RcFile[]) => {
-    await uploadFile(`${PROXY_SUFFIX}/uploadMulti`, file)
-    // {
-    //   onUploadProgress: (loaded, total) => {
-    //     console.log(`${loaded}/${total}`)
-    //   },
-    //   // infoDict: {
-    //   //   path: 'ceads',
-    //   // },
-    // })
 
-    return false
-  }
   const getUploadFolderData = (file: any) => {
     // console.log('dsad')
     // if (file?.webkitRelativePath) {
@@ -297,6 +289,41 @@ export default function useSetupHook() {
       })
     ),
   ]
+  const handleSinglePicPreview = (record: FileItem) => {
+    dispatch(
+      setPreviewListAction([
+        {
+          src: STATIC_SERVER_PREFIX + record.link,
+        },
+      ])
+    )
+    showPreviewGroup()
+  }
+  const handleGalleryMode = () => {
+    const imgList = currentFileList.filter((item) => {
+      return isImage(item.name)
+    })
+    if (imgList.length <= 0) {
+      message.info('当前目录未发现图片')
+      return
+    }
+    dispatch(
+      setPreviewListAction(
+        imgList.map((item) => {
+          return {
+            src: STATIC_SERVER_PREFIX + item.link,
+          }
+        })
+      )
+    )
+    showPreviewGroup()
+  }
+  function showPreviewGroup() {
+    dispatch(setIsPreviewVisibleAction(true))
+  }
+  const hanldePreviewVisibleChange = (value: boolean) => {
+    dispatch(setIsPreviewVisibleAction(value))
+  }
   useEffect(() => {
     getData()
   }, [])
@@ -310,6 +337,8 @@ export default function useSetupHook() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    handleGalleryMode,
+    handleSinglePicPreview,
     getUploadFolderData,
     cancelUploadProgressModal,
     handleNewNameChange,
@@ -325,10 +354,10 @@ export default function useSetupHook() {
     showNewTextModal,
     handleCreateNewText,
     refreshCurentWorkDir,
-    handleUpoadFiles,
     handleUploadChange,
     handleRenameSubmit,
     showRenameModal,
     handleDownloadItem,
+    hanldePreviewVisibleChange,
   }
 }

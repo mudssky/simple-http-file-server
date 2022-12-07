@@ -7,14 +7,18 @@ import {
   Progress,
   Space,
   Table,
+  Tooltip,
   Upload,
+  Image,
+  FloatButton,
 } from 'antd'
-import { filesizeFomatter, path } from '../../util/util'
+import { filesizeFomatter, isImage, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
   DeleteTwoTone,
   EditOutlined,
+  PictureOutlined,
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
@@ -22,6 +26,7 @@ import { FileItem, PROXY_SUFFIX } from '../../api'
 import { ColumnsType } from 'antd/es/table'
 import { useAppDispatch } from '../../store/hooks'
 import { setRenameModalOptionsAction } from '../../store/reducer/homeReducer'
+import { STATIC_SERVER_PREFIX } from '../../config'
 export default function FileList() {
   const dispatch = useAppDispatch()
   const {
@@ -53,8 +58,18 @@ export default function FileList() {
     handleUploadChange,
     handleRenameSubmit,
     handleDownloadItem,
+    handleSinglePicPreview,
+    hanldePreviewVisibleChange,
+    handleGalleryMode,
   } = useSetupHook()
-  const { uploadProgressModalOptions, renameModalOptions, newName } = state
+  const {
+    uploadProgressModalOptions,
+    renameModalOptions,
+    newName,
+    previewList,
+    isTableLoading,
+    isPreviewVisible,
+  } = state
   const columns: ColumnsType<FileItem> = [
     {
       title: '文件名',
@@ -75,7 +90,13 @@ export default function FileList() {
                   {value as string}
                 </span>
               ) : (
-                <a href={`/static${record.link}`}>{value as string}</a>
+                <a
+                  href={`${STATIC_SERVER_PREFIX}${record.link}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {value as string}
+                </a>
               )}
             </Space>
           </div>
@@ -114,6 +135,14 @@ export default function FileList() {
           <div>
             {currentWorkDir !== '' ? (
               <Space wrap={true}>
+                {isImage(record.name) ? (
+                  <Tooltip title="预览图片">
+                    <PictureOutlined
+                      className="cursor-pointer text-xl text-blue-400"
+                      onClick={() => handleSinglePicPreview(record)}
+                    />
+                  </Tooltip>
+                ) : null}
                 <ArrowDownOutlined
                   className="cursor-pointer text-xl text-green-500"
                   onClick={() => handleDownloadItem(record)}
@@ -127,6 +156,8 @@ export default function FileList() {
                   className="cursor-pointer text-xl text-blue-500"
                   onClick={() => showRenameModal(record)}
                 />
+
+                {/* <ReadOutlined /> */}
               </Space>
             ) : null}
           </div>
@@ -171,6 +202,7 @@ export default function FileList() {
               >
                 <Button>上传目录</Button>
               </Upload>
+              <Button onClick={handleGalleryMode}>相册模式</Button>
             </Space>
           ) : null}
         </div>
@@ -213,10 +245,14 @@ export default function FileList() {
             className="w-full"
             dataSource={currentFileList}
             columns={columns}
-            pagination={false}
+            pagination={{
+              defaultPageSize: 100,
+            }}
+            loading={isTableLoading}
             rowKey="name"
           ></Table>
         </Upload.Dragger>
+        <FloatButton.BackTop />
       </div>
       <Modal
         title="新建目录"
@@ -299,6 +335,18 @@ export default function FileList() {
           )
         })}
       </Modal>
+      <div style={{ display: 'none' }}>
+        <Image.PreviewGroup
+          preview={{
+            visible: isPreviewVisible,
+            onVisibleChange: hanldePreviewVisibleChange,
+          }}
+        >
+          {previewList.map((item) => {
+            return <Image key={item.src} data-src={item.src}></Image>
+          })}
+        </Image.PreviewGroup>
+      </div>
     </div>
   )
 }
