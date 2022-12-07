@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { message } from 'antd'
-import { AxiosProgressEvent } from 'axios'
 import { PromiseResponseData } from '../global'
 import { downloadFile, request } from '../request/request'
-import { filesizeFomatter, handleDownloadProgress } from '../util/util'
+import { handleDownloadProgress } from '../util/util'
 
 export const PROXY_SUFFIX = '/api'
 
@@ -13,6 +12,7 @@ export interface FileItem {
   path: string
   isFolder: boolean
   size: number
+  link: string
 }
 
 /**

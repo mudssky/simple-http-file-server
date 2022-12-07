@@ -37,8 +37,16 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: 'http://127.0.0.1:7888', //开发环境
           changeOrigin: true,
+          rewrite: (path) => {
+            // return path.replace(/^\/api/, '')
+            return path
+          },
+        },
+        '/static': {
+          target: 'http://127.0.0.1:7888', //开发环境
+          changeOrigin: true,
           // rewrite: (path) => {
-          //   return path.replace(/^\/api/, '')
+          //   return path.replace(/^\/s/, '')
           // },
         },
       },
