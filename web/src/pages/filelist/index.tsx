@@ -5,6 +5,7 @@ import {
   Input,
   Modal,
   Progress,
+  Row,
   Space,
   Table,
   Upload,
@@ -35,8 +36,6 @@ export default function FileList() {
     state,
     currentUploadFileList,
     getUploadFolderData,
-    handleBeforeUploadFolder,
-    handleUploadFolderChange,
     cancelUploadProgressModal,
     showRenameModal,
     handleNewNameChange,
@@ -69,9 +68,9 @@ export default function FileList() {
                 ext={path.extname(record.name ?? '')}
                 isFolder={record.isFolder}
               ></FileIcon>
-              <Button type="link" onClick={() => handleFileClick(record)}>
+              <span onClick={() => handleFileClick(record)}>
                 {value as string}
-              </Button>
+              </span>
             </Space>
           </div>
         )
@@ -99,14 +98,16 @@ export default function FileList() {
       sorter: (a: FileItem, b: FileItem) => {
         return a.lastModTime - b.lastModTime
       },
+      responsive: ['lg', 'md'],
     },
     {
       title: '操作',
+      fixed: 'right',
       render: (value: unknown, record: FileItem) => {
         return (
           <div>
             {currentWorkDir !== '' ? (
-              <Space>
+              <Space wrap={true}>
                 <ArrowDownOutlined
                   className="cursor-pointer text-xl text-green-500"
                   onClick={() => handleDownloadItem(record)}
@@ -129,7 +130,7 @@ export default function FileList() {
   ]
   return (
     <div>
-      <div className="mx-auto w-3/4 min-w-[800px]">
+      <div className="container w-full  md:mx-auto lg:w-3/4  ">
         <div className="py-1">
           {/* 根目录不能操作 */}
           {breadcrumbitemList.length > 1 ? (
@@ -190,7 +191,6 @@ export default function FileList() {
           </Breadcrumb>
         </Space>
         <Upload.Dragger
-          className="border-none"
           openFileDialogOnClick={false}
           action={`${PROXY_SUFFIX}/uploadMulti`}
           name="file"
@@ -204,6 +204,7 @@ export default function FileList() {
           onChange={handleUploadChange}
         >
           <Table
+            className="w-full"
             dataSource={currentFileList}
             columns={columns}
             pagination={false}

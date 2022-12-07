@@ -2,7 +2,7 @@ package request
 
 // 传入路径的请求
 type FilePath struct {
-	Path string `json:"path"` // 路径
+	Path string `json:"path" validate:"required"` // 路径
 }
 
 // 创建Txt文件需要的参数

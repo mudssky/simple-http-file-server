@@ -232,22 +232,7 @@ export default function useSetupHook() {
       }, 2000)
     }
   }
-  const handleUploadFolderChange = (
-    info: UploadChangeParam<UploadFile<any>>
-  ) => {
-    console.log(info.file.originFileObj?.webkitRelativePath)
 
-    return
-  }
-  /**
-   * 上传目录可以先把文件夹创建好，
-   * @param file
-   * @param FileList
-   */
-  const handleBeforeUploadFolder = (file: RcFile, fileList: RcFile[]) => {
-    console.log(file, fileList)
-    return false
-  }
   const showRenameModal = (record: FileItem) => {
     dispatch(
       setRenameModalOptionsAction({
@@ -312,7 +297,6 @@ export default function useSetupHook() {
     state,
     currentUploadFileList,
     getUploadFolderData,
-    handleUploadFolderChange,
     cancelUploadProgressModal,
     handleNewNameChange,
     cancelNewTextModal,
@@ -332,6 +316,5 @@ export default function useSetupHook() {
     handleRenameSubmit,
     showRenameModal,
     handleDownloadItem,
-    handleBeforeUploadFolder,
   }
 }
