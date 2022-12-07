@@ -5,7 +5,6 @@ import {
   Input,
   Modal,
   Progress,
-  Row,
   Space,
   Table,
   Upload,
@@ -68,9 +67,16 @@ export default function FileList() {
                 ext={path.extname(record.name ?? '')}
                 isFolder={record.isFolder}
               ></FileIcon>
-              <span onClick={() => handleFileClick(record)}>
-                {value as string}
-              </span>
+              {record.isFolder ? (
+                <span
+                  className="btn-link"
+                  onClick={() => handleFileClick(record)}
+                >
+                  {value as string}
+                </span>
+              ) : (
+                <a href={`/static${record.link}`}>{value as string}</a>
+              )}
             </Space>
           </div>
         )
@@ -134,7 +140,7 @@ export default function FileList() {
         <div className="py-1">
           {/* 根目录不能操作 */}
           {breadcrumbitemList.length > 1 ? (
-            <Space>
+            <Space wrap={true}>
               <Button onClick={showNewFolderModal}>新建目录</Button>
               <Button onClick={showNewTextModal}>新建文本</Button>
               <Upload

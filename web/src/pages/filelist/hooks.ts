@@ -24,6 +24,7 @@ import {
   setNewFolderName,
   setNewNameAction,
   setRenameModalOptionsAction,
+  setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
 import { uploadFile } from '../../request/request'
@@ -66,6 +67,10 @@ export default function useSetupHook() {
       message.success(res.msg)
       dispatch(setFileList(res.data))
       success?.()
+      if (params.path === '') {
+        // 根目录信息，是用来匹配绝对路径前缀，拼接静态路径的。
+        dispatch(setRootFolderList(res.data))
+      }
     } else {
       message.error(res.msg)
     }
@@ -94,6 +99,15 @@ export default function useSetupHook() {
     })
   }
 
+  // const getStaticPath = (item: FileItem) => {
+  //   rootFolderList.forEach((rootfolder) => {
+  //     // 检查是否匹配根路径前缀，匹配
+  //     if (item.path.startsWith(rootfolder.path)) {
+  //       return rootfolder.name + '/' + item.path.slice(rootfolder.path.length)
+  //     }
+  //   })
+  //   return ''
+  // }
   const handleBreadcrumbJump = async (index: number, item: BreadcrumbItem) => {
     if (index >= breadcrumbitemList.length - 1 || index < 0) {
       return

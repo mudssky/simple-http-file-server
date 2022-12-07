@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"path"
+	"strings"
 
 	"os"
 
@@ -20,6 +21,18 @@ import (
 
 type FileListAPI struct{}
 
+func getStaticLink(pathname string, isDir bool) string {
+	if isDir {
+		return ""
+	}
+	for _, rootpath := range global.Config.FolderList {
+		rootname := path.Base(rootpath)
+		if strings.HasPrefix(pathname, rootpath) {
+			return "/" + rootname + "/" + pathname[len(rootpath)+1:]
+		}
+	}
+	return ""
+}
 func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo, err error) {
 	dirEntryList, err := os.ReadDir(pathname)
 	if err != nil {
@@ -31,12 +44,14 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 		if err != nil {
 			return nil, err
 		}
+		itempath := path.Join(pathname, fileinfo.Name())
 		reslist = append(reslist, response.FileInfo{
 			Name:        fileinfo.Name(),
 			LastModTime: fileinfo.ModTime().UnixMilli(),
-			Path:        path.Join(pathname, fileinfo.Name()),
+			Path:        itempath,
 			IsFolder:    fileinfo.IsDir(),
 			Size:        fileinfo.Size(),
+			Link:        getStaticLink(itempath, fileinfo.IsDir()),
 		})
 	}
 	return reslist, nil
