@@ -8,5 +8,5 @@ type FileInfo struct {
 	Path        string `json:"path"`        //路径
 	IsFolder    bool   `json:"isFolder"`    //是否是文件夹
 	Size        int64  `json:"size"`        //文件大小
-	Link        string `json:"link"`        //静态链接
+	Link        string `json:"link"`        //静态链接,文件夹则为空串
 }

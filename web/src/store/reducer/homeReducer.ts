@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { UploadFile } from 'antd'
+import { ImageProps, UploadFile } from 'antd'
 import { FileItem } from '../../api'
 import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
@@ -12,9 +12,16 @@ export type UploadProgressItem = Omit<
   UploadFile<unknown>,
   'lastModifiedDate' | 'originFileObj' | 'xhr'
 >
+
+export interface PreviewItem extends ImageProps {
+  src: string //图片地址
+}
+
 interface State {
   currentFileList: FileItem[]
   rootFolderList: FileItem[]
+  isTableLoading: boolean
+  isPreviewVisible: boolean
   breadcrumbitemList: BreadcrumbItem[]
   isNewFolderModalVisible: boolean
   newFolderName: string //创建新目录的名字
@@ -23,6 +30,7 @@ interface State {
   renameModalOptions: ModalOptions
   newName: string
   currentRenameItem: FileItem | null
+  previewList: PreviewItem[]
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -32,6 +40,9 @@ export const rootBreadcrumbItem = {
 const initialState: State = {
   currentFileList: [],
   rootFolderList: [],
+  previewList: [],
+  isTableLoading: false,
+  isPreviewVisible: false,
   breadcrumbitemList: [rootBreadcrumbItem],
   isNewFolderModalVisible: false,
   newFolderName: '',
@@ -51,6 +62,15 @@ export const homeSlice = createSlice({
     },
     setRootFolderList: (state, action: PayloadAction<FileItem[]>) => {
       state.rootFolderList = action.payload
+    },
+    setIsTableLoadingAction: (state, action: PayloadAction<boolean>) => {
+      state.isTableLoading = action.payload
+    },
+    setIsPreviewVisibleAction: (state, action: PayloadAction<boolean>) => {
+      state.isPreviewVisible = action.payload
+    },
+    setPreviewListAction: (state, action: PayloadAction<PreviewItem[]>) => {
+      ;(state.previewList as PreviewItem[]) = action.payload
     },
     setBreadcrumbitemList: (state, action: PayloadAction<BreadcrumbItem[]>) => {
       state.breadcrumbitemList = action.payload
@@ -88,6 +108,7 @@ export const homeSlice = createSlice({
 export const {
   setFileList,
   setRootFolderList,
+  setPreviewListAction,
   setBreadcrumbitemList,
   setIsNewFolderModalVisible,
   setNewFolderName,
@@ -96,6 +117,8 @@ export const {
   setRenameModalOptionsAction,
   setNewNameAction,
   setCurrentRenameItemAction,
+  setIsTableLoadingAction,
+  setIsPreviewVisibleAction,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type

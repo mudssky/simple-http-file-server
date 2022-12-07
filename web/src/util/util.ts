@@ -2,6 +2,15 @@ import { message } from 'antd'
 import { AxiosProgressEvent } from 'axios'
 import { ResponseData } from '../global'
 
+export const imgPattern = /[^\s]+\.(jpg|jpeg|png|gif|bmp|webp)$/i
+/**
+ * 判断文件后缀名是否为 jpg|png|gif|bmp|webp的一种
+ * @param filename
+ */
+export function isImage(filename: string): boolean {
+  return imgPattern.test(filename)
+}
+
 export const path = {
   /**
    * 传入文件名，获取扩展名。 获取不到的情况下返回空字符串

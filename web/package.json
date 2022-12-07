@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "proxy:dev": "cross-env VITE_PROXY_TARGET='http://127.0.0.1:7888' vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -29,6 +30,7 @@
     "@typescript-eslint/parser": "^5.39.0",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.12",
+    "cross-env": "^7.0.3",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.31.11",

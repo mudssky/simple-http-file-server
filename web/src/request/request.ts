@@ -83,9 +83,7 @@ export function uploadFile(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formData.append(fieldName, file as any)
   return request.post(url, formData, {
-    onUploadProgress: (e) => {
-      console.log({ e })
-    },
+    onUploadProgress: onUploadProgress,
   })
 }
 

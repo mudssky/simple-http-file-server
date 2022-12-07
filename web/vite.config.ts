@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
       port: parseInt(env.VITE_PORT),
       proxy: {
         '/api': {
-          target: 'http://127.0.0.1:7888', //开发环境
+          target: env.VITE_PROXY_TARGET, //开发环境
           changeOrigin: true,
           rewrite: (path) => {
             // return path.replace(/^\/api/, '')
@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
           },
         },
         '/static': {
-          target: 'http://127.0.0.1:7888', //开发环境
+          target: env.VITE_PROXY_TARGET, //开发环境
           changeOrigin: true,
           // rewrite: (path) => {
           //   return path.replace(/^\/s/, '')
