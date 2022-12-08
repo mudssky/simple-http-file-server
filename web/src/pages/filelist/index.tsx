@@ -274,7 +274,7 @@ export default function FileList() {
             setRenameModalOptionsAction({
               ...renameModalOptions,
               open: false,
-            })
+            }),
           )
         }
         onOk={handleRenameSubmit}
@@ -343,7 +343,7 @@ export default function FileList() {
           }}
         >
           {previewList.map((item) => {
-            return <Image key={item.src} data-src={item.src}></Image>
+            return <Image key={item.src} src={item.src}></Image>
           })}
         </Image.PreviewGroup>
       </div>

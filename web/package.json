@@ -7,7 +7,10 @@
     "dev": "vite --host",
     "proxy:dev": "cross-env VITE_PROXY_TARGET='http://127.0.0.1:7888' vite --host",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "lint": "eslint --cache .",
+    "format": "prettier --write --cache .",
+    "preview": "vite preview",
+    "push": "eslint --cache && prettier --write --cache --ignore-unknown && git push"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
@@ -34,6 +37,7 @@
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.31.11",
+    "husky": "^8.0.0",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "sass": "^1.55.0",
@@ -41,5 +45,6 @@
     "typescript": "^4.6.4",
     "vite": "^3.2.4",
     "vite-plugin-svg-icons": "^2.0.1"
-  }
+  },
+  "packageManager": "pnpm@7.18.1"
 }
