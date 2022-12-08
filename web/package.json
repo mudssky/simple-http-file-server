@@ -11,6 +11,7 @@
     "format": "prettier --write --cache .",
     "preview": "vite preview",
     "prepare": "cd .. && husky install web/.husky",
+    "rome:check": "rome check .",
     "rome:fix": "rome check --apply .",
     "rome:suggested": "rome check --apply-suggested ."
   },

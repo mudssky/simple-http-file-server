@@ -198,7 +198,7 @@ export default function useSetupHook() {
     })
   }
 
-  const getUploadFolderData = (file: any) => {
+  const getUploadFolderData = (file: { webkitRelativePath: string }) => {
     // console.log('dsad')
     // if (file?.webkitRelativePath) {
     //   return
@@ -209,6 +209,7 @@ export default function useSetupHook() {
     }
   }
 
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
     console.log('info', info)
     dispatch(

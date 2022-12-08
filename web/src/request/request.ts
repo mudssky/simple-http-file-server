@@ -72,7 +72,7 @@ export const BaseHeader = {
 
 export function uploadFile(
   url: string,
-  file: unknown,
+  file: string | Blob,
   options?: {
     fieldName?: string
     onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
@@ -81,7 +81,7 @@ export function uploadFile(
   const { fieldName = 'file', onUploadProgress } = options ?? {}
   const formData = new FormData()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formData.append(fieldName, file as any)
+  formData.append(fieldName, file)
   return request.post(url, formData, {
     onUploadProgress: onUploadProgress,
   })
