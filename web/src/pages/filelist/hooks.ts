@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, message, Modal } from 'antd'
-import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
+import { UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { useEffect, useMemo, useState } from 'react'
 import {
   CREATE_TXT,
@@ -29,7 +29,6 @@ import {
   setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
-import { uploadFile } from '../../request/request'
 import { checkResponse, isImage, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 import { STATIC_SERVER_PREFIX } from '../../config'
@@ -55,14 +54,14 @@ export default function useSetupHook() {
 
   const currentWorkDir = useMemo(
     () => breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key,
-    [breadcrumbitemList]
+    [breadcrumbitemList],
   )
   const getData = async () => {
     await enterFolder({ path: '' })
   }
   const enterFolder = async (
     params: { path: string },
-    success?: () => void
+    success?: () => void,
   ) => {
     dispatch(setIsTableLoadingAction(true))
     const res = await GET_FILELIST(params)
@@ -99,7 +98,7 @@ export default function useSetupHook() {
             key: record.path,
             name: record.name,
           },
-        ])
+        ]),
       )
     })
   }
@@ -130,7 +129,7 @@ export default function useSetupHook() {
   const handleBackToParent = async () => {
     await handleBreadcrumbJump(
       breadcrumbitemList.length - 2,
-      breadcrumbitemList.at(-2) ?? rootBreadcrumbItem
+      breadcrumbitemList.at(-2) ?? rootBreadcrumbItem,
     )
   }
 
@@ -216,7 +215,7 @@ export default function useSetupHook() {
       setUploadProgressModalOptions({
         ...uploadProgressModalOptions,
         open: true,
-      })
+      }),
     )
     flushSync(() => setCurrentUploadFileList(info.fileList))
 
@@ -232,7 +231,7 @@ export default function useSetupHook() {
           setUploadProgressModalOptions({
             ...uploadProgressModalOptions,
             open: false,
-          })
+          }),
         )
         setCurrentUploadFileList([])
       }, 2000)
@@ -244,7 +243,7 @@ export default function useSetupHook() {
       setRenameModalOptionsAction({
         ...renameModalOptions,
         open: true,
-      })
+      }),
     )
     dispatch(setCurrentRenameItemAction(record))
     dispatch(setNewNameAction(record.name))
@@ -254,7 +253,7 @@ export default function useSetupHook() {
       setRenameModalOptionsAction({
         ...renameModalOptions,
         confirmLoading: true,
-      })
+      }),
     )
     const res = await RENAME_ITEM({
       path: currentRenameItem?.path ?? '',
@@ -265,14 +264,14 @@ export default function useSetupHook() {
       setRenameModalOptionsAction({
         ...renameModalOptions,
         confirmLoading: false,
-      })
+      }),
     )
     if (res.code === 0) {
       dispatch(
         setRenameModalOptionsAction({
           open: false,
           confirmLoading: false,
-        })
+        }),
       )
       refreshCurentWorkDir()
     }
@@ -286,7 +285,7 @@ export default function useSetupHook() {
       setUploadProgressModalOptions({
         ...uploadProgressModalOptions,
         open: false,
-      })
+      }),
     ),
   ]
   const handleSinglePicPreview = (record: FileItem) => {
@@ -295,7 +294,7 @@ export default function useSetupHook() {
         {
           src: STATIC_SERVER_PREFIX + record.link,
         },
-      ])
+      ]),
     )
     showPreviewGroup()
   }
@@ -313,8 +312,8 @@ export default function useSetupHook() {
           return {
             src: STATIC_SERVER_PREFIX + item.link,
           }
-        })
-      )
+        }),
+      ),
     )
     showPreviewGroup()
   }

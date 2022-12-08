@@ -29,7 +29,7 @@ export async function get(url: string, param?: any) {
 export async function post(
   url: string,
   body?: any,
-  contentType: ContentType = 'application/json'
+  contentType: ContentType = 'application/json',
 ) {
   console.log({ url, body })
   const data = await fetch(url, {
@@ -57,19 +57,19 @@ export const uploadFiles = (
   options?: {
     onProgress?: (loaded: number, total: number) => void
     infoDict?: { [key: string]: string } //后端需要的信息，比如文件保存的路径
-  }
+  },
 ) =>
   new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
     xhr.upload.addEventListener('progress', (e) =>
-      options?.onProgress?.(e.loaded, e.total)
+      options?.onProgress?.(e.loaded, e.total),
     )
     xhr.addEventListener('load', () =>
-      resolve({ status: xhr.status, body: xhr.responseText })
+      resolve({ status: xhr.status, body: xhr.responseText }),
     )
     xhr.addEventListener('error', () => reject(new Error('File upload failed')))
     xhr.addEventListener('abort', () =>
-      reject(new Error('File upload aborted'))
+      reject(new Error('File upload aborted')),
     )
     xhr.open('POST', url, true)
     // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
@@ -82,7 +82,7 @@ export const uploadFiles = (
     }
 
     Array.from(files).forEach((file: any, index) =>
-      formData.append(index.toString(), file)
+      formData.append(index.toString(), file),
     )
     xhr.send(formData)
   })

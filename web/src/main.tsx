@@ -30,6 +30,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <ConfigProvider locale={zhCN}>
       <RouterProvider router={globalRouter} />
     </ConfigProvider>
-  </Provider>
+  </Provider>,
   // </React.StrictMode>
 )
