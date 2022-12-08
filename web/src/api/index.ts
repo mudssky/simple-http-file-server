@@ -33,7 +33,7 @@ export const GET_FILELIST = async (data: {
  */
 export const MKDIR = async (data: {
   path: string //文件夹路径
-}): PromiseResponseData<any> => {
+}): PromiseResponseData<unknown> => {
   return request.post(`${PROXY_SUFFIX}/mkdir`, data)
 }
 
@@ -44,7 +44,7 @@ export const MKDIR = async (data: {
  */
 export const REMOVE_ITEM = async (data: {
   path: string
-}): PromiseResponseData<any> => {
+}): PromiseResponseData<unknown> => {
   return request.post(`${PROXY_SUFFIX}/removeItem`, data)
 }
 /**
@@ -55,18 +55,18 @@ export const REMOVE_ITEM = async (data: {
 export const CREATE_TXT = async (data: {
   path: string //文件路径
   content: string //文件内容
-}): PromiseResponseData<any> => {
+}): PromiseResponseData<unknown> => {
   return request.post(`${PROXY_SUFFIX}/createTxt`, data)
 }
 
 export const RENAME_ITEM = async (data: {
   path: string //文件路径
   newName: string //新文件名
-}): PromiseResponseData<any> => {
+}): PromiseResponseData<unknown> => {
   return request.post(`${PROXY_SUFFIX}/renameItem`, data)
 }
 
-export const DOWNLOAD_ITEM = async (data: FileItem): Promise<any> => {
+export const DOWNLOAD_ITEM = async (data: FileItem) => {
   const res: Blob = await request.post(`${PROXY_SUFFIX}/downloadItem`, data, {
     responseType: 'blob',
     onDownloadProgress: handleDownloadProgress,
