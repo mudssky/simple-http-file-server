@@ -9,8 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint --cache .",
     "format": "prettier --write --cache .",
-    "preview": "vite preview",
-    "push": "eslint --cache && prettier --write --cache --ignore-unknown && git push"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",

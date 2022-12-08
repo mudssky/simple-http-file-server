@@ -6,7 +6,7 @@ import axios, {
 } from 'axios'
 
 export function createGlobalAxiosWithInterceptors(
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): AxiosInstance {
   const axiosInstance = axios.create({
     timeout: 3000, //超时配置
@@ -23,7 +23,7 @@ export function createGlobalAxiosWithInterceptors(
     function (error) {
       // 对请求错误做些什么
       return Promise.reject(error)
-    }
+    },
   )
 
   // 添加响应拦截器
@@ -36,7 +36,7 @@ export function createGlobalAxiosWithInterceptors(
         response.data,
         {
           response,
-        }
+        },
       )
       return response.data
     },
@@ -54,7 +54,7 @@ export function createGlobalAxiosWithInterceptors(
         // }
       }
       return Promise.reject(error)
-    }
+    },
   )
   return axiosInstance
 }
@@ -76,7 +76,7 @@ export function uploadFile(
   options?: {
     fieldName?: string
     onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
-  }
+  },
 ) {
   const { fieldName = 'file', onUploadProgress } = options ?? {}
   const formData = new FormData()

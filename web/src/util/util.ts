@@ -65,7 +65,7 @@ export function filesizeFomatter(filesize: number, decimalPlaces = 2) {
   }
   return (
     (filesize / sizedict[unit.toLowerCase() as SizeUnit]).toFixed(
-      decimalPlaces
+      decimalPlaces,
     ) + unit
   )
 }
@@ -80,7 +80,7 @@ export function checkResponse<T>(
   options?: {
     successCallback?: (data: T) => void
     errorCallback?: () => void
-  }
+  },
 ) {
   if (res.code === 0) {
     message.success(res.msg)
@@ -97,7 +97,7 @@ export function checkResponse<T>(
  */
 export function formatProgressMsg(progressEvent: AxiosProgressEvent) {
   return `下载进度:${((progressEvent.progress ?? 0) * 100).toPrecision(
-    4
+    4,
   )}% Speed:${filesizeFomatter(progressEvent.rate ?? 0)}/s`
 }
 

@@ -86,13 +86,13 @@ export const homeSlice = createSlice({
     },
     setUploadProgressModalOptions: (
       state,
-      action: PayloadAction<ModalOptions>
+      action: PayloadAction<ModalOptions>,
     ) => {
       ;(state.uploadProgressModalOptions as ModalOptions) = action.payload
     },
     setRenameModalOptionsAction: (
       state,
-      action: PayloadAction<ModalOptions>
+      action: PayloadAction<ModalOptions>,
     ) => {
       ;(state.renameModalOptions as ModalOptions) = action.payload
     },

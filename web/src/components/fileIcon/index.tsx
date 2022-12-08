@@ -63,7 +63,7 @@ const getIcon = (params: Props) => {
     ppt: `${fileTypeFolder}-ppt`,
     ...convertIconDict(
       ['mp3', 'm4a', 'flac', 'wav', 'ape'],
-      `${fileTypeFolder}-audio`
+      `${fileTypeFolder}-audio`,
     ),
     pdf: `${fileTypeFolder}-pdf`,
     txt: `${fileTypeFolder}-txt`,
@@ -72,7 +72,7 @@ const getIcon = (params: Props) => {
     docx: `${fileTypeFolder}-word`,
     ...convertIconDict(
       ['webp', 'jpg', 'jpeg', 'png', 'bmp'],
-      `${fileTypeFolder}-picture`
+      `${fileTypeFolder}-picture`,
     ),
   }
   const lowExt = ext.toLowerCase()
