@@ -8,10 +8,10 @@ export default function AppLayout() {
   return (
     <Layout>
       <Header className="bg-[#0080FF]">
-        <AppHeader></AppHeader>
+        <AppHeader />
       </Header>
       <Content className="bg-white">
-        <Outlet></Outlet>
+        <Outlet />
       </Content>
       {/* <Footer>Footer</Footer> */}
     </Layout>

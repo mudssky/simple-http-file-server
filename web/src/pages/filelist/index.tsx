@@ -81,7 +81,7 @@ export default function FileList() {
               <FileIcon
                 ext={path.extname(record.name ?? '')}
                 isFolder={record.isFolder}
-              ></FileIcon>
+              />
               {record.isFolder ? (
                 <span
                   className="btn-link"
@@ -250,7 +250,7 @@ export default function FileList() {
             }}
             loading={isTableLoading}
             rowKey="name"
-          ></Table>
+          />
         </Upload.Dragger>
         <FloatButton.BackTop />
       </div>
@@ -264,7 +264,7 @@ export default function FileList() {
           placeholder="请输入目录名称"
           value={newFolderName}
           onChange={handleNewFolderNameChange}
-        ></Input>
+        />
       </Modal>
       <Modal
         title="重命名"
@@ -283,7 +283,7 @@ export default function FileList() {
           placeholder="请输入"
           value={newName}
           onChange={handleNewNameChange}
-        ></Input>
+        />
       </Modal>
       <Modal
         title="新建文本"
@@ -302,10 +302,10 @@ export default function FileList() {
               },
             ]}
           >
-            <Input></Input>
+            <Input />
           </Form.Item>
           <Form.Item label="内容" name="content">
-            <Input.TextArea showCount rows={6}></Input.TextArea>
+            <Input.TextArea showCount rows={6} />
           </Form.Item>
         </Form>
       </Modal>
@@ -343,7 +343,7 @@ export default function FileList() {
           }}
         >
           {previewList.map((item) => {
-            return <Image key={item.src} src={item.src}></Image>
+            return <Image key={item.src} src={item.src} />
           })}
         </Image.PreviewGroup>
       </div>

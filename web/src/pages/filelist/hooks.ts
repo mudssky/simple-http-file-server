@@ -173,7 +173,7 @@ export default function useSetupHook() {
   const handleCreateNewFolder = async () => {
     // const currentWorkDir = getCurrentWorkDir()
     const res = await MKDIR({
-      path: currentWorkDir + '/' + newFolderName,
+      path: `${currentWorkDir}/${newFolderName}`,
     })
     checkResponse(res, {
       successCallback: () => {
@@ -222,7 +222,7 @@ export default function useSetupHook() {
     if (
       !info?.event &&
       info.fileList.every((item) => {
-        return item.status == 'done'
+        return item.status === 'done'
       })
     ) {
       refreshCurentWorkDir()
