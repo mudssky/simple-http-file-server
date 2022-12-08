@@ -19,11 +19,12 @@
     "pre-commit": "pnpm exec lint-staged"
   },
   "lint-staged": {
-    "*": [
-      "prettier --write --cache --ignore-unknown"
-    ],
     "*.{ts,tsx,js,jsx}": [
-      "eslint --cache"
+      "eslint --cache .",
+      "rome format --write"
+    ],
+    "!*.{ts,tsx,js,jsx}": [
+      "prettier --write --cache --ignore-unknown"
     ]
   },
   "dependencies": {
