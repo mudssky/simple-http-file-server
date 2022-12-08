@@ -49,7 +49,7 @@ const convertIconDict = (extArr: FileExt[], str: string) => {
 const getIcon = (params: Props) => {
   const { isFolder, ext } = params
   if (isFolder) {
-    return <SvgIcon name={'filetype-folder'}></SvgIcon>
+    return <SvgIcon name={'filetype-folder'} />
   }
 
   const iconDict: {
@@ -77,9 +77,9 @@ const getIcon = (params: Props) => {
   }
   const lowExt = ext.toLowerCase()
   if (lowExt in iconDict) {
-    return <SvgIcon name={iconDict[lowExt as FileExt] ?? ''}></SvgIcon>
+    return <SvgIcon name={iconDict[lowExt as FileExt] ?? ''} />
   }
-  return <SvgIcon name="filetype-unknown"></SvgIcon>
+  return <SvgIcon name="filetype-unknown" />
 }
 export default function FileIcon(props: Props) {
   // const { isFolder = false, ext } = props

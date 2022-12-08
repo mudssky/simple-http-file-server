@@ -3,10 +3,10 @@ function objToUrlparam(obj: any) {
   const list = Object.keys(obj).map((key) => {
     return `${key}=${obj[key]}`
   })
-  if (list.length == 0) {
+  if (list.length === 0) {
     return ''
   } else {
-    return '?' + encodeURIComponent(list.join('&'))
+    return `?${encodeURIComponent(list.join('&'))}`
   }
 }
 const fetchBaseConfig: RequestInit = {
