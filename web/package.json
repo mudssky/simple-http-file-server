@@ -9,7 +9,19 @@
     "build": "tsc && vite build",
     "lint": "eslint --cache .",
     "format": "prettier --write --cache .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "cd .. && husky install web/.husky"
+  },
+  "hooks": {
+    "pre-commit": "pnpm exec lint-staged"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --cache --ignore-unknown"
+    ],
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --cache"
+    ]
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
@@ -36,7 +48,8 @@
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.31.11",
-    "husky": "^8.0.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "sass": "^1.55.0",
