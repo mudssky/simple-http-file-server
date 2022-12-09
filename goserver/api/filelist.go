@@ -72,7 +72,7 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 	var req request.FilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		response.FailWithMessage(myerror.JsonParseError, c)
+		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	if req.Path == "" {
@@ -134,20 +134,15 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 // @Tags         filelist
 // @Accept       application/json
 // @Produce      application/json
-// @Param        data   body  request.FilePath true "目录信息"
+// @Param        data   body  request.OprateFilePath true "目录信息"
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /mkdir [post]
 func (f *FileListAPI) MakeDir(c *gin.Context) {
 	// l := global.Logger
-	var req request.FilePath
+	var req request.OprateFilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	// fmt.Println("req:", req)
-	if req.Path == "" {
-		response.FailWithMessage("路径不能为空", c)
 		return
 	}
 	// 检测路径是否已经存在
@@ -169,22 +164,17 @@ func (f *FileListAPI) MakeDir(c *gin.Context) {
 // @Tags         filelist
 // @Accept       application/json
 // @Produce      application/json
-// @Param        data   body  request.FilePath true "路径"
+// @Param        data   body  request.OprateFilePath true "路径"
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /removeItem [post]
 func (f *FileListAPI) RemoveItem(c *gin.Context) {
 	// l := global.Logger
-	var req request.FilePath
+	var req request.OprateFilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if req.Path == "" {
-		response.FailWithMessage("路径不能为空", c)
-		return
-	}
-
 	if err := os.RemoveAll(req.Path); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
@@ -351,5 +341,35 @@ func (f *FileListAPI) DownloadItem(c *gin.Context) {
 		c.File(req.Path)
 	}
 	fmt.Println("req", req)
+
+}
+
+// downloadFolder
+// @Summary      下载文件夹
+// @Description  将文件夹打包，下载完成后删除
+// @Tags         filelist
+// @Accept       application/json
+// @Produce      application/json
+// @Param        data   body  request.OprateFilePath true "文件夹路径"
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /mkdir [post]
+func (f *FileListAPI) DownloadFolder(c *gin.Context) {
+	// l := global.Logger
+	var req request.OprateFilePath
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	// 检测路径是否已经存在
+	// if isNewfolderExist,err:=util.PathExists(req.FolderPath); isNewfolderExist|| err!=nil{
+	// 	response.FailWithMessage("不合法的路径", c)
+	// 	return
+	// }
+	if err := os.Mkdir(req.Path, os.ModeDir); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	response.Success(c)
 
 }
