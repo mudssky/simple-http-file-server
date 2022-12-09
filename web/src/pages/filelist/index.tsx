@@ -11,7 +11,7 @@ import {
   Upload,
   FloatButton,
 } from 'antd'
-import { filesizeFomatter, isImage, path } from '../../util/util'
+import { encodeURLAll, filesizeFomatter, isImage, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
@@ -94,7 +94,7 @@ export default function FileList() {
                 </span>
               ) : (
                 <a
-                  href={`${STATIC_SERVER_PREFIX}${record.link}`}
+                  href={`${STATIC_SERVER_PREFIX}${encodeURLAll(record.link)}`}
                   target="_blank"
                   rel="noreferrer"
                 >

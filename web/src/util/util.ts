@@ -109,3 +109,42 @@ export function handleDownloadProgress(progressEvent: AxiosProgressEvent) {
   const progressMsg = formatProgressMsg(progressEvent)
   console.log(progressMsg)
 }
+
+/**
+ * gin静态服务器对一些字符需要encode
+ * @param rawurl
+ * @returns
+ */
+export function encodeURLAll(rawurl: string) {
+  // const encodeDict: { [key: string]: string } = {
+  //   '!': '%21',
+  //   "'": '%27',
+  //   '(': '%28',
+  //   ')': '%29',
+  //   '*': '%2A',
+  // }
+  const encodeDict: { [key: string]: string } = {
+    '(': '%28',
+    ')': '%29',
+    '[': '%5B',
+    ']': '%5D',
+  }
+  return rawurl
+    .split('')
+    .map((char) => {
+      return encodeDict?.[char] ?? char
+    })
+    .join('')
+  // const res = encodeURIComponent(rawurl)
+  //   .split('')
+  //   .map((char) => {
+  //     return encodeDict?.[char] ?? char
+  //   })
+  //   .join('')
+  // .replace(/!/g, '%21')
+  // .replace(/'/g, '%27')
+  // .replace(/\(/g, '%28')
+  // .replace(/\)/g, '%29')
+  // .replace(/\*/g, '%2A')
+  // .replace(/%20/g, '+')
+}

@@ -30,7 +30,7 @@ import {
   setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
-import { checkResponse, isImage, path } from '../../util/util'
+import { checkResponse, encodeURLAll, isImage, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 import { STATIC_SERVER_PREFIX } from '../../config'
 
@@ -296,7 +296,7 @@ export default function useSetupHook() {
     dispatch(
       setPreviewListAction([
         {
-          src: STATIC_SERVER_PREFIX + record.link,
+          src: STATIC_SERVER_PREFIX + encodeURLAll(record.link),
         },
       ]),
     )
@@ -314,7 +314,7 @@ export default function useSetupHook() {
       setPreviewListAction(
         imgList.map((item) => {
           return {
-            src: STATIC_SERVER_PREFIX + item.link,
+            src: STATIC_SERVER_PREFIX + encodeURLAll(item.link),
           }
         }),
       ),
