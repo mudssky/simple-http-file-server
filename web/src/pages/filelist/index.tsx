@@ -9,7 +9,6 @@ import {
   Table,
   Tooltip,
   Upload,
-  Image,
   FloatButton,
 } from 'antd'
 import { filesizeFomatter, isImage, path } from '../../util/util'
@@ -25,8 +24,12 @@ import dayjs from 'dayjs'
 import { FileItem, PROXY_SUFFIX } from '../../api'
 import { ColumnsType } from 'antd/es/table'
 import { useAppDispatch } from '../../store/hooks'
-import { setRenameModalOptionsAction } from '../../store/reducer/homeReducer'
+import {
+  setPhotoPreviewOptionsAction,
+  setRenameModalOptionsAction,
+} from '../../store/reducer/homeReducer'
 import { STATIC_SERVER_PREFIX } from '../../config'
+import CustomPhotoViewer from '../../components/customPhotoView'
 export default function FileList() {
   const dispatch = useAppDispatch()
   const {
@@ -59,7 +62,6 @@ export default function FileList() {
     handleRenameSubmit,
     handleDownloadItem,
     handleSinglePicPreview,
-    hanldePreviewVisibleChange,
     handleGalleryMode,
   } = useSetupHook()
   const {
@@ -68,8 +70,9 @@ export default function FileList() {
     newName,
     previewList,
     isTableLoading,
-    isPreviewVisible,
+    photoPreviewOptions,
   } = state
+
   const columns: ColumnsType<FileItem> = [
     {
       title: '文件名',
@@ -335,7 +338,29 @@ export default function FileList() {
           )
         })}
       </Modal>
-      <div style={{ display: 'none' }}>
+      {/* <div style={{ display: 'none' }}> */}
+      <CustomPhotoViewer
+        images={previewList.map((item) => ({ src: item.src, key: item.src }))}
+        visible={photoPreviewOptions.visible}
+        onClose={() =>
+          dispatch(
+            setPhotoPreviewOptionsAction({
+              ...photoPreviewOptions,
+              visible: false,
+            }),
+          )
+        }
+        index={photoPreviewOptions.index}
+        onIndexChange={(index: number) =>
+          dispatch(
+            setPhotoPreviewOptionsAction({
+              ...photoPreviewOptions,
+              index: index,
+            }),
+          )
+        }
+      />
+      {/* <div style={{ display: 'none' }}>
         <Image.PreviewGroup
           preview={{
             visible: isPreviewVisible,
@@ -346,7 +371,7 @@ export default function FileList() {
             return <Image key={item.src} src={item.src} />
           })}
         </Image.PreviewGroup>
-      </div>
+      </div> */}
     </div>
   )
 }
