@@ -13,7 +13,9 @@
     "prepare": "cd .. && husky install web/.husky",
     "rome:check": "rome check .",
     "rome:fix": "rome check --apply .",
-    "rome:suggested": "rome check --apply-suggested ."
+    "rome:suggested": "rome check --apply-suggested .",
+    "commit": "git add . && git cz",
+    "push": "pnpm commit && git push"
   },
   "hooks": {
     "pre-commit": "pnpm exec lint-staged"
