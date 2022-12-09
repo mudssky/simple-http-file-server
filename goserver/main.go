@@ -14,6 +14,11 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+//go:generate go env -w GO111MODULE=on
+//go:generate go env -w GOPROXY=https://goproxy.cn,direct
+//go:generate go mod tidy
+//go:generate go mod download
+
 // @title           Swagger Example API
 // @version         1.0
 // @description     This is a sample server celler server.
