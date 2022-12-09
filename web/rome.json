@@ -7,7 +7,7 @@
     }
   },
   "files": {
-    "ignore": ["./dist/*", "./src/request/deprecated/*"]
+    "ignore": ["./dist/*", "./src/request/deprecated/*", "./.commitlintrc,cjs"]
   },
   "formatter": {
     "enabled": true,
