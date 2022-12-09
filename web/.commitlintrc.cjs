@@ -106,4 +106,5 @@ module.exports = {
     defaultScope: '',
     defaultSubject: '',
   },
+  extends: ['@commitlint/config-conventional'],
 }
