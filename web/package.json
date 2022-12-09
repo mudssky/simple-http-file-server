@@ -27,6 +27,11 @@
       "prettier --write --cache --ignore-unknown"
     ]
   },
+  "config": {
+    "commitizen": {
+      "path": "./web/node_modules/cz-git"
+    }
+  },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@reduxjs/toolkit": "^1.9.0",
@@ -50,6 +55,7 @@
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.12",
     "cross-env": "^7.0.3",
+    "cz-git": "^1.4.0",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.31.11",
