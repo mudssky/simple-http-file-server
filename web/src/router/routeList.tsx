@@ -22,7 +22,7 @@ export const globalRouter = createBrowserRouter([
         element: <FileList />,
       },
       {
-        path: '/hello',
+        path: 'hello',
         element: <Hello />,
       },
     ],

@@ -1,0 +1,271 @@
+basePath: /
+definitions:
+  request.FilePath:
+    properties:
+      path:
+        description: 路径
+        type: string
+    type: object
+  request.OprateFilePath:
+    properties:
+      path:
+        description: 路径
+        type: string
+    required:
+    - path
+    type: object
+  request.Rename:
+    properties:
+      newName:
+        type: string
+      path:
+        type: string
+    type: object
+  request.TxtFile:
+    properties:
+      content:
+        description: 内容
+        type: string
+      path:
+        description: 创建文本文件的路径
+        type: string
+    type: object
+  response.FileInfo:
+    description: 文件信息
+    properties:
+      isFolder:
+        description: 是否是文件夹
+        type: boolean
+      lastModTime:
+        description: 上次修改时间,单位为毫秒
+        type: integer
+      link:
+        description: 静态链接,文件夹则为空串
+        type: string
+      name:
+        description: 文件名
+        type: string
+      path:
+        description: 路径
+        type: string
+      size:
+        description: 文件大小
+        type: integer
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+host: 127.0.0.1:7888
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /createTxt:
+    post:
+      consumes:
+      - application/json
+      description: 传入文件名和内容，创建txt文本文件
+      parameters:
+      - description: 创建txt需要的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.TxtFile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 创建txt文本文件
+      tags:
+      - filelist
+  /downloadItem:
+    post:
+      consumes:
+      - application/json
+      description: 传入fileitem下载指定项目，文件夹和文件的情况区别处理
+      parameters:
+      - description: 下载文件对应的信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.FileInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 下载项目
+      tags:
+      - filelist
+  /filelist:
+    post:
+      consumes:
+      - application/json
+      description: 传入路径获取文件列表，不传参时返回根列表
+      parameters:
+      - description: 文件列表路径
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.FilePath'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 文件列表信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.FileInfo'
+                  type: array
+              type: object
+      summary: 传入文件夹路径获取文件列表，不传参时返回根列表
+      tags:
+      - filelist
+  /mkdir:
+    post:
+      consumes:
+      - application/json
+      description: 将文件夹打包，下载完成后删除
+      parameters:
+      - description: 文件夹路径
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.OprateFilePath'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 下载文件夹
+      tags:
+      - filelist
+  /removeItem:
+    post:
+      consumes:
+      - application/json
+      description: 传入路径，删除目录或文件
+      parameters:
+      - description: 路径
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.OprateFilePath'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 删除目录或文件
+      tags:
+      - filelist
+  /renameItem:
+    post:
+      consumes:
+      - application/json
+      description: 传入文件名和路径，重命名文件或文件夹
+      parameters:
+      - description: 重命名需要的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.Rename'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 重命名文件或文件夹
+      tags:
+      - filelist
+  /uploadMulti:
+    post:
+      consumes:
+      - application/json
+      description: 传入文件名和内容，创建txt文本文件
+      parameters:
+      - description: 创建txt需要的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.TxtFile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 多文件上传
+      tags:
+      - filelist
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
