@@ -24,6 +24,7 @@ import {
   setIsTableLoadingAction,
   setNewFolderName,
   setNewNameAction,
+  setPhotoPreviewOptionsAction,
   setPreviewListAction,
   setRenameModalOptionsAction,
   setRootFolderList,
@@ -49,6 +50,7 @@ export default function useSetupHook() {
     newName,
     renameModalOptions,
     currentRenameItem,
+    photoPreviewOptions,
   } = state
   const [newTextForm] = Form.useForm()
 
@@ -198,7 +200,8 @@ export default function useSetupHook() {
     })
   }
 
-  const getUploadFolderData = (file: { webkitRelativePath: string }) => {
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const getUploadFolderData = (file: any) => {
     // console.log('dsad')
     // if (file?.webkitRelativePath) {
     //   return
@@ -297,7 +300,7 @@ export default function useSetupHook() {
         },
       ]),
     )
-    showPreviewGroup()
+    dispatch(setPhotoPreviewOptionsAction({ visible: true, index: 0 }))
   }
   const handleGalleryMode = () => {
     const imgList = currentFileList.filter((item) => {
@@ -319,7 +322,12 @@ export default function useSetupHook() {
     showPreviewGroup()
   }
   function showPreviewGroup() {
-    dispatch(setIsPreviewVisibleAction(true))
+    dispatch(
+      setPhotoPreviewOptionsAction({
+        ...photoPreviewOptions,
+        visible: true,
+      }),
+    )
   }
   const hanldePreviewVisibleChange = (value: boolean) => {
     dispatch(setIsPreviewVisibleAction(value))

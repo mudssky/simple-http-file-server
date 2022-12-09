@@ -18,6 +18,8 @@ import 'virtual:svg-icons-register'
 // redux配置
 import { Provider } from 'react-redux'
 import { store } from './store/store'
+// 引入react-photo-view组件样式
+import 'react-photo-view/dist/react-photo-view.css'
 
 dayjs.locale('zh-cn')
 

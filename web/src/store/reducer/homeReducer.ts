@@ -3,7 +3,8 @@ import { ImageProps, UploadFile } from 'antd'
 import { FileItem } from '../../api'
 import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
-
+import { DataType } from 'react-photo-view/dist/types'
+import React from 'react'
 export interface BreadcrumbItem {
   key: string
   name: string
@@ -17,6 +18,18 @@ export interface PreviewItem extends ImageProps {
   src: string //图片地址
 }
 
+export interface PhotoPreviewImgItem extends DataType {
+  key: React.Key
+  src: string
+}
+export interface PhotoPreviewOptions {
+  index: number
+  visible: boolean
+}
+const DefaultPhotoPreviewOptions: PhotoPreviewOptions = {
+  index: 0,
+  visible: false,
+}
 interface State {
   currentFileList: FileItem[]
   rootFolderList: FileItem[]
@@ -31,6 +44,7 @@ interface State {
   newName: string
   currentRenameItem: FileItem | null
   previewList: PreviewItem[]
+  photoPreviewOptions: PhotoPreviewOptions
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -51,6 +65,7 @@ const initialState: State = {
   renameModalOptions: DefaultModalOptions,
   newName: '',
   currentRenameItem: null,
+  photoPreviewOptions: DefaultPhotoPreviewOptions,
 }
 export const homeSlice = createSlice({
   name: 'counter',
@@ -102,6 +117,12 @@ export const homeSlice = createSlice({
     setCurrentRenameItemAction: (state, action: PayloadAction<FileItem>) => {
       state.currentRenameItem = action.payload
     },
+    setPhotoPreviewOptionsAction: (
+      state,
+      action: PayloadAction<PhotoPreviewOptions>,
+    ) => {
+      state.photoPreviewOptions = action.payload
+    },
   },
 })
 
@@ -119,6 +140,7 @@ export const {
   setCurrentRenameItemAction,
   setIsTableLoadingAction,
   setIsPreviewVisibleAction,
+  setPhotoPreviewOptionsAction,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
