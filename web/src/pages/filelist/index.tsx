@@ -11,7 +11,7 @@ import {
   Upload,
   FloatButton,
 } from 'antd'
-import { encodeURLAll, filesizeFomatter, isImage, path } from '../../util/util'
+import { encodeURLAll, filesizeFormatter, isImage, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
@@ -113,7 +113,7 @@ export default function FileList() {
       title: '大小',
       dataIndex: 'size',
       render: (value: number) => {
-        return filesizeFomatter(value)
+        return filesizeFormatter(value)
       },
       sorter: (a: FileItem, b: FileItem) => {
         return a.size - b.size
@@ -324,7 +324,7 @@ export default function FileList() {
               <div>
                 <Space>
                   <span>{item.name}</span>
-                  <span>{filesizeFomatter(item.size ?? 0)}</span>
+                  <span>{filesizeFormatter(item.size ?? 0)}</span>
                   {/* <span>{dayjs(item.lastModified).format()}</span> */}
                 </Space>
               </div>
