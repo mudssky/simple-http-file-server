@@ -39,7 +39,7 @@ export const path = {
  * @param decimalPlaces  小数位数
  * @returns
  */
-export function filesizeFomatter(filesize: number, decimalPlaces = 2) {
+export function filesizeFormatter(filesize: number, decimalPlaces = 2) {
   const sizedict = {
     b: 1,
     kb: 1 << 10,
@@ -98,7 +98,7 @@ export function checkResponse<T>(
 export function formatProgressMsg(progressEvent: AxiosProgressEvent) {
   return `下载进度:${((progressEvent.progress ?? 0) * 100).toPrecision(
     4,
-  )}% Speed:${filesizeFomatter(progressEvent.rate ?? 0)}/s`
+  )}% Speed:${filesizeFormatter(progressEvent.rate ?? 0)}/s`
 }
 
 /**
