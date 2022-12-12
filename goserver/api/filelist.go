@@ -3,11 +3,9 @@ package api
 import (
 	"fmt"
 	"io/fs"
-	"io/ioutil"
+	"os"
 	"path"
 	"strings"
-
-	"os"
 
 	"github.com/gin-gonic/gin"
 	myerror "github.com/mudssky/simple-http-file-server/goserver/error"
@@ -213,7 +211,8 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 		return
 
 	}
-	if err := ioutil.WriteFile(req.Path, []byte(req.Content), fs.ModePerm); err != nil {
+
+	if err := os.WriteFile(req.Path, []byte(req.Content), fs.ModePerm); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
