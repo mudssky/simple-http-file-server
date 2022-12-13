@@ -9,7 +9,7 @@ export function createGlobalAxiosWithInterceptors(
   config?: AxiosRequestConfig,
 ): AxiosInstance {
   const axiosInstance = axios.create({
-    timeout: 3000, //超时配置
+    // timeout: 3000, //超时配置
     withCredentials: true, //跨域携带cookie
     ...config, // 自定义配置覆盖基本配置
   })
@@ -38,6 +38,9 @@ export function createGlobalAxiosWithInterceptors(
           response,
         },
       )
+      if (response.request.responseType === 'blob') {
+        return response
+      }
       return response.data
     },
     function (error) {

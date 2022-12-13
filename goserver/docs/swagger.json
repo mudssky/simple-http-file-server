@@ -16,7 +16,7 @@
         "version": "1.0"
     },
     "host": "127.0.0.1:7888",
-    "basePath": "/",
+    "basePath": "/api",
     "paths": {
         "/createTxt": {
             "post": {

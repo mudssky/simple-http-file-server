@@ -1,6 +1,7 @@
 package util
 
 import (
+	"io/fs"
 	"os"
 	"path"
 )
@@ -48,4 +49,43 @@ func HasDup(list []string) bool {
 		m[key] = true
 	}
 	return false
+}
+
+type ExploreDirOption struct {
+	RootPath          string   `yaml:"rootPath"`      // 目标根目录
+	IgnorePatternList []string `yaml:"ignorePattern"` // 忽略路径,采用shell文件名模式匹配，在windows下\\会被当作路径分隔符
+}
+
+func ExploreDir(option ExploreDirOption, fn fs.WalkDirFunc) error {
+	filelist, err := os.ReadDir(option.RootPath)
+	if err != nil {
+		return err
+	}
+	for _, ff := range filelist {
+		currentpath := path.Join(option.RootPath, ff.Name())
+		if len(option.IgnorePatternList) > 0 {
+			matched, err := MatchReList(option.IgnorePatternList, currentpath)
+			if err != nil {
+				return err
+			}
+			// 匹配到的项目跳过
+			if matched {
+				continue
+			}
+		}
+		err = fn(currentpath, ff, nil)
+		if err != nil {
+			return err
+		}
+		if ff.IsDir() {
+			ExploreDir(ExploreDirOption{
+				RootPath:          currentpath,
+				IgnorePatternList: option.IgnorePatternList,
+			}, func(path string, d fs.DirEntry, err error) error {
+				return fn(path, d, err)
+			})
+		}
+	}
+	return nil
+
 }

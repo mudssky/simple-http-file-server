@@ -26,7 +26,7 @@ func Result(code int, data interface{}, msg string, c *gin.Context) {
 		msg,
 	})
 	if code == ERROR {
-		global.Logger.Error(msg)
+		global.Logger.Warn(msg)
 	}
 }
 func Success(c *gin.Context) {

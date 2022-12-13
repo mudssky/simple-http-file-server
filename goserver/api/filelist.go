@@ -1,8 +1,10 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"io/fs"
+	"net/url"
 	"os"
 	"path"
 	"strings"
@@ -89,21 +91,6 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 		}), c)
 		return
 	} else {
-		l.Debug("查找文件路径")
-		isExist, err := util.PathExists(req.Path)
-		if err != nil {
-			errmsg := fmt.Sprintf("检测文件是否存在时报错：%v", err)
-			l.Warn(errmsg)
-			response.FailWithMessage(errmsg, c)
-			return
-		}
-		// l.Debug("文件路径是否存在", zap.Bool("is exist", isExist))
-		// 文件路径不存在时
-		if !isExist {
-			response.FailWithMessage("文件不存在", c)
-			return
-		}
-
 		filestat, err := os.Stat(req.Path)
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("获取文件状态出错%v", err), c)
@@ -198,10 +185,6 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if req.Path == "" {
-		response.FailWithMessage("文件路径不能为空", c)
-		return
-	}
 	if isExist, err := util.PathExists(req.Path); isExist || err != nil {
 		if isExist {
 			response.FailWithMessage("文件已存在", c)
@@ -211,7 +194,6 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 		return
 
 	}
-
 	if err := os.WriteFile(req.Path, []byte(req.Content), fs.ModePerm); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
@@ -310,6 +292,39 @@ func (f *FileListAPI) RenameItem(c *gin.Context) {
 
 }
 
+type DownloadDirCheckOption struct {
+	maxCount          int
+	maxSize           int64
+	ignorePatternList []string
+}
+
+func (f *FileListAPI) checkDirBeforeCompress(dir string, option DownloadDirCheckOption) error {
+	count := 0
+	var totalSize int64
+	exploreOption := util.ExploreDirOption{
+		RootPath:          dir,
+		IgnorePatternList: option.ignorePatternList,
+	}
+	return util.ExploreDir(exploreOption, func(path string, d fs.DirEntry, err error) error {
+		count += 1
+		if !d.IsDir() {
+			info, err := d.Info()
+			if err != nil {
+				return err
+			}
+			totalSize = totalSize + info.Size()
+		}
+		if count > option.maxCount {
+			return fmt.Errorf("文件数目过多，超过%d个", option.maxCount)
+		}
+		if totalSize > option.maxSize {
+			return errors.New("文件大小超过" + util.FileSizeFormatter(option.maxSize, 0))
+		}
+		return nil
+	})
+
+}
+
 // downloadItem
 // @Summary      下载项目
 // @Description  传入fileitem下载指定项目，文件夹和文件的情况区别处理
@@ -320,19 +335,37 @@ func (f *FileListAPI) RenameItem(c *gin.Context) {
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /downloadItem [post]
 func (f *FileListAPI) DownloadItem(c *gin.Context) {
-	var req response.FileInfo
+	var req request.FileInfo
+	// 这一步已经校验了路径存在
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if req.Path == "" {
-		response.FailWithMessage("路径不能为空", c)
-		return
-	}
+	// 打包时忽略的文件
+	ignorePatternList := []string{"[\\/]node_modules[\\/]|[\\/]node_modules$"}
 	if req.IsFolder {
-		response.FailWithMessage("路径不能为文件夹", c)
-		return
+		err := f.checkDirBeforeCompress(req.Path, DownloadDirCheckOption{
+			maxCount:          1000,
+			maxSize:           4 << 30, //4gb
+			ignorePatternList: ignorePatternList,
+		})
+		if err != nil {
+			response.FailWithMessage(err.Error(), c)
+			return
+		}
+		// c.Writer.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename*=utf-8''%s.zip", url.QueryEscape(req.Name)))
+		c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s.zip", url.QueryEscape(req.Name)))
+		// c.Header("Content-Disposition", "attachment; filename="+req.Name+".zip")
+		err = util.ZipBytes(util.ZipOpt{
+			SrcFile:           req.Path,
+			IgnorePatternList: ignorePatternList,
+			DestWriter:        c.Writer,
+		})
+		if err != nil {
+			response.FailWithMessage(err.Error(), c)
+			return
+		}
 	} else {
 		c.Header("Content-Disposition", "attachment; filename="+req.Name)
 		// c.Header("Content-Transfer-Encoding", "binary")
@@ -340,35 +373,5 @@ func (f *FileListAPI) DownloadItem(c *gin.Context) {
 		c.File(req.Path)
 	}
 	fmt.Println("req", req)
-
-}
-
-// downloadFolder
-// @Summary      下载文件夹
-// @Description  将文件夹打包，下载完成后删除
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.OprateFilePath true "文件夹路径"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /mkdir [post]
-func (f *FileListAPI) DownloadFolder(c *gin.Context) {
-	// l := global.Logger
-	var req request.OprateFilePath
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	// 检测路径是否已经存在
-	// if isNewfolderExist,err:=util.PathExists(req.FolderPath); isNewfolderExist|| err!=nil{
-	// 	response.FailWithMessage("不合法的路径", c)
-	// 	return
-	// }
-	if err := os.Mkdir(req.Path, os.ModeDir); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	response.Success(c)
 
 }
