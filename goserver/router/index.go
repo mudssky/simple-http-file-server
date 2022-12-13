@@ -51,6 +51,9 @@ func InitRouter() *gin.Engine {
 		apiGroup.POST("/renameItem", fileListAPI.RenameItem)
 		apiGroup.POST("/downloadItem", fileListAPI.DownloadItem)
 		// r.POST("/uploadSingle", fileListAPI.UploadSingle)
+
+		serverApi := api.ApiGroupApp.ServerAPI
+		apiGroup.GET("/getServerInfo", serverApi.GetServerInfo)
 	}
 
 	return r
