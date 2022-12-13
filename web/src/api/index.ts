@@ -67,13 +67,21 @@ export const RENAME_ITEM = async (data: {
 }
 
 export const DOWNLOAD_ITEM = async (data: FileItem) => {
-  const res: Blob = await request.post(`${PROXY_SUFFIX}/downloadItem`, data, {
+  const resP = await request.post(`${PROXY_SUFFIX}/downloadItem`, data, {
     responseType: 'blob',
     onDownloadProgress: handleDownloadProgress,
   })
+  const res = resP.data
   // json的情况说明是报错
   if (res.type !== 'application/json') {
-    downloadFile(res, data.name)
+    const filename =
+      resP.headers?.['content-disposition']?.split('=')?.at(-1) ?? data.name
+    downloadFile(res, filename)
+    // if (res.type === 'application/zip') {
+    //   downloadFile(res, `${data.name}.zip`)
+    // } else {
+    //   downloadFile(res, data.name)
+    // }
   } else {
     const r = await res.text()
     message.error(JSON.parse(r)?.msg)

@@ -10,6 +10,7 @@ import (
 	"github.com/mudssky/simple-http-file-server/goserver/router"
 	"github.com/mudssky/simple-http-file-server/goserver/server"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
+	"github.com/mudssky/simple-http-file-server/goserver/validator"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -32,12 +33,13 @@ import (
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host      127.0.0.1:7888
-// @BasePath  /
+// @BasePath  /api
 
 // @securityDefinitions.basic  BasicAuth
 func main() {
 	// cmd.Execute()
 	global.InitGlobalConfig()
+	validator.InitValidator()
 	var r = router.InitRouter()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

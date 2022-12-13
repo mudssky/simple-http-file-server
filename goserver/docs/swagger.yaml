@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api
 definitions:
   request.FilePath:
     properties:
