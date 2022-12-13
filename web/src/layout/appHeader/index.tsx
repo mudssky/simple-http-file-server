@@ -12,7 +12,14 @@ export default function AppHeader() {
         content={
           <Row justify={'center'}>
             <QRCodeSVG
-              value={`http://${serverInfo.localIpList?.[1]}:${serverInfo.port}`}
+              // 开发环境地址设置
+              value={
+                import.meta.env.DEV
+                  ? `http://${serverInfo.localIpList?.[1]}:${
+                      import.meta.env.VITE_PORT
+                    }`
+                  : `http://${serverInfo.localIpList?.[1]}:${serverInfo.port}`
+              }
             />
           </Row>
         }
