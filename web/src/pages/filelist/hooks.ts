@@ -32,7 +32,7 @@ import {
 } from '../../store/reducer/homeReducer'
 import { checkResponse, encodeURLAll, isImage, path } from '../../util/util'
 import { flushSync } from 'react-dom'
-import { STATIC_SERVER_PREFIX } from '../../config'
+import { getServerStaticUrl, STATIC_SERVER_PREFIX } from '../../config'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
@@ -296,7 +296,7 @@ export default function useSetupHook() {
     dispatch(
       setPreviewListAction([
         {
-          src: STATIC_SERVER_PREFIX + encodeURLAll(record.link),
+          src: getServerStaticUrl(record.link),
         },
       ]),
     )

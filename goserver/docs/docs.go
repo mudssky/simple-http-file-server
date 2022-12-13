@@ -166,9 +166,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/getServerInfo": {
+            "get": {
+                "description": "获取本地ip等服务器信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "获取服务器信息",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.ServerInfoRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/mkdir": {
             "post": {
-                "description": "将文件夹打包，下载完成后删除",
+                "description": "传入文件夹的路径，新建文件夹",
                 "consumes": [
                     "application/json"
                 ],
@@ -178,10 +213,10 @@ const docTemplate = `{
                 "tags": [
                     "filelist"
                 ],
-                "summary": "下载文件夹",
+                "summary": "新建文件夹",
                 "parameters": [
                     {
-                        "description": "文件夹路径",
+                        "description": "目录信息",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -375,6 +410,10 @@ const docTemplate = `{
         },
         "request.Rename": {
             "type": "object",
+            "required": [
+                "newName",
+                "path"
+            ],
             "properties": {
                 "newName": {
                     "type": "string"
@@ -386,6 +425,9 @@ const docTemplate = `{
         },
         "request.TxtFile": {
             "type": "object",
+            "required": [
+                "path"
+            ],
             "properties": {
                 "content": {
                     "description": "内容",
@@ -436,6 +478,22 @@ const docTemplate = `{
                 "data": {},
                 "msg": {
                     "type": "string"
+                }
+            }
+        },
+        "response.ServerInfoRes": {
+            "type": "object",
+            "properties": {
+                "localIpList": {
+                    "description": "本地IP列表",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "port": {
+                    "description": "本地端口",
+                    "type": "integer"
                 }
             }
         }

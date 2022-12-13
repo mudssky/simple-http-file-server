@@ -10,6 +10,8 @@ import {
   Tooltip,
   Upload,
   FloatButton,
+  Popover,
+  Row,
 } from 'antd'
 import { encodeURLAll, filesizeFormatter, isImage, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
@@ -18,18 +20,21 @@ import {
   DeleteTwoTone,
   EditOutlined,
   PictureOutlined,
+  QrcodeOutlined,
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
 import { FileItem, PROXY_SUFFIX } from '../../api'
 import { ColumnsType } from 'antd/es/table'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   setPhotoPreviewOptionsAction,
   setRenameModalOptionsAction,
 } from '../../store/reducer/homeReducer'
-import { STATIC_SERVER_PREFIX } from '../../config'
+import { getServerStaticUrl, STATIC_SERVER_PREFIX } from '../../config'
 import CustomPhotoViewer from '../../components/customPhotoView'
+import { QRCodeSVG } from 'qrcode.react'
+
 export default function FileList() {
   const dispatch = useAppDispatch()
   const {
@@ -72,6 +77,7 @@ export default function FileList() {
     isTableLoading,
     photoPreviewOptions,
   } = state
+  const { serverInfo } = useAppSelector((state) => state.server)
 
   const columns: ColumnsType<FileItem> = [
     {
@@ -138,6 +144,23 @@ export default function FileList() {
           <div>
             {currentWorkDir !== '' ? (
               <Space wrap={true}>
+                {!record.isFolder ? (
+                  <Popover
+                    overlayClassName="w-[150px]"
+                    content={
+                      <Row justify={'center'}>
+                        <QRCodeSVG
+                          value={`http://${serverInfo.localIpList?.[1]}:${
+                            serverInfo.port
+                          }${getServerStaticUrl(record.link)}`}
+                        />
+                      </Row>
+                    }
+                    title="扫码访问"
+                  >
+                    <QrcodeOutlined className="cursor-pointer text-xl text-black" />
+                  </Popover>
+                ) : null}
                 {isImage(record.name) ? (
                   <Tooltip title="预览图片">
                     <PictureOutlined

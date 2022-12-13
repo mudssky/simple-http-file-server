@@ -1,0 +1,4 @@
+
+
+# 获取服务器信息
+GET http://{{ $dotenv HOST}}/getServerInfo HTTP/1.1

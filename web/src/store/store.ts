@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import homeReducer from './reducer/homeReducer'
+import serverReducer from './reducer/serverReducer'
 // ...
 
 export const store = configureStore({
   reducer: {
     home: homeReducer,
+    server: serverReducer,
   },
 })
 
