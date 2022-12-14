@@ -4,6 +4,7 @@ module.exports = {
   rules: {
     // @see: https://commitlint.js.org/#/reference-rules
   },
+  parserPreset: './parser-preset.cjs',
   prompt: {
     alias: { fd: 'docs: fix typos' },
     messages: {
@@ -73,8 +74,9 @@ module.exports = {
         emoji: ':rewind:',
       },
     ],
+
     useEmoji: true,
-    emojiAlign: 'center',
+    emojiAlign: 'left',
     themeColorCode: '',
     scopes: [],
     allowCustomScopes: true,
