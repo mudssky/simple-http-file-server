@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -63,6 +64,7 @@ func ZapRecovery(stack bool) gin.HandlerFunc {
 				}
 
 				if stack {
+					fmt.Println("error", string(debug.Stack()))
 					global.Logger.Error("[Recovery from panic]",
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),

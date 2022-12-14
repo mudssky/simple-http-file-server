@@ -14,6 +14,8 @@ import (
 func InitRouter() *gin.Engine {
 	l := global.Logger
 	var r = gin.New()
+
+	r.LoadHTMLFiles("oublic")
 	r.Use(middleware.ZapLogger(), middleware.ZapRecovery(true))
 	// r := gin.Default()
 	r.Use(middleware.Cors())
