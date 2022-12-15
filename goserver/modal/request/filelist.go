@@ -9,6 +9,9 @@ type FilePath struct {
 type OprateFilePath struct {
 	Path string `json:"path" binding:"required,path_exist"` // 路径
 }
+type MkdirPath struct {
+	Path string `json:"path" binding:"required,path_not_exist"` // 路径
+}
 
 // 创建Txt文件需要的参数
 type TxtFile struct {
