@@ -119,12 +119,12 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 // @Tags         filelist
 // @Accept       application/json
 // @Produce      application/json
-// @Param        data   body  request.OprateFilePath true "目录信息"
+// @Param        data   body  request.MkdirPath true "目录信息"
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /mkdir [post]
 func (f *FileListAPI) MakeDir(c *gin.Context) {
 	// l := global.Logger
-	var req request.OprateFilePath
+	var req request.MkdirPath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
