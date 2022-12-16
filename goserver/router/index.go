@@ -41,6 +41,9 @@ func InitRouter() *gin.Engine {
 
 	apiGroup := r.Group("/api")
 	{
+		userApi := api.ApiGroupApp.UserAPI
+		apiGroup.POST("/login", userApi.Login)
+
 		// fileListApi := new(api.FileListAPI)
 		// GET local
 		fileListAPI := api.ApiGroupApp.FileListAPI
