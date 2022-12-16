@@ -1,6 +1,4 @@
-import { ModalProps } from 'antd'
-
-export interface ModalOptions extends ModalProps {
+export interface ModalOptions {
   open: boolean
   confirmLoading: boolean
 }
