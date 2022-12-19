@@ -5,4 +5,5 @@ type Server struct {
 	Zap        Zap      `mapstructure:"zap" json:"zap" yaml:"zap"`
 	FolderList []string `mapstructure:"folderlist" json:"folderlist" yaml:"folderlist"`
 	UserList   []User   `mapstructure:"userlist" json:"userlist" yaml:"userlist"`
+	Jwt        JWT      `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
 }

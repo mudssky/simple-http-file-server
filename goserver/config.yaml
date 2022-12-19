@@ -3,6 +3,10 @@ folderlist:
   - 'D:/coding'
 userlist:
   - { username: 'mudssky', password: '123456' }
+
+jwt:
+  secret: djfklashiwqasd;landsada
+  expires: 864000
 zap:
   level: debug
   prefix: '[gfs]'

@@ -1,17 +1,30 @@
-import { QrcodeOutlined } from '@ant-design/icons'
-import { Button, Popover, Row, Form, Input, Modal } from 'antd'
+import { DownOutlined, QrcodeOutlined } from '@ant-design/icons'
+import { Button, Popover, Row, Form, Input, Modal, Dropdown, Space } from 'antd'
 
+import type { MenuProps } from 'antd'
 import { QRCodeSVG } from 'qrcode.react'
-
 import { useAppSelector } from '../../store/hooks'
 import { useSetupHook } from './hooks'
 
 export default function AppHeader() {
   const { serverInfo } = useAppSelector((state) => state.server)
   const userState = useAppSelector((state) => state.user)
+  const { userInfo } = userState
   const { loginModalOptions } = userState
-  const { loginForm, cancelLoginModal, handleLoginSubmit, showLoginModal } =
-    useSetupHook()
+  const {
+    loginForm,
+    cancelLoginModal,
+    handleLoginSubmit,
+    showLoginModal,
+    handleLogoutClick,
+  } = useSetupHook()
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <div onClick={handleLogoutClick}>退出登录</div>,
+    },
+  ]
   return (
     <div>
       <Row justify={'space-between'} align="middle">
@@ -38,7 +51,16 @@ export default function AppHeader() {
             文件服务器
           </span>
         </Popover>
-        <Button onClick={showLoginModal}>登录</Button>
+        {userInfo ? (
+          <Dropdown menu={{ items }}>
+            <Space className="text-white text-[16px]">
+              <span className='text-white'>{userInfo.username}</span>
+              <DownOutlined />
+            </Space>
+          </Dropdown>
+        ) : (
+          <Button onClick={showLoginModal}>登录</Button>
+        )}
       </Row>
       <Modal
         title="用户登录"

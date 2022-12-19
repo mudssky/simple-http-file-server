@@ -2,6 +2,13 @@ import { PROXY_SUFFIX } from '.'
 import { PromiseResponseData } from '../global'
 import { request } from '../request/request'
 
+export interface LoginRes {
+  token: string
+  userInfo: UserInfo
+}
+export interface UserInfo {
+  username: string
+}
 /**
  * 用户登录
  * @param params
@@ -10,6 +17,6 @@ import { request } from '../request/request'
 export const LOGIN = async (data: {
   username: string
   password: string
-}): PromiseResponseData<unknown> => {
+}): PromiseResponseData<LoginRes> => {
   return request.post(`${PROXY_SUFFIX}/login`, data)
 }

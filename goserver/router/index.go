@@ -39,10 +39,14 @@ func InitRouter() *gin.Engine {
 		ctx.String(http.StatusOK, "gin %s", "ok")
 	})
 
-	apiGroup := r.Group("/api")
+	PublicGroup := r.Group("")
 	{
 		userApi := api.ApiGroupApp.UserAPI
-		apiGroup.POST("/login", userApi.Login)
+		PublicGroup.POST("/api/login", userApi.Login)
+	}
+
+	apiGroup := r.Group("/api", middleware.JWTAuth())
+	{
 
 		// fileListApi := new(api.FileListAPI)
 		// GET local
