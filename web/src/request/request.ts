@@ -4,6 +4,8 @@ import axios, {
   AxiosProgressEvent,
   AxiosRequestConfig,
 } from 'axios'
+import { LoginRes } from '../api/user'
+import { getLocalstorage } from '../util/localStorage'
 
 export function createGlobalAxiosWithInterceptors(
   config?: AxiosRequestConfig,
@@ -18,6 +20,16 @@ export function createGlobalAxiosWithInterceptors(
     function (config) {
       // 在发送请求之前做些什么
       //   console.log('config:', config)
+      const loginStoraged = getLocalstorage('userInfo') as LoginRes | null
+      // 取得token以后进行添加
+      if (loginStoraged) {
+        // 添加Authorization请求头用于登录认证
+        const { token } = loginStoraged
+        if (token && config.headers) {
+          config.headers['x-token'] = token
+        }
+      }
+
       return config
     },
     function (error) {
@@ -51,12 +63,12 @@ export function createGlobalAxiosWithInterceptors(
       if (error.response) {
         notification.error({
           message: error.response.status,
-          description: error?.response?.data?.message ?? '服务端异常',
+          description: error?.response?.data?.msg ?? '服务端异常',
         })
         // switch (error.response.status) {
         // }
       }
-      return Promise.reject(error)
+      // return Promise.reject(error)
     },
   )
   return axiosInstance

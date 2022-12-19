@@ -72,6 +72,7 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 	var req request.FilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
+		l.Warn(fmt.Sprintf("参数解析错误：%v", req))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}

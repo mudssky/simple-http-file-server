@@ -2,11 +2,15 @@ package api
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
+	"github.com/mudssky/simple-http-file-server/goserver/config"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/request"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserAPI struct{}
@@ -35,11 +39,26 @@ func (u *UserAPI) Login(c *gin.Context) {
 		return
 	}
 	for _, user := range global.Config.UserList {
-		if user.Username == req.Username && user.Password == req.Password {
-			fmt.Println("登陆成功")
-			response.SuccessWithMessage("登陆成功", c)
+		if user.Username == req.Username {
+			if err := bcrypt.CompareHashAndPassword([]byte(req.Password), []byte(user.Password)); err != nil {
+				response.FailWithMessage("登录失败,用户名或密码错误", c)
+			}
+			token, err := global.Config.Jwt.GenJwtToken(config.CustomClaims{
+				Username:       req.Username,
+				StandardClaims: jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Second * time.Duration(global.Config.Jwt.Expires)).Unix()},
+			})
+			if err != nil {
+				response.FailWithMessage("token生成失败："+err.Error(), c)
+				return
+			}
+			response.SuccessWithDetailed(response.LoginRes{
+				Token: token,
+				UserInfo: response.UserInfo{
+					Username: req.Username,
+				},
+			}, "登陆成功", c)
 			return
 		}
 	}
-	response.FailWithMessage("登录失败", c)
+	response.FailWithMessage("登录失败,用户名或密码错误", c)
 }
