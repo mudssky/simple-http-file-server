@@ -5,7 +5,7 @@ userlist:
   - { username: 'mudssky', password: '123456' }
 
 jwt:
-  secret: djfklashiwqasd;landsada
+  secret: eqweqeqe
   expires: 864000
 zap:
   level: debug

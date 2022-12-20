@@ -1,0 +1,4 @@
+p,visitor,/api/filelist,POST
+p,visitor,/api/downloadItem,POST
+p,root,/api/*,(GET)|(POST)
+g,mudssky,root,

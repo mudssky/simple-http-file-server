@@ -13,9 +13,9 @@ type JWT struct {
 // 	TokenParseError = error.New
 // )
 
-func NewJWT(secret []byte) *JWT {
+func NewJWT(secret string) *JWT {
 	return &JWT{
-		Secret: secret,
+		Secret: []byte(secret),
 	}
 }
 

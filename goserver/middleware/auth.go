@@ -14,11 +14,14 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("x-token")
 		if token == "" {
-			c.JSON(http.StatusUnauthorized, response.Response{
-				Code: 1,
-				Msg:  "未登录或非法访问",
-			})
-			c.Abort()
+			// token为空的情况下，按游客来计算，根据casbin里面visitor的权限来决定是否能访问
+			c.Next()
+			// c.JSON(http.StatusUnauthorized, response.Response{
+			// 	Code: 1,
+			// 	Msg:  "未登录或非法访问",
+			// })
+			// c.Abort()
+			return
 		}
 		jwtS := util.NewJWT(global.Config.Jwt.Secret)
 		claims, err := jwtS.ParseToken(token)
@@ -31,6 +34,6 @@ func JWTAuth() gin.HandlerFunc {
 			})
 			c.Abort()
 		}
-		// ParseToken()
+		c.Next()
 	}
 }
