@@ -201,6 +201,76 @@ const docTemplate = `{
                 }
             }
         },
+        "/getWebpermission": {
+            "get": {
+                "description": "获取前端权限信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "获取前端权限信息",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "登录",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/mkdir": {
             "post": {
                 "description": "传入文件夹的路径，新建文件夹",
@@ -221,7 +291,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.OprateFilePath"
+                            "$ref": "#/definitions/request.MkdirPath"
                         }
                     }
                 ],
@@ -389,6 +459,18 @@ const docTemplate = `{
     "definitions": {
         "request.FilePath": {
             "type": "object",
+            "properties": {
+                "path": {
+                    "description": "路径",
+                    "type": "string"
+                }
+            }
+        },
+        "request.MkdirPath": {
+            "type": "object",
+            "required": [
+                "path"
+            ],
             "properties": {
                 "path": {
                     "description": "路径",

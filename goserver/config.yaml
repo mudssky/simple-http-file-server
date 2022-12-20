@@ -24,3 +24,11 @@ zap:
   max-size: 500
   # show-line: true
   log-in-console: true
+
+webpermission:
+  # 新建文本，新建目录之类统一归类为write
+  # 重命名和删除单独分类
+  admin: ['write', 'read', 'rename', 'delete']
+  user: ['write', 'read', 'rename']
+  visitor: ['read', 'write']
+  uploader: ['write']

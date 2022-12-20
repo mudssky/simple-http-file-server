@@ -6,6 +6,14 @@ definitions:
         description: 路径
         type: string
     type: object
+  request.MkdirPath:
+    properties:
+      path:
+        description: 路径
+        type: string
+    required:
+    - path
+    type: object
   request.OprateFilePath:
     properties:
       path:
@@ -193,6 +201,46 @@ paths:
       summary: 获取服务器信息
       tags:
       - server
+  /getWebpermission:
+    get:
+      consumes:
+      - application/json
+      description: 获取前端权限信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 获取前端权限信息
+      tags:
+      - server
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 登录
+      tags:
+      - server
   /mkdir:
     post:
       consumes:
@@ -204,7 +252,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.OprateFilePath'
+          $ref: '#/definitions/request.MkdirPath'
       produces:
       - application/json
       responses:

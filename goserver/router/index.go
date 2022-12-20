@@ -39,30 +39,34 @@ func InitRouter() *gin.Engine {
 		ctx.String(http.StatusOK, "gin %s", "ok")
 	})
 
-	PublicGroup := r.Group("")
-	{
-		userApi := api.ApiGroupApp.UserAPI
-		PublicGroup.POST("/api/login", userApi.Login)
-	}
-
-	apiGroup := r.Group("/api").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+	apiGroup := r.Group("/api")
 	{
 
-		// fileListApi := new(api.FileListAPI)
-		// GET local
-		fileListAPI := api.ApiGroupApp.FileListAPI
-		apiGroup.POST("/filelist", fileListAPI.GetFileList)
-		apiGroup.POST("/mkdir", fileListAPI.MakeDir)
-		apiGroup.POST("/removeItem", fileListAPI.RemoveItem)
-		apiGroup.POST("/createTxt", fileListAPI.CreateTxt)
+		PublicGroup := apiGroup.Group("").Use(middleware.JWTAuth())
+		{
+			userApi := api.ApiGroupApp.UserAPI
+			PublicGroup.POST("/login", userApi.Login)
+			PublicGroup.GET("/getWebpermission", userApi.GetWebpermisson)
+			serverApi := api.ApiGroupApp.ServerAPI
+			PublicGroup.GET("/getServerInfo", serverApi.GetServerInfo)
+		}
 
-		apiGroup.POST("/uploadMulti", fileListAPI.UploadMulti)
-		apiGroup.POST("/renameItem", fileListAPI.RenameItem)
-		apiGroup.POST("/downloadItem", fileListAPI.DownloadItem)
-		// r.POST("/uploadSingle", fileListAPI.UploadSingle)
+		privateGroup := apiGroup.Group("").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+		{
+			// fileListApi := new(api.FileListAPI)
+			// GET local
+			fileListAPI := api.ApiGroupApp.FileListAPI
+			privateGroup.POST("/filelist", fileListAPI.GetFileList)
+			privateGroup.POST("/mkdir", fileListAPI.MakeDir)
+			privateGroup.POST("/removeItem", fileListAPI.RemoveItem)
+			privateGroup.POST("/createTxt", fileListAPI.CreateTxt)
+			privateGroup.POST("/uploadMulti", fileListAPI.UploadMulti)
+			privateGroup.POST("/renameItem", fileListAPI.RenameItem)
+			privateGroup.POST("/downloadItem", fileListAPI.DownloadItem)
+			// r.POST("/uploadSingle", fileListAPI.UploadSingle)
 
-		serverApi := api.ApiGroupApp.ServerAPI
-		apiGroup.GET("/getServerInfo", serverApi.GetServerInfo)
+		}
+
 	}
 
 	return r

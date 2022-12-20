@@ -62,3 +62,34 @@ func (u *UserAPI) Login(c *gin.Context) {
 	}
 	response.FailWithMessage("登录失败,用户名或密码错误", c)
 }
+
+// GetWebpermisson
+// @Summary      获取前端权限信息
+// @Description  获取前端权限信息
+// @Tags         server
+// @Accept       application/json
+// @Produce      application/json
+// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Router       /getWebpermission [get]
+func (u *UserAPI) GetWebpermisson(c *gin.Context) {
+	currentUsername := c.GetString("username")
+	fmt.Println("currentUsername", currentUsername)
+	// 游客的情况
+	if currentUsername == "visitor" {
+		response.SuccessWithData(global.Config.WebPermission["visitor"], c)
+		return
+	}
+	for _, user := range global.Config.UserList {
+		if user.Username == currentUsername {
+			// 用户角色没配置的情况下默认为游客
+			if user.Role == "" {
+				response.SuccessWithData(global.Config.WebPermission["visitor"], c)
+				return
+			}
+			// 用户角色设置的情况下，查map获取权限列表
+			response.SuccessWithData(global.Config.WebPermission[user.Role], c)
+			return
+		}
+	}
+	response.FailWithMessage("找不到该用户的权限信息", c)
+}
