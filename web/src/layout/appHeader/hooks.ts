@@ -2,10 +2,11 @@ import { Form, message } from 'antd'
 import { userInfo } from 'os'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LOGIN, LoginRes } from '../../api/user'
+import { GET_PERMISSION, LOGIN, LoginRes } from '../../api/user'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   setLoginModalOptionsAction,
+  setPermissionListAction,
   setUserInfoAction,
 } from '../../store/reducer/userReducer'
 import { encryptPassword } from '../../util/crypto'
@@ -71,10 +72,17 @@ export function useSetupHook() {
       message.error(res.msg)
     }
   }
-  const loadUserInfo = () => {
+  const loadUserInfo = async () => {
     const userInfo = getLocalstorage('userInfo') as LoginRes | null
     if (userInfo) {
       dispatch(setUserInfoAction(userInfo.userInfo))
+    }
+    await getUserPermission()
+  }
+  const getUserPermission = async () => {
+    const res = await GET_PERMISSION()
+    if (res.code === 0) {
+      dispatch(setPermissionListAction(res.data))
     }
   }
   useEffect(() => {

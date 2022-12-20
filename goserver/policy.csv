@@ -1,4 +1,6 @@
 p,visitor,/api/filelist,POST
 p,visitor,/api/downloadItem,POST
-p,root,/api/*,(GET)|(POST)
-g,mudssky,root,
+p,uploader,/api/filelist,POST
+p,uploader,/api/uploadMulti,POST
+p,admin,/api/*,(GET)|(POST)
+g,mudssky,admin,
