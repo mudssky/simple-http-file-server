@@ -1,31 +1,43 @@
 package global
 
 import (
+	_ "embed"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/casbin/casbin/v2"
+	"github.com/casbin/casbin/v2/model"
 	"github.com/fsnotify/fsnotify"
 	"github.com/joho/godotenv"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
+	scas "github.com/qiangmzsx/string-adapter/v2"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+//go:embed ..\rabc_modal.conf
+var casbinModalStr string
+
+//go:embed ..\policy.csv
+var policyCSV string
+
 var (
-	Viper  *viper.Viper
-	Logger *zap.Logger
-	Config config.Server
+	Viper          *viper.Viper
+	Logger         *zap.Logger
+	Config         config.Server
+	CasbinEnforcer *casbin.Enforcer
 )
 
 func InitGlobalConfig() {
 	initViper()
 	initZap()
 	validateConfig()
+	initCasbin()
 }
 
 // 加载.env文件到全局变量
@@ -74,7 +86,19 @@ func loadViper() {
 		fmt.Println(err)
 	}
 }
-
+func initCasbin() {
+	fmt.Println("casbin:", casbinModalStr)
+	fmt.Println("casbin policy:", policyCSV)
+	m, err := model.NewModelFromString(casbinModalStr)
+	if err != nil {
+		log.Fatalln("读取casbin modal配置文件失败:", err.Error())
+	}
+	sa := scas.NewAdapter(policyCSV)
+	CasbinEnforcer, err = casbin.NewEnforcer(m, sa)
+	if err != nil {
+		log.Fatalln("casbin 初始化失败", err.Error())
+	}
+}
 func initZap() {
 	// The bundled Config struct only supports the most common configuration
 	// options. More complex needs, like splitting logs between multiple files

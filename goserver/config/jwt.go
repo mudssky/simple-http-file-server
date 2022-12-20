@@ -5,7 +5,7 @@ import (
 )
 
 type JWT struct {
-	Secret  []byte `json:"secret" yaml:"secret"`
+	Secret  string `json:"secret" yaml:"secret"`
 	Expires int    `json:"expires" yaml:"expires"`
 }
 
@@ -30,7 +30,7 @@ type JwtMap struct {
 func (j *JWT) GenJwtToken(cc CustomClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, cc)
 	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString(j.Secret)
+	tokenString, err := token.SignedString([]byte(j.Secret))
 	if err != nil {
 		return "", err
 	}

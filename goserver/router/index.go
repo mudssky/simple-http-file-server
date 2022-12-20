@@ -45,7 +45,7 @@ func InitRouter() *gin.Engine {
 		PublicGroup.POST("/api/login", userApi.Login)
 	}
 
-	apiGroup := r.Group("/api", middleware.JWTAuth())
+	apiGroup := r.Group("/api").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
 
 		// fileListApi := new(api.FileListAPI)
