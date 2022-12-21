@@ -67,7 +67,7 @@ func main() {
 	})
 	fmt.Printf(`
 	localhost:http://127.0.0.1:%v`, global.Config.Port)
-	Ips, err := util.GetClientIPs()
+	Ips, err := util.ClientIPs()
 	if err != nil {
 		global.Logger.Warn(err.Error())
 	}

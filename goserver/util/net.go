@@ -5,7 +5,7 @@ import (
 )
 
 // 获取本地ip地址列表
-func GetClientIPs() (IPs []string, err error) {
+func ClientIPs() (IPs []string, err error) {
 	// 这个函数返回系统单播地址的列表。
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -23,4 +23,11 @@ func GetClientIPs() (IPs []string, err error) {
 	}
 	return
 
+}
+
+// 判断是否为内网IP
+func IsLANIP(IP string) bool {
+	prefix := IP[:3]
+	// 内网IP，可能是10，172，192开头的
+	return prefix == "10." || prefix == "172" || prefix == "192"
 }
