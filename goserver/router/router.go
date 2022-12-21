@@ -15,10 +15,13 @@ func InitRouter() *gin.Engine {
 	l := global.Logger
 	var r = gin.New()
 
-	r.LoadHTMLFiles("oublic")
 	r.Use(middleware.ZapLogger(), middleware.ZapRecovery(true))
 	// r := gin.Default()
-	r.Use(middleware.Cors())
+	// r.Use(middleware.Cors())
+
+	r.Use(middleware.IPLimit())
+
+	// r.SetTrustedProxies([]string{"127.0.0.1"})
 	// 设置默认上传大小限制1gb（不设置的情况下默认是32gb）
 	r.MaxMultipartMemory = 1 << 30
 

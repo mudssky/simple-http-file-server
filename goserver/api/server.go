@@ -20,7 +20,7 @@ type ServerAPI struct{}
 func (s *ServerAPI) GetServerInfo(c *gin.Context) {
 	// l := global.Logger
 	// ip, err := util.GetClientIp()
-	IPList, err := util.GetClientIPs()
+	IPList, err := util.ClientIPs()
 
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
