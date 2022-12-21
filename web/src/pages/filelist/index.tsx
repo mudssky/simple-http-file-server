@@ -78,6 +78,7 @@ export default function FileList() {
     photoPreviewOptions,
   } = state
   const { serverInfo } = useAppSelector((state) => state.server)
+  const { permissionMap } = useAppSelector((state) => state.user)
 
   const columns: ColumnsType<FileItem> = [
     {
@@ -144,7 +145,7 @@ export default function FileList() {
           <div>
             {currentWorkDir !== '' ? (
               <Space wrap={true}>
-                {!record.isFolder ? (
+                {!record.isFolder && permissionMap.read ? (
                   <Popover
                     overlayClassName="w-[150px]"
                     content={
@@ -161,7 +162,7 @@ export default function FileList() {
                     <QrcodeOutlined className="cursor-pointer text-xl text-black" />
                   </Popover>
                 ) : null}
-                {isImage(record.name) ? (
+                {permissionMap?.read && isImage(record.name) ? (
                   <Tooltip title="预览图片">
                     <PictureOutlined
                       className="cursor-pointer text-xl text-blue-400"
@@ -169,21 +170,25 @@ export default function FileList() {
                     />
                   </Tooltip>
                 ) : null}
-                <ArrowDownOutlined
-                  className="cursor-pointer text-xl text-green-500"
-                  onClick={() => handleDownloadItem(record)}
-                />
-                <DeleteTwoTone
-                  twoToneColor={'#ff0000'}
-                  className="cursor-pointer text-xl"
-                  onClick={() => handleDeleteItem(record)}
-                />
-                <EditOutlined
-                  className="cursor-pointer text-xl text-blue-500"
-                  onClick={() => showRenameModal(record)}
-                />
-
-                {/* <ReadOutlined /> */}
+                {permissionMap.read ? (
+                  <ArrowDownOutlined
+                    className="cursor-pointer text-xl text-green-500"
+                    onClick={() => handleDownloadItem(record)}
+                  />
+                ) : null}
+                {permissionMap.delete ? (
+                  <DeleteTwoTone
+                    twoToneColor={'#ff0000'}
+                    className="cursor-pointer text-xl"
+                    onClick={() => handleDeleteItem(record)}
+                  />
+                ) : null}
+                {permissionMap.rename ? (
+                  <EditOutlined
+                    className="cursor-pointer text-xl text-blue-500"
+                    onClick={() => showRenameModal(record)}
+                  />
+                ) : null}
               </Space>
             ) : null}
           </div>
@@ -198,37 +203,44 @@ export default function FileList() {
           {/* 根目录不能操作 */}
           {breadcrumbitemList.length > 1 ? (
             <Space wrap={true}>
-              <Button onClick={showNewFolderModal}>新建目录</Button>
-              <Button onClick={showNewTextModal}>新建文本</Button>
-              <Upload
-                action={`${PROXY_SUFFIX}/uploadMulti`}
-                name="file"
-                data={{
-                  path: currentWorkDir,
-                }}
-                multiple={true}
-                method="POST"
-                // 不显示文件列表，当作一个普通的下载按钮使用
-                showUploadList={false}
-                fileList={currentUploadFileList}
-                onChange={handleUploadChange}
-              >
-                <Button>上传文件</Button>
-              </Upload>
-              <Upload
-                action={`${PROXY_SUFFIX}/uploadMulti`}
-                name="file"
-                data={getUploadFolderData}
-                method="POST"
-                directory={true}
-                // 不显示文件列表，当作一个普通的下载按钮使用
-                showUploadList={false}
-                fileList={currentUploadFileList}
-                onChange={handleUploadChange}
-              >
-                <Button>上传目录</Button>
-              </Upload>
-              <Button onClick={handleGalleryMode}>相册模式</Button>
+              {permissionMap?.write ? (
+                <>
+                  <Button onClick={showNewFolderModal}>新建目录</Button>
+                  <Button onClick={showNewTextModal}>新建文本</Button>
+
+                  <Upload
+                    action={`${PROXY_SUFFIX}/uploadMulti`}
+                    name="file"
+                    data={{
+                      path: currentWorkDir,
+                    }}
+                    multiple={true}
+                    method="POST"
+                    // 不显示文件列表，当作一个普通的下载按钮使用
+                    showUploadList={false}
+                    fileList={currentUploadFileList}
+                    onChange={handleUploadChange}
+                  >
+                    <Button>上传文件</Button>
+                  </Upload>
+                  <Upload
+                    action={`${PROXY_SUFFIX}/uploadMulti`}
+                    name="file"
+                    data={getUploadFolderData}
+                    method="POST"
+                    directory={true}
+                    // 不显示文件列表，当作一个普通的下载按钮使用
+                    showUploadList={false}
+                    fileList={currentUploadFileList}
+                    onChange={handleUploadChange}
+                  >
+                    <Button>上传目录</Button>
+                  </Upload>
+                </>
+              ) : null}
+              {permissionMap?.read ? (
+                <Button onClick={handleGalleryMode}>相册模式</Button>
+              ) : null}
             </Space>
           ) : null}
         </div>
