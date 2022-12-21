@@ -80,6 +80,7 @@ func (u *UserAPI) GetWebpermisson(c *gin.Context) {
 		return
 	}
 	for _, user := range global.Config.UserList {
+		fmt.Println("user", user)
 		if user.Username == currentUsername {
 			// 用户角色没配置的情况下默认为游客
 			if user.Role == "" {
@@ -87,6 +88,7 @@ func (u *UserAPI) GetWebpermisson(c *gin.Context) {
 				return
 			}
 			// 用户角色设置的情况下，查map获取权限列表
+			fmt.Println("permission", global.Config.WebPermission, user)
 			response.SuccessWithData(global.Config.WebPermission[user.Role], c)
 			return
 		}

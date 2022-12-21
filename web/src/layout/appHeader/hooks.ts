@@ -1,12 +1,9 @@
 import { Form, message } from 'antd'
-import { userInfo } from 'os'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { GET_PERMISSION, LOGIN, LoginRes } from '../../api/user'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   convertPermissionList,
-  PermissionMap,
   setLoginModalOptionsAction,
   setPermissionMapAction,
   setUserInfoAction,
@@ -20,7 +17,7 @@ import {
 
 export function useSetupHook() {
   const userState = useAppSelector((state) => state.user)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { loginModalOptions } = userState
   const dispatch = useAppDispatch()
   const [loginForm] = Form.useForm()
@@ -68,6 +65,7 @@ export function useSetupHook() {
         }),
       )
       setLocalstorage('userInfo', res.data)
+      await loadUserInfo()
       // const [header,payload]= decodeJWT(res.data.token)
       // console.log('deocde:', decodeJWT(res.data.token))
     } else {
