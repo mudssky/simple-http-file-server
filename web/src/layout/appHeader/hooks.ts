@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import { GET_PERMISSION, LOGIN, LoginRes } from '../../api/user'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
+  convertPermissionList,
+  PermissionMap,
   setLoginModalOptionsAction,
-  setPermissionListAction,
+  setPermissionMapAction,
   setUserInfoAction,
 } from '../../store/reducer/userReducer'
 import { encryptPassword } from '../../util/crypto'
@@ -82,7 +84,7 @@ export function useSetupHook() {
   const getUserPermission = async () => {
     const res = await GET_PERMISSION()
     if (res.code === 0) {
-      dispatch(setPermissionListAction(res.data))
+      dispatch(setPermissionMapAction(convertPermissionList(res.data ?? [])))
     }
   }
   useEffect(() => {
