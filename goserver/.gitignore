@@ -22,3 +22,4 @@ go.work
 
 # 前端打包的文件
 public/
+dist/

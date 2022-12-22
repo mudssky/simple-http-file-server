@@ -33,17 +33,7 @@ func InitFlag() *cobra.Command {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().Uint16P("port", "p", 5006, "server start port")
 	rootCmd.Flags().StringP("config", "c", "", "config file path")
+	rootCmd.Flags().BoolP("verbose", "v", false, "log more message")
 	Execute()
 	return rootCmd
-}
-func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.goserver.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-
 }
