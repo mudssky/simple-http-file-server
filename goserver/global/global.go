@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
+	"strings"
 	"time"
 
 	"github.com/casbin/casbin/v2"
@@ -26,6 +28,9 @@ var casbinModalStr string
 //go:embed ..\policy.csv
 var policyCSV string
 
+//go:embed ..\config.yaml
+var defaultConfig string
+
 var (
 	Viper          *viper.Viper
 	Logger         *zap.Logger
@@ -44,30 +49,59 @@ func InitGlobalConfig() {
 func loadDotenv() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		// 开启verbose后显示更多信息
+		if Viper.GetBool("verbose") {
+			fmt.Println(err.Error())
+		}
 	}
 }
+func userHomeDir() string {
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return os.Getenv("HOME")
+}
+
 func initViper() {
-	osenv, _ := os.LookupEnv("PORT")
-	fmt.Println("env:", osenv)
 	loadDotenv()
 	Viper = viper.GetViper()
 	rootCmd := cmd.InitFlag()
 	viper.BindPFlags(rootCmd.Flags())
 	viper.AddConfigPath(".")
+
+	// windows下面路径分隔符是反斜杠
+	viper.AddConfigPath("$HOME\\.ghs")
 	viper.SetConfigName("config")
+
+	// 读取命令行中的配置文件路径
 	if configpath := viper.GetString("config"); configpath != "" {
 		fmt.Println("命令行设置配置文件：", configpath, viper.AllSettings())
 		viper.SetConfigFile(configpath)
-		// ioutil.ReadFile(configpath)
-		// viper.ReadConfig()
 	}
+	viper.MergeInConfig()
 	viper.AutomaticEnv()
 	// viper.SetEnvPrefix("GFS")
 	viper.BindEnv("port")
-	err := viper.ReadInConfig() // 查找并读取配置文件
-	if err != nil {             // 处理读取配置文件的错误
-		fmt.Println("未找到配置文件,当前读取到的配置为:", viper.AllSettings())
+
+	// 先读取内嵌默认配置
+	err := viper.ReadConfig(strings.NewReader(defaultConfig))
+	if err != nil {
+		log.Fatalln("读取内嵌默认配置失败", err.Error())
+	}
+
+	// 然后用用户的配置文件进行覆盖
+	err = viper.MergeInConfig()
+	// err = viper.ReadInConfig() // 查找并读取配置文件
+	if err != nil { // 处理读取配置文件的错误
+		log.Fatalln("未找到配置文件:", err.Error())
+	}
+
+	if err := Viper.Unmarshal(&Config); err != nil {
+		log.Fatalln("反序列化配置文件失败：", err.Error())
 	}
 	loadViper()
 	viper.WatchConfig()

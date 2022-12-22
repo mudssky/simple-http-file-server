@@ -56,7 +56,10 @@ func main() {
 	global.InitGlobalConfig()
 	validator.InitValidator()
 	var r = router.InitRouter()
+	// 文档路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// html和静态文件路由
 	r.StaticFS("/assets/", locateFileSystem("public/assets"))
 	r.GET("/", func(c *gin.Context) {
 		htmlByte, err := webAssets.ReadFile("public/index.html")

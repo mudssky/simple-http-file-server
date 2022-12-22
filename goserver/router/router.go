@@ -20,7 +20,9 @@ func InitRouter() *gin.Engine {
 	// r.Use(middleware.Cors())
 
 	r.Use(middleware.IPLimit())
-
+	// 这个设置信用代理，似乎影响的是ClientIP()获取ip的过程，设为nil之后就会直接返回remoteIP
+	// 似乎是有ngix之类做代理的时候，通过header转发被代理的ip时需要设置一下
+	r.SetTrustedProxies(nil)
 	// r.SetTrustedProxies([]string{"127.0.0.1"})
 	// 设置默认上传大小限制1gb（不设置的情况下默认是32gb）
 	r.MaxMultipartMemory = 1 << 30
