@@ -16,8 +16,8 @@ func IPLimit() gin.HandlerFunc {
 		// 获取客户端ip
 		clientIP := c.ClientIP()
 		l.Info(fmt.Sprintf("ip %v enter", clientIP))
-		// 本地地址默认是信任的。
-		if clientIP != "127.0.0.1" {
+		// 本地环回地址默认是信任的。127网段都是本地环回地址
+		if clientIP[:4] != "127." {
 			// 判断是否为局域网ip
 			if util.IsLANIP(clientIP) {
 				// 信任局域网，也就是内网的情况下，放行内网IP
