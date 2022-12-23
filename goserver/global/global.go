@@ -2,6 +2,7 @@ package global
 
 import (
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -12,9 +13,11 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/fsnotify/fsnotify"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
+	"github.com/mudssky/simple-http-file-server/goserver/util"
 	scas "github.com/qiangmzsx/string-adapter/v2"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -69,14 +72,13 @@ func userHomeDir() string {
 func initViper() {
 	loadDotenv()
 	Viper = viper.GetViper()
-	rootCmd := cmd.InitFlag()
-	viper.BindPFlags(rootCmd.Flags())
 	viper.AddConfigPath(".")
-
 	// windows下面路径分隔符是反斜杠
 	viper.AddConfigPath("$HOME\\.ghs")
 	viper.SetConfigName("config")
 
+	rootCmd := cmd.InitFlag()
+	viper.BindPFlags(rootCmd.Flags())
 	// 读取命令行中的配置文件路径
 	if configpath := viper.GetString("config"); configpath != "" {
 		fmt.Println("命令行设置配置文件：", configpath, viper.AllSettings())
@@ -112,13 +114,44 @@ func initViper() {
 		fmt.Printf("当前配置:%+v\n", Config)
 	})
 	fmt.Println("命令行设置配置文件：", viper.AllSettings())
+	excuteCMd()
+}
+
+func excuteCMd() {
+	if Viper.GetBool("open") {
+		go func() {
+			// time.Sleep(time.Second)
+			err := util.Open("http://127.0.0.1:" + fmt.Sprintf("%d", Config.Port))
+			if err != nil {
+				log.Fatalln(err)
+				os.Exit(1)
+			}
+
+		}()
+	}
+
 }
 
 // 当前viper配置加载到结构体
 func loadViper() {
+	var validate *validator.Validate
 	if err := Viper.Unmarshal(&Config); err != nil {
 		fmt.Println(err)
 	}
+
+	usermap := Viper.GetString("usermap")
+	if usermap != "" {
+		user := config.User{}
+		err := json.Unmarshal([]byte(usermap), &user)
+		if err != nil {
+			log.Fatalln("usermap parse failed:", err.Error(), usermap)
+		}
+		if err := validate.Struct(user); err != nil {
+			log.Fatalln("usermap validate failed:", err.Error())
+		}
+		Config.UserList = append(Config.UserList, user)
+	}
+
 }
 func initCasbin() {
 	fmt.Println("casbin:", casbinModalStr)
