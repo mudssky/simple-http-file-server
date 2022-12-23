@@ -39,7 +39,7 @@ func InitFlag() *cobra.Command {
 	rootCmd.Flags().BoolP("verbose", "v", false, "log more message")
 	rootCmd.Flags().BoolP("open", "", false, "open default browser")
 	rootCmd.Flags().StringP("folderlist", "", workdir, "config file path")
-	rootCmd.Flags().StringP("usermap", "", "", "user data json  to login")
+	// rootCmd.Flags().StringP("usermap", "", "", "user data json  to login")
 	// rootCmd.Flags().StringP("username", "u", "mudssky", "username to login")
 	// rootCmd.Flags().StringP("password", "v", "mudssky", "username to login")
 	// 弹出帮助信息时，直接退出后续程序执行。

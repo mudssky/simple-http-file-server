@@ -2,18 +2,15 @@ package global
 
 import (
 	_ "embed"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/fsnotify/fsnotify"
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
@@ -57,16 +54,6 @@ func loadDotenv() {
 			fmt.Println(err.Error())
 		}
 	}
-}
-func userHomeDir() string {
-	if runtime.GOOS == "windows" {
-		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
-		if home == "" {
-			home = os.Getenv("USERPROFILE")
-		}
-		return home
-	}
-	return os.Getenv("HOME")
 }
 
 func initViper() {
@@ -134,23 +121,25 @@ func excuteCMd() {
 
 // 当前viper配置加载到结构体
 func loadViper() {
-	var validate *validator.Validate
+	// var validate *validator.Validate
 	if err := Viper.Unmarshal(&Config); err != nil {
 		fmt.Println(err)
 	}
 
-	usermap := Viper.GetString("usermap")
-	if usermap != "" {
-		user := config.User{}
-		err := json.Unmarshal([]byte(usermap), &user)
-		if err != nil {
-			log.Fatalln("usermap parse failed:", err.Error(), usermap)
-		}
-		if err := validate.Struct(user); err != nil {
-			log.Fatalln("usermap validate failed:", err.Error())
-		}
-		Config.UserList = append(Config.UserList, user)
-	}
+	// usermap := Viper.GetString("usermap")
+	// fmt.Printf("usermap:%s\n", usermap)
+	// if usermap != "" {
+	// 	user := config.User{}
+	// 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
+	// 	err := json.Unmarshal([]byte(usermap), &user)
+	// 	if err != nil {
+	// 		log.Fatalln("usermap parse failed:", err.Error(), usermap)
+	// 	}
+	// 	if err := validate.Struct(user); err != nil {
+	// 		log.Fatalln("usermap validate failed:", err.Error())
+	// 	}
+	// 	Config.UserList = append(Config.UserList, user)
+	// }
 
 }
 func initCasbin() {
