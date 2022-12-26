@@ -52,8 +52,7 @@ func locateFileSystem(dir string) http.FileSystem {
 
 // @securityDefinitions.basic  BasicAuth
 func main() {
-	// cmd.Execute()
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	global.InitGlobalConfig()
 	validator.InitValidator()
 	var r = router.InitRouter()

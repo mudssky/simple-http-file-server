@@ -11,6 +11,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/fsnotify/fsnotify"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
@@ -39,9 +40,13 @@ var (
 )
 
 func InitGlobalConfig() {
+	// 初始化viper，读取各种配置
 	initViper()
-	initZap()
+	// 手动校验配置信息
 	validateConfig()
+	// 初始化zap logger
+	initZap()
+	// 初始化 casbin
 	initCasbin()
 }
 
@@ -62,7 +67,7 @@ func initViper() {
 	viper.AddConfigPath(".")
 	// windows下面路径分隔符是反斜杠
 	viper.AddConfigPath("$HOME\\.ghs")
-	viper.SetConfigName("config")
+	viper.SetConfigName("ghs")
 
 	rootCmd := cmd.InitFlag()
 	viper.BindPFlags(rootCmd.Flags())
@@ -81,12 +86,19 @@ func initViper() {
 	if err != nil {
 		log.Fatalln("读取内嵌默认配置失败", err.Error())
 	}
-
 	// 然后用用户的配置文件进行覆盖
 	err = viper.MergeInConfig()
 	// err = viper.ReadInConfig() // 查找并读取配置文件
 	if err != nil { // 处理读取配置文件的错误
-		log.Fatalln("未找到配置文件:", err.Error())
+		//  err.(viper.ConfigFileNotFoundError)
+		switch t := err.(type) {
+		// 配置文件没找到的情况下不进行处理,采用内置配置文件
+		case viper.ConfigFileNotFoundError:
+			fmt.Println("user config file not found:", t.Error())
+		default:
+			log.Fatalln("merge config file failed:", t.Error())
+		}
+
 	}
 
 	if err := Viper.Unmarshal(&Config); err != nil {
@@ -100,12 +112,16 @@ func initViper() {
 		// fmt.Println("当前配置", Config)
 		fmt.Printf("当前配置:%+v\n", Config)
 	})
-	fmt.Println("命令行设置配置文件：", viper.AllSettings())
+	if Viper.GetBool("verbose") {
+		fmt.Println("所有配置：", viper.AllSettings())
+	}
+	// 处理命令行参数相关的执行
 	excuteCMd()
 }
 
 func excuteCMd() {
-	if Viper.GetBool("open") {
+	// 处理打开浏览器
+	if Config.Open {
 		go func() {
 			// time.Sleep(time.Second)
 			err := util.Open("http://127.0.0.1:" + fmt.Sprintf("%d", Config.Port))
@@ -116,16 +132,20 @@ func excuteCMd() {
 
 		}()
 	}
-
 }
 
 // 当前viper配置加载到结构体
 func loadViper() {
-	// var validate *validator.Validate
+
 	if err := Viper.Unmarshal(&Config); err != nil {
 		fmt.Println(err)
 	}
-
+	// 校验配置文件
+	validate := validator.New()
+	err := validate.Struct(&Config)
+	if err != nil {
+		log.Fatalln("config validate failed:", err.Error())
+	}
 	// usermap := Viper.GetString("usermap")
 	// fmt.Printf("usermap:%s\n", usermap)
 	// if usermap != "" {
@@ -143,8 +163,11 @@ func loadViper() {
 
 }
 func initCasbin() {
-	fmt.Println("casbin:", casbinModalStr)
-	fmt.Println("casbin policy:", policyCSV)
+	if Viper.GetBool("verbose") {
+		fmt.Println("casbin:", casbinModalStr)
+		fmt.Println("casbin policy:", policyCSV)
+	}
+
 	m, err := model.NewModelFromString(casbinModalStr)
 	if err != nil {
 		log.Fatalln("读取casbin modal配置文件失败:", err.Error())
@@ -169,9 +192,9 @@ func initZap() {
 	highPriority := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl >= zapcore.ErrorLevel
 	})
-	lowPriority := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-		return lvl < zapcore.ErrorLevel
-	})
+	// lowPriority := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	// 	return lvl < zapcore.ErrorLevel
+	// })
 
 	// High-priority output should also go to standard error, and low-priority
 	// output should also go to standard out.
@@ -210,7 +233,11 @@ func initZap() {
 	// zapcore.Cores, then tee the four cores together.
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, fileWriteSync, Config.Zap.GetLevelPriority()),
-		zapcore.NewCore(consoleEncoder, consoleDebugging, lowPriority),
+		// zapcore.NewCore(consoleEncoder, consoleDebugging, lowPriority),
+		zapcore.NewCore(consoleEncoder, consoleDebugging, zap.LevelEnablerFunc(func(l zapcore.Level) bool {
+			// 配置console loglevel
+			return l >= util.TransportZapLevel(Config.Loglevel)
+		})),
 		zapcore.NewCore(consoleEncoder, consoleErrors, highPriority),
 	)
 

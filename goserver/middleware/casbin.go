@@ -6,11 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
+	"go.uber.org/zap"
 )
 
 // RABC 权限校验
 func CasbinHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		l := global.Logger
 		// keys是中间件上下文自带的一个map键值对，可以用来在中间件之间传递值
 		// fmt.Println("keys", c.Keys)
 		sub := c.GetString("username")
@@ -18,6 +20,11 @@ func CasbinHandler() gin.HandlerFunc {
 		act := c.Request.Method
 		// fmt.Printf("sub:%v,obj:%v,act:%v\n", sub, obj, act)
 		isPass, err := global.CasbinEnforcer.Enforce(sub, obj, act)
+		l.Debug("permission check", zap.String("sub", sub),
+			zap.String("obj", obj),
+			zap.String("act", act),
+			zap.Bool("isPass", isPass),
+		)
 		if err != nil {
 			response.FailWithMessage("权限验证出错："+err.Error(), c)
 			c.Abort()
@@ -28,7 +35,6 @@ func CasbinHandler() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
 		c.Next()
 	}
 }
