@@ -1,6 +1,13 @@
 p,visitor,/api/filelist,POST
 p,visitor,/api/downloadItem,POST
+p,visitor,/api/uploadMulti,POST
+p,visitor,/api/mkdir,POST
+p,visitor,/api/createTxt,POST
 p,uploader,/api/filelist,POST
 p,uploader,/api/uploadMulti,POST
+p,uploader,/api/mkdir,POST
+p,uploader,/api/createTxt,POST
+p,user,/api/removeItem,POST,deny
 p,admin,/api/*,(GET)|(POST)
-g,mudssky,admin,
+g,mudssky,admin
+g,user,admin

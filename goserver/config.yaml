@@ -1,12 +1,16 @@
 port: 8792
 # folderlist: ['D:/coding']
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
+# 控制台输出的记录等级
+loglevel: 'info'
+
 jwt:
   secret: eqweqeqe
   expires: 3600
 zap:
-  level: debug
-  prefix: '[gfs]'
+  # 这边配置日志文件的记录等级
+  level: warn
+  prefix: '[ghs]'
   format: console
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
