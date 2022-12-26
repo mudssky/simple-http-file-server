@@ -52,9 +52,11 @@ func locateFileSystem(dir string) http.FileSystem {
 
 // @securityDefinitions.basic  BasicAuth
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+
 	global.InitGlobalConfig()
 	validator.InitValidator()
+	// 模式设置,按照env,配置文件的顺序读取模式
+	gin.SetMode(global.Config.Mode)
 	var r = router.InitRouter()
 	// 文档路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

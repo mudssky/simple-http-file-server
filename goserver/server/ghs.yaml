@@ -1,9 +1,9 @@
-port: 8792
+port: 8799
 # folderlist: ['D:/coding']
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级
 loglevel: 'info'
-mode: 'release'
+
 jwt:
   secret: eqweqeqe
   expires: 3600

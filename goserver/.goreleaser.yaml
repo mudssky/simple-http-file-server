@@ -1,5 +1,6 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
+project_name: ghs
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -12,7 +13,8 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
+      # 没有苹果设备,所以就不发布苹果版本的了
+      # - darwin
 archives:
   - replacements:
       darwin: Darwin
