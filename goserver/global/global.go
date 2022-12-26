@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strings"
 	"time"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	"github.com/mitchellh/go-homedir"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
@@ -56,33 +58,46 @@ func loadDotenv() {
 	if err != nil {
 		// 开启verbose后显示更多信息
 		if Viper.GetBool("verbose") {
-			fmt.Println(err.Error())
+			fmt.Println("log dotenv error:", err.Error())
 		}
 	}
 }
 
 func initViper() {
-	loadDotenv()
+
 	Viper = viper.GetViper()
 	viper.AddConfigPath(".")
 	// windows下面路径分隔符是反斜杠
-	viper.AddConfigPath("$HOME\\.ghs")
-	viper.SetConfigName("ghs")
+
+	homepath, err := homedir.Dir()
+	if err != nil {
+		log.Fatalln("get home dir error: ", err.Error())
+	}
+	homeconfigPath := path.Join(homepath, ".ghs")
+	configname := "ghs"
+	// fmt.Println("homedir:", homepath)
+	viper.AddConfigPath(homeconfigPath)
+	viper.SetConfigName(configname)
+	loadDotenv()
 
 	rootCmd := cmd.InitFlag()
-	viper.BindPFlags(rootCmd.Flags())
+	err = viper.BindPFlags(rootCmd.Flags())
+	if err != nil {
+		log.Fatalln("bind flags failed:", err.Error())
+	}
 	// 读取命令行中的配置文件路径
 	if configpath := viper.GetString("config"); configpath != "" {
 		fmt.Println("命令行设置配置文件：", configpath, viper.AllSettings())
 		viper.SetConfigFile(configpath)
 	}
-	viper.MergeInConfig()
 	viper.AutomaticEnv()
 	// viper.SetEnvPrefix("GFS")
-	viper.BindEnv("port")
-
+	// err = viper.BindEnv("port")
+	// if err != nil {
+	// 	log.Fatalln("bind port failed:", err.Error())
+	// }
 	// 先读取内嵌默认配置
-	err := viper.ReadConfig(strings.NewReader(defaultConfig))
+	err = viper.ReadConfig(strings.NewReader(defaultConfig))
 	if err != nil {
 		log.Fatalln("读取内嵌默认配置失败", err.Error())
 	}
@@ -94,15 +109,30 @@ func initViper() {
 		switch t := err.(type) {
 		// 配置文件没找到的情况下不进行处理,采用内置配置文件
 		case viper.ConfigFileNotFoundError:
-			fmt.Println("user config file not found:", t.Error())
+			if Viper.GetBool("verbose") {
+				fmt.Println("user config file not found:", t.Error())
+			}
+			// 找不到的情况,写入默认配置到用户目录
+			isExist, err := util.PathExists(homepath)
+			if err != nil {
+				log.Fatalln("check homepath failed:", err.Error())
+			}
+			if !isExist {
+				err := os.MkdirAll(homepath, os.ModeDir)
+				if err != nil {
+					log.Fatalln("create home path failed:", err.Error())
+				}
+			}
+			homeconfigfilePath := path.Join(homeconfigPath, configname+".yaml")
+			err = os.WriteFile(homeconfigfilePath, []byte(defaultConfig), os.ModePerm)
+			if err != nil {
+				log.Fatalln("create home path config failed:", err.Error())
+			}
+
 		default:
 			log.Fatalln("merge config file failed:", t.Error())
 		}
 
-	}
-
-	if err := Viper.Unmarshal(&Config); err != nil {
-		log.Fatalln("反序列化配置文件失败：", err.Error())
 	}
 	loadViper()
 	viper.WatchConfig()
@@ -126,8 +156,8 @@ func excuteCMd() {
 			// time.Sleep(time.Second)
 			err := util.Open("http://127.0.0.1:" + fmt.Sprintf("%d", Config.Port))
 			if err != nil {
-				log.Fatalln(err)
-				os.Exit(1)
+				log.Fatalln("open brower failed", err.Error())
+				// os.Exit(1)
 			}
 
 		}()
@@ -138,7 +168,7 @@ func excuteCMd() {
 func loadViper() {
 
 	if err := Viper.Unmarshal(&Config); err != nil {
-		fmt.Println(err)
+		log.Fatalln("loadViper failed:", err)
 	}
 	// 校验配置文件
 	validate := validator.New()
