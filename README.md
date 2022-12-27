@@ -1,1 +1,13 @@
-# simple-http-file-server
+# ghs
+golang http file server
+
+
+## Overview
+ghs是一个命令行启动的文件服务器
+支持以下功能
+- 文件上传(目录上传，拖拽上传)
+- 文件/文件夹（zip打包）下载
+- 创建文本，编辑文本，创建目录，文件删除，重命名等功能
+- 用户登录
+- 使用casbin实现了一套基于角色的权限管理功能
+- 提供二维码

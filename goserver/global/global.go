@@ -101,6 +101,10 @@ func initViper() {
 	if err != nil {
 		log.Fatalln("读取内嵌默认配置失败", err.Error())
 	}
+	if Viper.GetBool("verbose") {
+		loadViper()
+		fmt.Printf("default config:%#v\n", Config)
+	}
 	// 然后用用户的配置文件进行覆盖
 	err = viper.MergeInConfig()
 	// err = viper.ReadInConfig() // 查找并读取配置文件
@@ -144,6 +148,8 @@ func initViper() {
 	})
 	if Viper.GetBool("verbose") {
 		fmt.Println("所有配置：", viper.AllSettings())
+		fmt.Printf("merged config:%#v\n", Config)
+		viper.Debug()
 	}
 	// 处理命令行参数相关的执行
 	excuteCMd()

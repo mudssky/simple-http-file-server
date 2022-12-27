@@ -100,3 +100,6 @@ __debug_bin
 ######################
 .sass-cache/*
 node_modules/
+
+
+githubtoken
