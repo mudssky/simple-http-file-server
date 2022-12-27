@@ -20,12 +20,14 @@ type ServerAPI struct{}
 func (s *ServerAPI) GetServerInfo(c *gin.Context) {
 	// l := global.Logger
 	// ip, err := util.GetClientIp()
-	IPList, err := util.ClientIPs()
+	IPList, err := util.ServerIPs()
 
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	// outIP, _ := util.ExternalIP()
+	// fmt.Println("outip", outIP)
 	response.SuccessWithData(response.ServerInfoRes{
 		LocalIPList: IPList,
 		Port:        int(global.Config.Port),

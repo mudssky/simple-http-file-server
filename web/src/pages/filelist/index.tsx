@@ -151,7 +151,7 @@ export default function FileList() {
                     content={
                       <Row justify={'center'}>
                         <QRCodeSVG
-                          value={`http://${serverInfo.localIpList?.[1]}:${
+                          value={`http://${serverInfo.localIpList?.[0]}:${
                             serverInfo.port
                           }${getServerStaticUrl(record.link)}`}
                         />

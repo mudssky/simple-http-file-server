@@ -7,6 +7,7 @@ import (
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
+	"go.uber.org/zap"
 )
 
 func IPLimit() gin.HandlerFunc {
@@ -20,6 +21,7 @@ func IPLimit() gin.HandlerFunc {
 		if clientIP[:4] != "127." {
 			// 判断是否为局域网ip
 			if util.IsLANIP(clientIP) {
+				l.Debug("pass lan ip :", zap.String("ip", clientIP))
 				// 信任局域网，也就是内网的情况下，放行内网IP
 				if global.Config.Security.TrustLan {
 					c.Next()

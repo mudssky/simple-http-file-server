@@ -1,6 +1,6 @@
 package config
 
 type Security struct {
-	IPWhitelist []string `json:"ip_whitelist"`
-	TrustLan    bool     `json:"trust_lan"`
+	IPWhitelist []string `mapstructure:"ip-whitelist" json:"ip-whitelist" yaml:"ip-whitelist"`
+	TrustLan    bool     `mapstructure:"trust-lan" json:"trust-lan" yaml:"trust-lan"`
 }

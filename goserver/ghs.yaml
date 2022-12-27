@@ -35,5 +35,5 @@ webpermission:
   uploader: ['write']
 
 security:
-  ip-whitelist: []
+  ip-whitelist: ['dsada']
   trust-lan: true

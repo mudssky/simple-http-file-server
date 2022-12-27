@@ -1,5 +1,7 @@
 package config
 
+// mapstructure 是viper unmarshaling 用到的标签 ,用的这个库 github.com/mitchellh/mapstructure
+
 type Server struct {
 	// 配置文件路径
 	Config string `mapstructure:"config"  json:"config" yaml:"config"`
@@ -7,8 +9,8 @@ type Server struct {
 	Open    bool `mapstructure:"open" json:"open" yaml:"open"`
 	Verbose bool `mapstructure:"verbose" json:"verbose" yaml:"verbose"`
 	// 服务器模式
-	Mode          string `mapstructure:"mode" json:"mode" yaml:"mode" validate:"oneof=debug release test"`
-	Port          uint16
+	Mode          string        `mapstructure:"mode" json:"mode" yaml:"mode" validate:"oneof=debug release test"`
+	Port          int           `mapstructure:"port" json:"port" yaml:"port"`
 	Zap           Zap           `mapstructure:"zap" json:"zap" yaml:"zap"`
 	Loglevel      string        `mapstructure:"loglevel" json:"loglevel" yaml:"loglevel" validate:"oneof=debug info warn error dpanic panic fatal" `
 	FolderList    []string      `mapstructure:"folderlist" json:"folderlist" yaml:"folderlist"`
