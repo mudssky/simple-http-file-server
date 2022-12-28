@@ -32,8 +32,6 @@ function buildWeb {
 	Set-Location ..
 }
 
-$token = Get-Content .\githubtoken
-$env:GITHUB_TOKEN = $token
 if (-not $skipWebbuild) {
 	buildWeb
 }
@@ -47,6 +45,8 @@ if ($build) {
 	Set-Location $workPath
 }
 if ($release) {
+	$token = Get-Content .\githubtoken
+	$env:GITHUB_TOKEN = $token
 	Write-Verbose -Message ('cd gopath {0}' -f $goPath)
 	Set-Location $goPath
 	Write-Verbose -Message "release to github"
