@@ -1,8 +1,8 @@
 package router
 
 import (
+	"encoding/base64"
 	"net/http"
-	"path"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,8 +29,12 @@ func InitRouter() *gin.Engine {
 
 	// 遍历生成静态文件目录
 	for _, folderpath := range global.Config.FolderList {
-		l.Debug("static path: /static/" + path.Base(folderpath))
-		r.StaticFS("/static/"+path.Base(folderpath), http.Dir(folderpath))
+		// l.Debug("static path: /static/" + path.Base(folderpath))
+		// r.StaticFS("/static/"+path.Base(folderpath), http.Dir(folderpath))
+		// 使用url安全的base64根据路径生成静态服务前缀
+		l.Debug("static path: /static/" + base64.RawURLEncoding.EncodeToString([]byte(folderpath)))
+		r.StaticFS("/static/"+base64.RawURLEncoding.EncodeToString([]byte(folderpath)), http.Dir(folderpath))
+
 	}
 
 	r.GET("/ping", func(c *gin.Context) {

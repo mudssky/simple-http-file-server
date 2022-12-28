@@ -33,8 +33,8 @@ func Execute() {
 func InitFlag() *cobra.Command {
 
 	workdir, _ := util.AbsWorkDirSlash()
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().Uint16P("port", "p", 5006, "server start port")
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().IntP("port", "p", 5006, "server start port")
 	rootCmd.Flags().StringP("config", "c", "", "config file path")
 	rootCmd.Flags().BoolP("verbose", "v", false, "log more message")
 	rootCmd.Flags().BoolP("open", "o", false, "open default browser")

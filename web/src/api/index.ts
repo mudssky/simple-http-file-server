@@ -13,6 +13,8 @@ export interface FileItem {
   isFolder: boolean
   size: number
   link: string
+  rootPath: string
+  rootPathEncode: string
 }
 
 /**

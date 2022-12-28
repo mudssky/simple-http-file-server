@@ -22,3 +22,18 @@ export function encryptPassword(password: string) {
   const salt = bcrypt.genSaltSync(10)
   return bcrypt.hashSync(password, salt)
 }
+
+export function base64URLSafeEncode(value: string) {
+  const urlsafeDict: { [key: string]: string } = {
+    '+': '-',
+    '/': '_',
+    '=': '',
+  }
+  const base64Val = window.btoa(value)
+  return base64Val
+    .split('')
+    .map((char) => {
+      return urlsafeDict?.[char] ?? char
+    })
+    .join('')
+}
