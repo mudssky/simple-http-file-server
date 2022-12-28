@@ -182,6 +182,16 @@ func loadViper() {
 	if err != nil {
 		log.Fatalln("config validate failed:", err.Error())
 	}
+	// 处理zap相关配置
+	// 日志文件默认写入用户目录和配置文件放在一起
+	if Config.Zap.Filename == "" {
+		homepath, err := homedir.Dir()
+		if err != nil {
+			log.Fatalln("get home dir error: ", err.Error())
+		}
+		homeconfigPath := path.Join(homepath, ".ghs")
+		Config.Zap.Filename = path.Join(homeconfigPath, "ghs.log")
+	}
 	// usermap := Viper.GetString("usermap")
 	// fmt.Printf("usermap:%s\n", usermap)
 	// if usermap != "" {

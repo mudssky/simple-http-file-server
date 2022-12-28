@@ -10,7 +10,7 @@ type Server struct {
 	Verbose bool `mapstructure:"verbose" json:"verbose" yaml:"verbose"`
 	// 服务器模式
 	Mode          string        `mapstructure:"mode" json:"mode" yaml:"mode" validate:"oneof=debug release test"`
-	Port          int           `mapstructure:"port" json:"port" yaml:"port"`
+	Port          int           `mapstructure:"port" json:"port" yaml:"port" validate:"max=65535,min=0"`
 	Zap           Zap           `mapstructure:"zap" json:"zap" yaml:"zap"`
 	Loglevel      string        `mapstructure:"loglevel" json:"loglevel" yaml:"loglevel" validate:"oneof=debug info warn error dpanic panic fatal" `
 	FolderList    []string      `mapstructure:"folderlist" json:"folderlist" yaml:"folderlist"`

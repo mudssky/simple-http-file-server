@@ -1,4 +1,4 @@
-port: 8799
+# port: 8799
 # folderlist: ['D:/coding']
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级
@@ -9,14 +9,14 @@ jwt:
   expires: 3600
 zap:
   # 这边配置日志文件的记录等级
-  level: warn
+  level: debug
   prefix: '[ghs]'
   format: console
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
 
   ## 下面是lumberjack库相关的配置，用于日志写入文件
-  filename: log/goserver.log
+  filename: log/ghs.log
   # 最大日期，天数
   max-age: 30
   # 最大备份次数

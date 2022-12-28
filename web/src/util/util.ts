@@ -1,8 +1,6 @@
 import { message } from 'antd'
 import { AxiosProgressEvent } from 'axios'
 import { ResponseData } from '../global'
-import CryptoJS from 'crypto-js'
-import { setLocalstorage } from './localStorage'
 
 export const imgPattern = /[^\s]+\.(jpg|jpeg|png|gif|bmp|webp)$/i
 /**

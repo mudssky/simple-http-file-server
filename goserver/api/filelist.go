@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -21,19 +22,25 @@ import (
 
 type FileListAPI struct{}
 
-func getStaticLink(pathname string, isDir bool) string {
-	if isDir {
-		return ""
-	}
-	for _, rootpath := range global.Config.FolderList {
-		rootname := path.Base(rootpath)
-		if strings.HasPrefix(pathname, rootpath) {
-			return "/" + rootname + "/" + pathname[len(rootpath)+1:]
+//	func getStaticLink(pathname string, isDir bool) string {
+//		if isDir {
+//			return ""
+//		}
+//		for _, rootpath := range global.Config.FolderList {
+//			rootname := path.Base(rootpath)
+//			if strings.HasPrefix(pathname, rootpath) {
+//				return "/" + rootname + "/" + pathname[len(rootpath)+1:]
+//			}
+//		}
+//		return ""
+//	}
+func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo, err error) {
+	var rootPath string
+	for _, folder := range global.Config.FolderList {
+		if strings.HasPrefix(pathname, folder) {
+			rootPath = folder
 		}
 	}
-	return ""
-}
-func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo, err error) {
 	dirEntryList, err := os.ReadDir(pathname)
 	if err != nil {
 		return nil, err
@@ -45,13 +52,17 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 			return nil, err
 		}
 		itempath := path.Join(pathname, fileinfo.Name())
+		staticPath := strings.TrimPrefix(itempath, rootPath)
+		rootPathEncode := base64.RawURLEncoding.EncodeToString([]byte(rootPath))
 		reslist = append(reslist, response.FileInfo{
-			Name:        fileinfo.Name(),
-			LastModTime: fileinfo.ModTime().UnixMilli(),
-			Path:        itempath,
-			IsFolder:    fileinfo.IsDir(),
-			Size:        fileinfo.Size(),
-			Link:        getStaticLink(itempath, fileinfo.IsDir()),
+			Name:           fileinfo.Name(),
+			LastModTime:    fileinfo.ModTime().UnixMilli(),
+			Path:           itempath,
+			IsFolder:       fileinfo.IsDir(),
+			Size:           fileinfo.Size(),
+			RootPath:       rootPath,
+			RootPathEncode: rootPathEncode,
+			Link:           rootPathEncode + staticPath,
 		})
 	}
 	return reslist, nil
@@ -85,9 +96,12 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 		l.Debug(fmt.Sprintf("global config : %v", global.Config.FolderList))
 		response.SuccessWithData(lo.Map(global.Config.FolderList, func(item string, index int) response.FileInfo {
 			return response.FileInfo{
-				Path:     item,
-				IsFolder: true,
-				Name:     path.Base(item),
+				Path:           item,
+				IsFolder:       true,
+				Name:           path.Base(item),
+				RootPath:       item,
+				RootPathEncode: base64.RawURLEncoding.EncodeToString([]byte(item)),
+				// Link:           "",
 			}
 		}), c)
 		return

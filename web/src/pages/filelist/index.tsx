@@ -13,7 +13,7 @@ import {
   Popover,
   Row,
 } from 'antd'
-import { encodeURLAll, filesizeFormatter, isImage, path } from '../../util/util'
+import { filesizeFormatter, isImage, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
@@ -31,7 +31,7 @@ import {
   setPhotoPreviewOptionsAction,
   setRenameModalOptionsAction,
 } from '../../store/reducer/homeReducer'
-import { getServerStaticUrl, STATIC_SERVER_PREFIX } from '../../config'
+import { STATIC_SERVER_PREFIX } from '../../config'
 import CustomPhotoViewer from '../../components/customPhotoView'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -101,7 +101,7 @@ export default function FileList() {
                 </span>
               ) : (
                 <a
-                  href={`${STATIC_SERVER_PREFIX}${encodeURLAll(record.link)}`}
+                  href={`${STATIC_SERVER_PREFIX}${record.link}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -151,9 +151,7 @@ export default function FileList() {
                     content={
                       <Row justify={'center'}>
                         <QRCodeSVG
-                          value={`http://${serverInfo.localIpList?.[0]}:${
-                            serverInfo.port
-                          }${getServerStaticUrl(record.link)}`}
+                          value={`http://${serverInfo.localIpList?.[0]}:${serverInfo.port}${record.link}`}
                         />
                       </Row>
                     }

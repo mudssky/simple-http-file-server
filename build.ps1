@@ -1,7 +1,8 @@
 [CmdletBinding()]
 Param(
 	[switch]$skipWebbuild = $false,
-	[switch]$release = $false
+	[switch]$release = $false,
+	[switch]$build = $false
 )
 
 trap {
@@ -15,6 +16,7 @@ function buildWeb {
 	Write-Verbose -Message "move to web dir"
 	Set-Location web
 	Write-Verbose -Message "build web app"
+	pnpm install
 	pnpm build
 	if (Test-Path ../goserver/public) {
 		Write-Verbose -Message "clean goserver/public"
@@ -34,6 +36,15 @@ $token = Get-Content .\githubtoken
 $env:GITHUB_TOKEN = $token
 if (-not $skipWebbuild) {
 	buildWeb
+}
+if ($build) {
+	Write-Verbose -Message "move to gofolder"
+	Set-Location $goPath
+	Write-Verbose -Message "building..."
+	go generate
+	go build
+	Write-Verbose -Message "move back to root"
+	Set-Location $workPath
 }
 if ($release) {
 	Write-Verbose -Message ('cd gopath {0}' -f $goPath)
