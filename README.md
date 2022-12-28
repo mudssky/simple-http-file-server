@@ -41,7 +41,7 @@ Usage:
 
 Flags:
   -c, --config string       config file path
-      --folderlist string   config file path (default "C:/home/coding/Projects/simple-http-file-server/goserver")
+      --folderlist string   root folder list (default "C:/home/coding/Projects/simple-http-file-server/goserver")
   -h, --help                help for ghs
   -l, --loglevel string     console log level (default "debug")
   -o, --open                open default browser

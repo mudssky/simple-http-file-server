@@ -38,7 +38,7 @@ func InitFlag() *cobra.Command {
 	rootCmd.Flags().StringP("config", "c", "", "config file path")
 	rootCmd.Flags().BoolP("verbose", "v", false, "log more message")
 	rootCmd.Flags().BoolP("open", "o", false, "open default browser")
-	rootCmd.Flags().StringP("folderlist", "", workdir, "config file path")
+	rootCmd.Flags().StringP("folderlist", "", workdir, "root folder list")
 	rootCmd.Flags().StringP("loglevel", "l", "debug", "console log level")
 	// rootCmd.Flags().StringP("usermap", "", "", "user data json  to login")
 	// rootCmd.Flags().StringP("username", "u", "mudssky", "username to login")
