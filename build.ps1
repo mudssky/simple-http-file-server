@@ -2,7 +2,8 @@
 Param(
 	[switch]$skipWebbuild = $false,
 	[switch]$release = $false,
-	[switch]$build = $false
+	[switch]$build = $false,
+	[switch]$localRelease = $false
 )
 
 trap {
@@ -44,13 +45,20 @@ if ($build) {
 	Write-Verbose -Message "move back to root"
 	Set-Location $workPath
 }
-if ($release) {
-	$token = Get-Content .\githubtoken
-	$env:GITHUB_TOKEN = $token
+if ($release -or $localRelease) {
 	Write-Verbose -Message ('cd gopath {0}' -f $goPath)
 	Set-Location $goPath
-	Write-Verbose -Message "release to github"
-	goreleaser.exe release  --rm-dist
+	if ($localRelease) {
+		Write-Verbose -Message "local release"
+		goreleaser release --snapshot --rm-dist
+	}
+	else {
+		$token = Get-Content .\githubtoken
+		$env:GITHUB_TOKEN = $token
+		Write-Verbose -Message "release to github"
+		goreleaser release  --rm-dist
+	}
+
 	Set-Location $workPath
 }
 
