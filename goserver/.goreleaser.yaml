@@ -16,12 +16,19 @@ builds:
       # 没有苹果设备,所以就不发布苹果版本的了
       # - darwin
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+  - # replacements:
+    #   darwin: Darwin
+    #   linux: Linux
+    #   windows: Windows
+    #   386: i386
+    #   amd64: x86_64
+    # windows build 采用zip打包
+    format_overrides:
+      - goos: windows
+        format: zip
+source:
+  enabled: true
+
 checksum:
   name_template: 'checksums.txt'
 snapshot:

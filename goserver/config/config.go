@@ -9,8 +9,10 @@ type Server struct {
 	Open    bool `mapstructure:"open" json:"open" yaml:"open"`
 	Verbose bool `mapstructure:"verbose" json:"verbose" yaml:"verbose"`
 	// 服务器模式
-	Mode          string        `mapstructure:"mode" json:"mode" yaml:"mode" validate:"oneof=debug release test"`
-	Port          int           `mapstructure:"port" json:"port" yaml:"port" validate:"max=65535,min=0"`
+	Mode string `mapstructure:"mode" json:"mode" yaml:"mode" validate:"oneof=debug release test"`
+	Port int    `mapstructure:"port" json:"port" yaml:"port" validate:"max=65535,min=0"`
+	//是否检查更新
+	CheckUpdate   bool          `mapstructure:"check-update" json:"check-update" yaml:"check-update"`
 	Zap           Zap           `mapstructure:"zap" json:"zap" yaml:"zap"`
 	Loglevel      string        `mapstructure:"loglevel" json:"loglevel" yaml:"loglevel" validate:"oneof=debug info warn error dpanic panic fatal" `
 	FolderList    []string      `mapstructure:"folderlist" json:"folderlist" yaml:"folderlist"`

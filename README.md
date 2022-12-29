@@ -14,8 +14,7 @@ ghs是一个命令行启动的文件服务器
 - 图片预览功能
 
 ## Install
-1. 去发布页面下载
-
+1. [去发布页面下载](https://github.com/mudssky/simple-http-file-server/releases/)
 
 2. 从源码编译
 使用powershell写了一个执行编译的脚本 build.ps1

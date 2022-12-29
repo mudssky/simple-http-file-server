@@ -14,10 +14,11 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/mitchellh/go-homedir"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
+	"github.com/mudssky/simple-http-file-server/goserver/sysinfo"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
+	"github.com/mudssky/simple-http-file-server/goserver/version"
 	scas "github.com/qiangmzsx/string-adapter/v2"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -39,6 +40,7 @@ var (
 	Logger         *zap.Logger
 	Config         config.Server
 	CasbinEnforcer *casbin.Enforcer
+	SystemInfo     *sysinfo.SystemInfo
 )
 
 func InitGlobalConfig() {
@@ -66,24 +68,48 @@ func loadDotenv() {
 func initViper() {
 
 	Viper = viper.GetViper()
+	rootCmd := cmd.InitFlag()
+	err := viper.BindPFlags(rootCmd.Flags())
+	if err != nil {
+		log.Fatalln("bind flags failed:", err.Error())
+	}
+	// 获取系统相关信息，接下来检查更新要用到
+	SystemInfo, err = sysinfo.Info()
+	if err != nil {
+		log.Fatalln("get system info error: ", err.Error())
+	}
+
+	// 执行更新命令
+	if viper.GetBool("update") {
+		version.Update(SystemInfo)
+	} else {
+		if viper.GetBool("check-update") {
+			err := version.NotifyUpdate()
+			if err != nil {
+				log.Fatalln("notify update error:", err.Error())
+			}
+		}
+	}
+
 	viper.AddConfigPath(".")
 	// windows下面路径分隔符是反斜杠
+	// homepath, err := homedir.Dir()
+	// if err != nil {
+	// 	log.Fatalln("get home dir error: ", err.Error())
+	// }
+	// SystemInfo.Path, err = os.UserHomeDir()
+	// if err != nil {
+	// 	log.Fatalln("get home dir error: ", err.Error())
+	// }
 
-	homepath, err := homedir.Dir()
-	if err != nil {
-		log.Fatalln("get home dir error: ", err.Error())
-	}
-	homeconfigPath := path.Join(homepath, ".ghs")
+	homeconfigPath := path.Join(SystemInfo.HomePath, ".ghs")
 	configname := "ghs"
 	// fmt.Println("homedir:", homepath)
 	viper.AddConfigPath(homeconfigPath)
 	viper.SetConfigName(configname)
 	loadDotenv()
-
-	rootCmd := cmd.InitFlag()
-	err = viper.BindPFlags(rootCmd.Flags())
-	if err != nil {
-		log.Fatalln("bind flags failed:", err.Error())
+	if viper.GetBool("verbose") {
+		fmt.Println("home dir:", SystemInfo.HomePath)
 	}
 	// 读取命令行中的配置文件路径
 	if configpath := viper.GetString("config"); configpath != "" {
@@ -117,12 +143,12 @@ func initViper() {
 				fmt.Println("user config file not found:", t.Error())
 			}
 			// 找不到的情况,写入默认配置到用户目录
-			isExist, err := util.PathExists(homepath)
+			isExist, err := util.PathExists(SystemInfo.HomePath)
 			if err != nil {
 				log.Fatalln("check homepath failed:", err.Error())
 			}
 			if !isExist {
-				err := os.MkdirAll(homepath, os.ModeDir)
+				err := os.MkdirAll(SystemInfo.HomePath, os.ModeDir)
 				if err != nil {
 					log.Fatalln("create home path failed:", err.Error())
 				}
@@ -185,11 +211,7 @@ func loadViper() {
 	// 处理zap相关配置
 	// 日志文件默认写入用户目录和配置文件放在一起
 	if Config.Zap.Filename == "" {
-		homepath, err := homedir.Dir()
-		if err != nil {
-			log.Fatalln("get home dir error: ", err.Error())
-		}
-		homeconfigPath := path.Join(homepath, ".ghs")
+		homeconfigPath := path.Join(SystemInfo.HomePath, ".ghs")
 		Config.Zap.Filename = path.Join(homeconfigPath, "ghs.log")
 	}
 	// usermap := Viper.GetString("usermap")

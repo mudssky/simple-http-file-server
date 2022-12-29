@@ -3,6 +3,7 @@
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级
 loglevel: 'info'
+check-update: true
 
 jwt:
   secret: eqweqeqe
