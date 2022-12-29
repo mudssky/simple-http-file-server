@@ -160,3 +160,28 @@ func Unzip(zipFile string, destDir string) ([]string, error) {
 	}
 	return paths, nil
 }
+
+func UnzipCertain(zipFile string, filename string) (file []byte, err error) {
+	zipReader, err := zip.OpenReader(zipFile)
+	// var paths []string
+	if err != nil {
+		return nil, err
+	}
+	defer zipReader.Close()
+
+	for _, f := range zipReader.File {
+		if f.Name == filename {
+			inFile, err := f.Open()
+			if err != nil {
+				return nil, err
+			}
+			file, err = io.ReadAll(inFile)
+			if err != nil {
+				return nil, err
+			}
+			defer inFile.Close()
+			break
+		}
+	}
+	return
+}
