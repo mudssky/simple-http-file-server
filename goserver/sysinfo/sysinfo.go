@@ -2,10 +2,13 @@ package sysinfo
 
 import (
 	"os"
+	"path"
 	"runtime"
 )
 
 type SystemInfo struct {
+	// 程序所在文件夹
+	ProgramFolder string
 	// 执行程序所在的路径
 	ProgramPath string
 	HomePath    string
@@ -22,6 +25,7 @@ func Info() (info *SystemInfo, err error) {
 	info.GOOS = runtime.GOOS
 	info.GOARCH = runtime.GOARCH
 	info.ProgramPath = os.Args[0]
+	info.ProgramFolder = path.Dir(info.ProgramPath)
 	return
 
 }

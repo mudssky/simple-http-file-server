@@ -12,6 +12,7 @@ ghs是一个命令行启动的文件服务器
 - 使用casbin实现了一套基于角色的权限管理功能
 - 地址二维码方便手机使用
 - 图片预览功能
+- 支持从github检查/更新版本
 
 ## Install
 1. [去发布页面下载](https://github.com/mudssky/simple-http-file-server/releases/)
@@ -34,7 +35,6 @@ build.ps1 -build -Verbose
 因为我没有mac设备，所以没有发布mac的版本。
 
 ```
-go run .\main.go -h
 Usage:
   ghs [flags]
 
@@ -45,7 +45,9 @@ Flags:
   -l, --loglevel string     console log level (default "debug")
   -o, --open                open default browser
   -p, --port int            server start port (default 5006)
+  -U, --update              update new version
   -v, --verbose             log more message
+      --version             version for ghs
 ```
 
 1. 命令行在对应路径执行

@@ -5,11 +5,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"runtime"
 	"strings"
 
+	"github.com/cavaliergopher/grab/v3"
 	goversion "github.com/hashicorp/go-version"
 	"github.com/mudssky/simple-http-file-server/goserver/sysinfo"
+	"github.com/mudssky/simple-http-file-server/goserver/util"
 )
 
 var (
@@ -18,7 +21,7 @@ var (
 )
 
 func Version() string {
-	return "0.0.9"
+	return "1.0.2"
 }
 
 func PrintVersion() {
@@ -47,8 +50,6 @@ func CheckUpdate() (needUpdate bool, err error) {
 	if err != nil {
 		log.Fatalln("new version error", latestVersion, err.Error())
 	}
-	fmt.Println("os:", os.Environ())
-	fmt.Println("runtime", runtime.GOOS, runtime.GOARCH)
 	// 版本不需要更新的情况
 	if currentVersion.LessThan(latestVersion) {
 		return true, nil
@@ -63,7 +64,7 @@ func NotifyUpdate() error {
 		return err
 	}
 	if needUpdate {
-		fmt.Println("发现新版本：", latestVersionStr)
+		fmt.Printf("发现新版本：%s, run ghs -U to update", latestVersionStr)
 	}
 	return nil
 }
@@ -99,9 +100,9 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 	fmt.Printf("发现新版本! %v\n", latestVersionStr)
 
 	achieveSuffix := ".tar.gz"
-	// if runtime.GOOS == "windows" {
-	// 	achieveSuffix = ".zip"
-	// }
+	if runtime.GOOS == "windows" {
+		achieveSuffix = ".zip"
+	}
 	fileNameList := []string{
 		"ghs",
 		latestVersionStr,
@@ -110,9 +111,30 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 	}
 	fileName := strings.Join(fileNameList, "_") + achieveSuffix
 	latestDownloadURL := downloadPrefix + fileName
+	fmt.Println("download link:", latestDownloadURL)
+	fmt.Println("download path:", systemInfo)
+	resp, err := grab.Get(systemInfo.ProgramFolder, latestDownloadURL)
+	if err != nil {
+		log.Fatal("download update failed:", err)
+	}
+	zipPath := path.Join(systemInfo.ProgramFolder, fileName)
+	fmt.Println("Download saved to", resp.Filename)
+	binaryName := "ghs"
+	if systemInfo.GOOS == "windows" {
+		binaryName = "ghs.exe"
 
-	fmt.Printf(`下载地址:%s
-	`, latestDownloadURL)
+	}
+	fmt.Println("unpack zip file...")
+	binaryBytes, err := util.UnzipCertain(zipPath, binaryName)
+	if err != nil {
+		log.Fatalln("unzip error:", err.Error())
+	}
+	os.WriteFile(path.Join(systemInfo.ProgramFolder, binaryName), binaryBytes, os.ModePerm)
+	fmt.Println("unpack zip file succeed")
+	fmt.Println("remove zip...")
+	os.ReadFile(zipPath)
+	fmt.Println("remove zip succeed")
+	fmt.Printf("new version %s install succeed,run ghs --version to check", latestVersionStr)
 	os.Exit(0)
 
 }
