@@ -129,10 +129,16 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 	if err != nil {
 		log.Fatalln("unzip error:", err.Error())
 	}
-	os.WriteFile(path.Join(systemInfo.ProgramFolder, binaryName), binaryBytes, os.ModePerm)
+	err = os.WriteFile(path.Join(systemInfo.ProgramFolder, binaryName), binaryBytes, os.ModePerm)
+	if err != nil {
+		log.Fatalln("write file error:", err.Error())
+	}
 	fmt.Println("unpack zip file succeed")
 	fmt.Println("remove zip...")
-	os.ReadFile(zipPath)
+	err = os.Remove(zipPath)
+	if err != nil {
+		log.Fatalln("remove file error:", err.Error())
+	}
 	fmt.Println("remove zip succeed")
 	fmt.Printf("new version %s install succeed,run ghs --version to check", latestVersionStr)
 	os.Exit(0)
