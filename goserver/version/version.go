@@ -64,7 +64,7 @@ func NotifyUpdate() error {
 		return err
 	}
 	if needUpdate {
-		fmt.Printf("发现新版本：%s, run ghs -U to update", latestVersionStr)
+		fmt.Printf("发现新版本：%s, run ghs -U to update\n", latestVersionStr)
 	}
 	return nil
 }
@@ -93,7 +93,7 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 		log.Fatalln("check update err:", err.Error())
 	}
 	if !needUpdate {
-		log.Fatalln("已经是最新版本：", latestVersionStr)
+		log.Fatalln("已经是最新版本：", Version())
 		return
 	}
 	// 版本需要更新

@@ -48,6 +48,8 @@ func InitGlobalConfig() {
 	initViper()
 	// 手动校验配置信息
 	validateConfig()
+	// 处理命令行参数相关的执行,需要加载完viper后执行的内容
+	excuteCMDAfterViper()
 	// 初始化zap logger
 	initZap()
 	// 初始化 casbin
@@ -79,34 +81,12 @@ func initViper() {
 		log.Fatalln("get system info error: ", err.Error())
 	}
 
-	// 执行更新命令
-	if viper.GetBool("update") {
-		version.Update(SystemInfo)
-	} else {
-		if viper.GetBool("check-update") {
-			err := version.NotifyUpdate()
-			if err != nil {
-				log.Fatalln("notify update error:", err.Error())
-			}
-		}
-	}
-
 	viper.AddConfigPath(".")
-	// windows下面路径分隔符是反斜杠
-	// homepath, err := homedir.Dir()
-	// if err != nil {
-	// 	log.Fatalln("get home dir error: ", err.Error())
-	// }
-	// SystemInfo.Path, err = os.UserHomeDir()
-	// if err != nil {
-	// 	log.Fatalln("get home dir error: ", err.Error())
-	// }
-
 	homeconfigPath := path.Join(SystemInfo.HomePath, ".ghs")
 	configname := "ghs"
-	// fmt.Println("homedir:", homepath)
 	viper.AddConfigPath(homeconfigPath)
 	viper.SetConfigName(configname)
+
 	loadDotenv()
 	if viper.GetBool("verbose") {
 		fmt.Println("home dir:", SystemInfo.HomePath)
@@ -177,11 +157,22 @@ func initViper() {
 		fmt.Printf("merged config:%#v\n", Config)
 		viper.Debug()
 	}
-	// 处理命令行参数相关的执行
-	excuteCMd()
+
 }
 
-func excuteCMd() {
+func excuteCMDAfterViper() {
+	// fmt.Println("check-update:", viper.GetBool("check-update"))
+	// 执行更新命令
+	if viper.GetBool("update") {
+		version.Update(SystemInfo)
+	} else {
+		if viper.GetBool("check-update") {
+			err := version.NotifyUpdate()
+			if err != nil {
+				log.Fatalln("notify update error:", err.Error())
+			}
+		}
+	}
 	// 处理打开浏览器
 	if Config.Open {
 		go func() {
@@ -316,5 +307,5 @@ func initZap() {
 }
 
 func validateConfig() {
-	ValidateFoldernameDup()
+	// ValidateFoldernameDup()
 }

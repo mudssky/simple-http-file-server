@@ -2,7 +2,7 @@ package sysinfo
 
 import (
 	"os"
-	"path"
+	"path/filepath"
 	"runtime"
 )
 
@@ -25,7 +25,7 @@ func Info() (info *SystemInfo, err error) {
 	info.GOOS = runtime.GOOS
 	info.GOARCH = runtime.GOARCH
 	info.ProgramPath = os.Args[0]
-	info.ProgramFolder = path.Dir(info.ProgramPath)
+	info.ProgramFolder = filepath.Dir(info.ProgramPath)
 	return
 
 }
