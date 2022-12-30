@@ -312,7 +312,7 @@ func initZap() {
 	// From a zapcore.Core, it's easy to construct a Logger.
 	Logger = zap.New(core)
 	defer Logger.Sync()
-	Logger.Info("constructed a logger")
+	Logger.Debug("constructed a logger")
 }
 
 func validateConfig() {
