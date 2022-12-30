@@ -13,13 +13,14 @@ import {
   Popover,
   Row,
 } from 'antd'
-import { filesizeFormatter, isImage, path } from '../../util/util'
+import { filesizeFormatter, isImage, isVideo, path } from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
   DeleteTwoTone,
   EditOutlined,
   PictureOutlined,
+  PlayCircleOutlined,
   QrcodeOutlined,
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
@@ -47,6 +48,7 @@ export default function FileList() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    handleJumpPlaylist,
     getUploadFolderData,
     cancelUploadProgressModal,
     showRenameModal,
@@ -165,6 +167,14 @@ export default function FileList() {
                     <PictureOutlined
                       className="cursor-pointer text-xl text-blue-400"
                       onClick={() => handleSinglePicPreview(record)}
+                    />
+                  </Tooltip>
+                ) : null}
+                {permissionMap?.read && isVideo(record.name) ? (
+                  <Tooltip title="播放视频">
+                    <PlayCircleOutlined
+                      className="cursor-pointer text-xl text-blue-400"
+                      onClick={() => handleJumpPlaylist(record)}
                     />
                   </Tooltip>
                 ) : null}

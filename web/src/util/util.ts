@@ -2,13 +2,18 @@ import { message } from 'antd'
 import { AxiosProgressEvent } from 'axios'
 import { ResponseData } from '../global'
 
-export const imgPattern = /[^\s]+\.(jpg|jpeg|png|gif|bmp|webp)$/i
+export const imgPattern = /[\S\s]+\.(jpg|jpeg|png|gif|bmp|webp)$/i
 /**
  * 判断文件后缀名是否为 jpg|png|gif|bmp|webp的一种
  * @param filename
  */
 export function isImage(filename: string): boolean {
   return imgPattern.test(filename)
+}
+const videoPattern = /[\S\s]+\.(mkv|mp4|flv|webm|ts)$/i
+
+export function isVideo(filename: string): boolean {
+  return videoPattern.test(filename)
 }
 
 export const path = {

@@ -4,6 +4,7 @@ import AppLayout from '../layout/appLayout'
 import FileList from '../pages/filelist'
 import Hello from '../pages/hello'
 import { NotFound } from '../pages/not-found'
+import Play from '../pages/play'
 
 export const globalRouter = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const globalRouter = createBrowserRouter([
       {
         path: 'home',
         element: <FileList />,
+      },
+      {
+        path: 'play',
+        element: <Play />,
       },
       {
         path: 'hello',

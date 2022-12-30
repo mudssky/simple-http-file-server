@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import homeReducer from './reducer/homeReducer'
+import playReducer from './reducer/playReducer'
 import serverReducer from './reducer/serverReducer'
 import userReducer from './reducer/userReducer'
 // ...
@@ -9,6 +10,7 @@ export const store = configureStore({
     home: homeReducer,
     server: serverReducer,
     user: userReducer,
+    play: playReducer,
   },
 })
 
