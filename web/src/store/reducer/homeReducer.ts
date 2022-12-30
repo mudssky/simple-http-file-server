@@ -51,7 +51,7 @@ export const rootBreadcrumbItem = {
   name: 'root',
 }
 
-const initialState: State = {
+export const initialState: State = {
   currentFileList: [],
   rootFolderList: [],
   previewList: [],

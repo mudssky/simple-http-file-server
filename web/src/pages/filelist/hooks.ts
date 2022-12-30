@@ -14,6 +14,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   BreadcrumbItem,
+  initialState,
   rootBreadcrumbItem,
   setBreadcrumbitemList,
   setCurrentRenameItemAction,
@@ -30,9 +31,10 @@ import {
   setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
-import { checkResponse, isImage, path } from '../../util/util'
+import { checkResponse, isImage, isVideo, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 import { getServerStaticUrl } from '../../config'
+import { useNavigate } from 'react-router-dom'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
@@ -54,11 +56,16 @@ export default function useSetupHook() {
   } = state
   const [newTextForm] = Form.useForm()
 
+  const navigate = useNavigate()
   const currentWorkDir = useMemo(
     () => breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key,
     [breadcrumbitemList],
   )
   const getData = async () => {
+    // 如果状态没清空的情况下，再次进入不刷新数据
+    if (state !== initialState) {
+      return
+    }
     await enterFolder({ path: '' })
   }
   const enterFolder = async (
@@ -332,6 +339,17 @@ export default function useSetupHook() {
   const hanldePreviewVisibleChange = (value: boolean) => {
     dispatch(setIsPreviewVisibleAction(value))
   }
+
+  const handleJumpPlaylist = (record: FileItem) => {
+    navigate('/play', {
+      state: {
+        fileitem: record,
+        filelist: currentFileList.filter((item) => {
+          return !item.isFolder && isVideo(item.name)
+        }),
+      },
+    })
+  }
   useEffect(() => {
     getData()
   }, [])
@@ -367,5 +385,6 @@ export default function useSetupHook() {
     showRenameModal,
     handleDownloadItem,
     hanldePreviewVisibleChange,
+    handleJumpPlaylist,
   }
 }
