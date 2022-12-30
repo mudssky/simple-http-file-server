@@ -58,8 +58,11 @@ func main() {
 	// 模式设置,按照env,配置文件的顺序读取模式
 	gin.SetMode(global.Config.Mode)
 	var r = router.InitRouter()
-	// 文档路由
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// 发布版本不显示文档
+	if global.Config.Mode != "release" {
+		// 文档路由
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	// html和静态文件路由
 	r.StaticFS("/assets/", locateFileSystem("public/assets"))
@@ -70,6 +73,7 @@ func main() {
 		}
 		c.Data(http.StatusOK, "text/html; charset=utf-8", htmlByte)
 	})
+
 	fmt.Printf(`
 	localhost:http://127.0.0.1:%v`, global.Config.Port)
 	Ips, err := util.ClientIPs()
@@ -80,9 +84,12 @@ func main() {
 		fmt.Printf(`
 	NetWork%v:http://%v:%v`, index+1, ip, global.Config.Port)
 	}
-	fmt.Printf(`
+
+	if global.Config.Mode != "release" {
+		fmt.Printf(`
 	默认自动化文档地址:http://127.0.0.1:%v/swagger/index.html
 `, global.Config.Port)
+	}
 
 	srv := &http.Server{
 		Addr:    ":" + util.Itoa(global.Config.Port),
