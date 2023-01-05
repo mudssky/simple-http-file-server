@@ -1,9 +1,11 @@
+import { PlayCircleOutlined } from '@ant-design/icons'
 import { useAppSelector } from '../../store/hooks'
 import { useSetupHook } from './hooks'
 import styles from './styles.module.scss'
 
 export default function Play() {
-  const { player, playerRef, playerContainerRef, newSize } = useSetupHook()
+  const { player, playerRef, playerContainerRef, newSize, handleChangeSet } =
+    useSetupHook()
   const { currentFileitem, playlist } = useAppSelector((state) => state.play)
   return (
     <div className='flex justify-center'>
@@ -32,8 +34,14 @@ export default function Play() {
               return (
                 <div
                   key={item.path}
-                  className='px-[10px] py-[10px] h-12 hover:bg-gray-200 cursor-pointer break-all'
+                  className={`px-[10px] py-[10px] h-12  cursor-pointer break-all ${
+                    item.path === currentFileitem?.path
+                      ? 'bg-slate-400'
+                      : 'hover:bg-gray-200'
+                  }`}
+                  onClick={() => handleChangeSet(item)}
                 >
+                  <PlayCircleOutlined />
                   <span title={item.name}> {item.name}</span>
                 </div>
               )
