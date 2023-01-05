@@ -1,16 +1,4 @@
-.video {
-}
+@import '../../style/scss/mixin.scss';
 .playlist {
-  // 滚动条定制
-
-  // 整个滚动条
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  // 滑块
-  &::-webkit-scrollbar-thumb {
-    background-color: #aaa;
-    border-radius: 8px;
-  }
+  @include scrollbar-custom;
 }
