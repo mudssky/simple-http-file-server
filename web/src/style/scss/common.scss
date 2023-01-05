@@ -45,3 +45,9 @@ html {
     border-radius: 8px;
   }
 }
+
+video {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
