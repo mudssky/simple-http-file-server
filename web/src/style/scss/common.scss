@@ -1,5 +1,5 @@
 @import './variable.scss';
-
+@import './mixin.scss';
 // .#{$antd-prefix}-message-custom-content {
 //   display: flex;
 //   align-items: center;
@@ -34,16 +34,7 @@
 
 // 滚动条定制
 html {
-  // 整个滚动条
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  // 滑块
-  &::-webkit-scrollbar-thumb {
-    background-color: #aaa;
-    border-radius: 8px;
-  }
+  @include scrollbar-custom;
 }
 
 video {
