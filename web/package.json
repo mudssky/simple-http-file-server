@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.8.0",
+    "@nplayer/danmaku": "^1.0.12",
     "@reduxjs/toolkit": "^1.9.1",
     "antd": "~5.1.2",
     "axios": "^1.2.2",

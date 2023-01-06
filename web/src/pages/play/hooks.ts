@@ -2,25 +2,40 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getServerStaticUrl } from '../../config'
 import Player from 'nplayer'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   setCurrentFileitemAction,
   setPlaylistAction,
+  setSubtitleOptionsAction,
 } from '../../store/reducer/playReducer'
 import { FileItem } from '../../api'
+import { isDanmaku, isSubtitle, isVideo, path } from '../../util/util'
 let player: Player
 export function useSetupHook() {
   const location = useLocation()
-  const playerRef = useRef<HTMLDivElement>(null!)
+  const playerRef = useRef<HTMLDivElement>(null)
   const playerContainerRef = useRef(null)
   const dispatch = useAppDispatch()
-  // const { currentFileitem, playlist } = useAppSelector((state) => state.play)
+  const { playlist } = useAppSelector((state) => state.play)
 
   const loadPlayer = () => {
-    const { fileitem, filelist } = location.state
+    const {
+      fileitem,
+      filelist,
+    }: {
+      fileitem: FileItem
+      filelist: FileItem[]
+    } = location.state
     const videoLink = getServerStaticUrl(fileitem.link)
+    const files = filelist.filter((item) => {
+      return !item.isFolder
+    })
+    const videolist = files.filter((item) => {
+      return isVideo(item.name)
+    })
     dispatch(setCurrentFileitemAction(fileitem))
-    dispatch(setPlaylistAction(filelist))
+    dispatch(setPlaylistAction(videolist))
+    loadSubtitles(files, fileitem)
     player = new Player({
       src: videoLink,
     })
@@ -28,11 +43,70 @@ export function useSetupHook() {
       player.mount(playerRef.current)
     }
   }
+  function loadSubtitles(filelist: FileItem[], currentItem: FileItem) {
+    console.log({ filelist })
+    const danmakuList = filelist.filter((item) => {
+      return isDanmaku(item.name)
+    })
+    const subtitleList = filelist.filter((item) => {
+      return isSubtitle(item.name)
+    })
+    const currentIndex = playlist.findIndex((item) => {
+      return item.path === currentItem.path
+    })
+    const currentDanmaku = chooseSubtitle(
+      danmakuList,
+      currentItem,
+      currentIndex,
+      playlist,
+    )
+    const currentSubtitle = chooseSubtitle(
+      subtitleList,
+      currentItem,
+      currentIndex,
+      playlist,
+    )
+    dispatch(
+      setSubtitleOptionsAction({
+        danmakuList,
+        subtitleList,
+        currentDanmaku,
+        currentSubtitle,
+      }),
+    )
+  }
+  // 选择字幕的逻辑
+  function chooseSubtitle(
+    sublist: FileItem[],
+    currentFile: FileItem,
+    currentIndex: number,
+    videoList: FileItem[],
+  ): FileItem {
+    const baseName = path.basename(currentFile.name)
+
+    // 先按照名字匹配选择
+    const nameMatchedList = sublist.filter((item) => {
+      return item.name.startsWith(baseName)
+    })
+    if (nameMatchedList.length > 0) {
+      return nameMatchedList[0]
+    }
+    // 名字不匹配的情况，按照顺序匹配
+    // 有简繁等多个文件的情况，字幕文件会比视频文件多
+    if (sublist.length > videoList.length) {
+      return sublist[currentIndex * 2]
+    }
+    //其他默认是一对一匹配的情况
+    return sublist?.[currentIndex]
+  }
   // 切换播放列表
   const handleChangeSet = (item: FileItem) => {
     player.video.src = getServerStaticUrl(item.link)
     dispatch(setCurrentFileitemAction(item))
     player.play()
+  }
+  const handleChangeTabs = (key: string) => {
+    console.log(key)
   }
   useEffect(() => {
     loadPlayer()
@@ -56,6 +130,7 @@ export function useSetupHook() {
     playerContainerRef,
     newSize,
     handleChangeSet,
+    handleChangeTabs,
   }
 }
 // 根据窗口大小，缩放播放器大小的逻辑
@@ -76,7 +151,7 @@ export const useWindowAutoSizeHook = (
   const [newSize, setNewSize] = useState(defaultSize)
   window.onresize = () => {
     const screenWidth = window.screen.width
-    const screenHeight = window.screen.height
+    // const screenHeight = window.screen.height
     const innerHeight = window.innerHeight
     const innterWidth = window.innerWidth
     // const aspectRadio = defaultSize.width / defaultSize.height
