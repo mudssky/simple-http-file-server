@@ -31,7 +31,7 @@ import {
   setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
-import { checkResponse, isImage, isVideo, path } from '../../util/util'
+import { checkResponse, isImage, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 import { getServerStaticUrl } from '../../config'
 import { useNavigate } from 'react-router-dom'
@@ -344,9 +344,7 @@ export default function useSetupHook() {
     navigate('/play', {
       state: {
         fileitem: record,
-        filelist: currentFileList.filter((item) => {
-          return !item.isFolder && isVideo(item.name)
-        }),
+        filelist: currentFileList,
       },
     })
   }

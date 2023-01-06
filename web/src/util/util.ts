@@ -16,6 +16,21 @@ export function isVideo(filename: string): boolean {
   return videoPattern.test(filename)
 }
 
+/**
+ * 根据文件后缀名判断是否是字幕
+ * @param filename
+ * @returns
+ */
+export function isSubtitle(filename: string): boolean {
+  const pattern = /[\S\s]+\.(ass)$/i
+  return pattern.test(filename)
+}
+
+export function isDanmaku(filename: string): boolean {
+  const pattern = /[\S\s]+\.(xml)$/i
+  return pattern.test(filename)
+}
+
 export const path = {
   /**
    * 传入文件名，获取扩展名。 获取不到的情况下返回空字符串
@@ -35,6 +50,14 @@ export const path = {
         return pathname.slice(0, i)
       }
     }
+  },
+  basename: (pathname: string) => {
+    for (let i = pathname.length - 1; i >= 0; i--) {
+      if (pathname[i] === '.') {
+        return pathname.slice(0, i)
+      }
+    }
+    return pathname
   },
 }
 

@@ -2,14 +2,25 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { FileItem } from '../../api'
 
+interface SubtitleOptions {
+  danmakuList: FileItem[]
+  subtitleList: FileItem[]
+  currentDanmaku?: FileItem
+  currentSubtitle?: FileItem
+}
 interface State {
-  currentFileitem: FileItem | null
+  currentVideo: FileItem | null
   playlist: FileItem[]
+  subtitleOptions: SubtitleOptions
 }
 
 const initialState: State = {
-  currentFileitem: null,
+  currentVideo: null,
   playlist: [],
+  subtitleOptions: {
+    danmakuList: [],
+    subtitleList: [],
+  },
 }
 
 export const playSlice = createSlice({
@@ -17,15 +28,25 @@ export const playSlice = createSlice({
   initialState,
   reducers: {
     setCurrentFileitemAction: (state, action: PayloadAction<FileItem>) => {
-      state.currentFileitem = action.payload
+      state.currentVideo = action.payload
     },
     setPlaylistAction: (state, action: PayloadAction<FileItem[]>) => {
       state.playlist = action.payload
     },
+    setSubtitleOptionsAction: (
+      state,
+      action: PayloadAction<SubtitleOptions>,
+    ) => {
+      state.subtitleOptions = action.payload
+    },
   },
 })
 
-export const { setCurrentFileitemAction, setPlaylistAction } = playSlice.actions
+export const {
+  setCurrentFileitemAction,
+  setPlaylistAction,
+  setSubtitleOptionsAction,
+} = playSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const playState = (state: RootState) => state.play
