@@ -64,7 +64,7 @@ export default function FileList() {
     handleCreateNewFolder,
     handleDeleteItem,
     handleCreateNewText,
-    refreshCurentWorkDir,
+    refreshCurrentWorkDir,
     handleUploadChange,
     handleRenameSubmit,
     handleDownloadItem,
@@ -253,7 +253,7 @@ export default function FileList() {
           ) : null}
         </div>
         <Space className="mb-3">
-          <div onClick={refreshCurentWorkDir}>
+          <div onClick={refreshCurrentWorkDir}>
             <span className="text-blue-500 cursor-pointer">刷新</span>
             <span className="p-1 text-black">|</span>
           </div>
@@ -407,7 +407,7 @@ export default function FileList() {
         <Image.PreviewGroup
           preview={{
             visible: isPreviewVisible,
-            onVisibleChange: hanldePreviewVisibleChange,
+            onVisibleChange: handlePreviewVisibleChange,
           }}
         >
           {previewList.map((item) => {

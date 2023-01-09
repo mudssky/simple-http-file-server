@@ -26,7 +26,7 @@ export function createGlobalAxiosWithInterceptors(
         // 添加Authorization请求头用于登录认证
         const { token } = loginStoraged
         if (token && config.headers) {
-          config.headers['x-token'] = token
+          ;(config.headers as { [key: string]: unknown })['x-token'] = token
         }
       }
 

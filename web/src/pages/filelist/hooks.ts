@@ -88,7 +88,7 @@ export default function useSetupHook() {
       message.error(res.msg)
     }
   }
-  const refreshCurentWorkDir = async () => {
+  const refreshCurrentWorkDir = async () => {
     // const currentWorkDir = getCurrentWorkDir()
     enterFolder({
       path: currentWorkDir,
@@ -165,7 +165,7 @@ export default function useSetupHook() {
     })
     checkResponse(res, {
       successCallback: () => {
-        refreshCurentWorkDir()
+        refreshCurrentWorkDir()
         cancelNewTextModal()
       },
     })
@@ -188,7 +188,7 @@ export default function useSetupHook() {
       successCallback: () => {
         cancelNewFolderModal()
         dispatch(setNewFolderName(''))
-        refreshCurentWorkDir()
+        refreshCurrentWorkDir()
       },
     })
   }
@@ -201,7 +201,7 @@ export default function useSetupHook() {
           path: record.path,
         })
         checkResponse(res, {
-          successCallback: refreshCurentWorkDir,
+          successCallback: refreshCurrentWorkDir,
         })
       },
     })
@@ -209,7 +209,6 @@ export default function useSetupHook() {
 
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const getUploadFolderData = (file: any) => {
-    // console.log('dsad')
     // if (file?.webkitRelativePath) {
     //   return
     // }
@@ -236,7 +235,7 @@ export default function useSetupHook() {
         return item.status === 'done'
       })
     ) {
-      refreshCurentWorkDir()
+      refreshCurrentWorkDir()
       setTimeout(() => {
         dispatch(
           setUploadProgressModalOptions({
@@ -284,7 +283,7 @@ export default function useSetupHook() {
           confirmLoading: false,
         }),
       )
-      refreshCurentWorkDir()
+      refreshCurrentWorkDir()
     }
   }
   const handleDownloadItem = async (record: FileItem) => {
@@ -336,15 +335,15 @@ export default function useSetupHook() {
       }),
     )
   }
-  const hanldePreviewVisibleChange = (value: boolean) => {
+  const handlePreviewVisibleChange = (value: boolean) => {
     dispatch(setIsPreviewVisibleAction(value))
   }
 
   const handleJumpPlaylist = (record: FileItem) => {
     navigate('/play', {
       state: {
-        fileitem: record,
-        filelist: currentFileList,
+        fileItem: record,
+        fileList: currentFileList,
       },
     })
   }
@@ -377,12 +376,12 @@ export default function useSetupHook() {
     handleDeleteItem,
     showNewTextModal,
     handleCreateNewText,
-    refreshCurentWorkDir,
+    refreshCurrentWorkDir,
     handleUploadChange,
     handleRenameSubmit,
     showRenameModal,
     handleDownloadItem,
-    hanldePreviewVisibleChange,
+    handlePreviewVisibleChange,
     handleJumpPlaylist,
   }
 }
