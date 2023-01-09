@@ -4,7 +4,7 @@ import { getServerStaticUrl } from '../../config'
 import Player from 'nplayer'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
-  setCurrentFileitemAction,
+  setCurrentFileItemAction,
   setPlaylistAction,
   setSubtitleOptionsAction,
 } from '../../store/reducer/playReducer'
@@ -20,35 +20,36 @@ export function useSetupHook() {
 
   const loadPlayer = () => {
     const {
-      fileitem,
-      filelist,
+      fileItem,
+      fileList,
     }: {
-      fileitem: FileItem
-      filelist: FileItem[]
+      fileItem: FileItem
+      fileList: FileItem[]
     } = location.state
-    const videoLink = getServerStaticUrl(fileitem.link)
-    const files = filelist.filter((item) => {
+    const videoLink = getServerStaticUrl(fileItem.link)
+    const files = fileList.filter((item) => {
       return !item.isFolder
     })
-    const videolist = files.filter((item) => {
+    const videoList = files.filter((item) => {
       return isVideo(item.name)
     })
-    dispatch(setCurrentFileitemAction(fileitem))
-    dispatch(setPlaylistAction(videolist))
-    loadSubtitles(files, fileitem)
+    dispatch(setCurrentFileItemAction(fileItem))
+    dispatch(setPlaylistAction(videoList))
+    loadSubtitles(files, fileItem)
     player = new Player({
       src: videoLink,
     })
     if (playerRef.current) {
       player.mount(playerRef.current)
+      // player.video.addTextTrack()
     }
   }
-  function loadSubtitles(filelist: FileItem[], currentItem: FileItem) {
-    console.log({ filelist })
-    const danmakuList = filelist.filter((item) => {
+  function loadSubtitles(fileList: FileItem[], currentItem: FileItem) {
+    console.log({ fileList })
+    const danmakuList = fileList.filter((item) => {
       return isDanmaku(item.name)
     })
-    const subtitleList = filelist.filter((item) => {
+    const subtitleList = fileList.filter((item) => {
       return isSubtitle(item.name)
     })
     const currentIndex = playlist.findIndex((item) => {
@@ -102,7 +103,7 @@ export function useSetupHook() {
   // 切换播放列表
   const handleChangeSet = (item: FileItem) => {
     player.video.src = getServerStaticUrl(item.link)
-    dispatch(setCurrentFileitemAction(item))
+    dispatch(setCurrentFileItemAction(item))
     player.play()
   }
   const handleChangeTabs = (key: string) => {
@@ -153,10 +154,10 @@ export const useWindowAutoSizeHook = (
     const screenWidth = window.screen.width
     // const screenHeight = window.screen.height
     const innerHeight = window.innerHeight
-    const innterWidth = window.innerWidth
+    const innerWidth = window.innerWidth
     // const aspectRadio = defaultSize.width / defaultSize.height
     //  计算宽和高缩小的比例，按照比例低的那个作为基准值
-    const widthScale = innterWidth / screenWidth
+    const widthScale = innerWidth / screenWidth
     const heightScale = innerHeight / window.outerHeight
 
     const aspectRadio = defaultSize.width / defaultSize.height
@@ -170,12 +171,12 @@ export const useWindowAutoSizeHook = (
         const newWidth = tempWidth < minSize.width ? minSize.width : tempWidth
         const newHeight = newWidth / aspectRadio
         console.log({
-          width: innterWidth < 1700 ? newWidth : defaultSize.width,
+          width: innerWidth < 1700 ? newWidth : defaultSize.width,
           height: newHeight,
         })
 
         setNewSize({
-          width: innterWidth < 1700 ? newWidth : defaultSize.width,
+          width: innerWidth < 1700 ? newWidth : defaultSize.width,
           height: innerHeight < 900 ? newHeight : defaultSize.height,
         })
       } else {

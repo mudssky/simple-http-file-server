@@ -27,7 +27,7 @@ export const playSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setCurrentFileitemAction: (state, action: PayloadAction<FileItem>) => {
+    setCurrentFileItemAction: (state, action: PayloadAction<FileItem>) => {
       state.currentVideo = action.payload
     },
     setPlaylistAction: (state, action: PayloadAction<FileItem[]>) => {
@@ -43,7 +43,7 @@ export const playSlice = createSlice({
 })
 
 export const {
-  setCurrentFileitemAction,
+  setCurrentFileItemAction,
   setPlaylistAction,
   setSubtitleOptionsAction,
 } = playSlice.actions
