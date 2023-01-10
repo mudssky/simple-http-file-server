@@ -19,7 +19,12 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
 
-require github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
+require (
+	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
+	github.com/asticode/go-astikit v0.20.0 // indirect
+	github.com/asticode/go-astisub v0.23.0 // indirect
+	github.com/asticode/go-astits v1.8.0 // indirect
+)
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect

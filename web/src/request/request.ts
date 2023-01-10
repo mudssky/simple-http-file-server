@@ -20,11 +20,11 @@ export function createGlobalAxiosWithInterceptors(
     function (config) {
       // 在发送请求之前做些什么
       //   console.log('config:', config)
-      const loginStoraged = getLocalstorage('userInfo') as LoginRes | null
+      const loginStorage = getLocalstorage('userInfo') as LoginRes | null
       // 取得token以后进行添加
-      if (loginStoraged) {
+      if (loginStorage) {
         // 添加Authorization请求头用于登录认证
-        const { token } = loginStoraged
+        const { token } = loginStorage
         if (token && config.headers) {
           ;(config.headers as { [key: string]: unknown })['x-token'] = token
         }
@@ -103,19 +103,19 @@ export function uploadFile(
 }
 
 /**
- * 使用bolb方式下载
+ * 使用blob方式下载
  * @param res
  * @param filename
  * @returns
  */
 export function downloadFile(res: Blob, filename: string) {
-  const url = window.URL.createObjectURL(new Blob([res]))
+  const blobUrl = window.URL.createObjectURL(new Blob([res]))
   const a = document.createElement('a')
   a.style.display = 'none'
-  a.href = url
+  a.href = blobUrl
   a.download = filename
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  window.URL.revokeObjectURL(url) // 释放blob对象
+  window.URL.revokeObjectURL(blobUrl) // 释放blob对象
 }

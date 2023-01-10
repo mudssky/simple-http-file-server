@@ -169,7 +169,7 @@ func (f *FileListAPI) MakeDir(c *gin.Context) {
 // @Router       /removeItem [post]
 func (f *FileListAPI) RemoveItem(c *gin.Context) {
 	// l := global.Logger
-	var req request.OprateFilePath
+	var req request.OperateFilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)

@@ -5,7 +5,22 @@
   // language - current active spelling language
   "language": "en",
   // words - list of words to be always considered correct
-  "words": ["breadcrumbitem", "filesize", "Qrcode"],
+  "words": [
+    "arrayutil",
+    "asticode",
+    "astisub",
+    "breadcrumbitem",
+    "Casbin",
+    "filesize",
+    "fsys",
+    "gonic",
+    "GOPROXY",
+    "goserver",
+    "mudssky",
+    "Qrcode",
+    "swaggo",
+    "watchexec"
+  ],
   // flagWords - list of words to be always considered incorrect
   // This is useful for offensive words and common spelling errors.
   // For example "hte" should be "the"
