@@ -10,6 +10,7 @@ import {
 } from '../../store/reducer/playReducer'
 import { FileItem } from '../../api'
 import { isDanmaku, isSubtitle, isVideo, path } from '../../util/util'
+import { GET_VTT_SUBTITLE } from '../../api/video'
 let player: Player
 export function useSetupHook() {
   const location = useLocation()
@@ -18,7 +19,7 @@ export function useSetupHook() {
   const dispatch = useAppDispatch()
   const { playlist } = useAppSelector((state) => state.play)
 
-  const loadPlayer = () => {
+  const loadPlayer = async () => {
     const {
       fileItem,
       fileList,
@@ -44,7 +45,7 @@ export function useSetupHook() {
       // player.video.addTextTrack()
     }
   }
-  function loadSubtitles(fileList: FileItem[], currentItem: FileItem) {
+  async function loadSubtitles(fileList: FileItem[], currentItem: FileItem) {
     console.log({ fileList })
     const danmakuList = fileList.filter((item) => {
       return isDanmaku(item.name)
@@ -67,6 +68,9 @@ export function useSetupHook() {
       currentIndex,
       playlist,
     )
+    await GET_VTT_SUBTITLE({
+      path: currentSubtitle.path,
+    })
     dispatch(
       setSubtitleOptionsAction({
         danmakuList,

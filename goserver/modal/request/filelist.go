@@ -6,7 +6,7 @@ type FilePath struct {
 }
 
 // 需要执行操作时传入的路径
-type OprateFilePath struct {
+type OperateFilePath struct {
 	Path string `json:"path" binding:"required,path_exist"` // 路径
 }
 type MkdirPath struct {
