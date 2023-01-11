@@ -342,7 +342,7 @@ export default function useSetupHook() {
   const handleJumpPlaylist = (record: FileItem) => {
     navigate('/play', {
       state: {
-        fileItem: record,
+        currentVideoItem: record,
         fileList: currentFileList,
       },
     })

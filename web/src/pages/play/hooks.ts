@@ -1,58 +1,121 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getServerStaticUrl } from '../../config'
-import Player from 'nplayer'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   setCurrentFileItemAction,
-  setPlaylistAction,
+  setFileListAction,
   setSubtitleOptionsAction,
 } from '../../store/reducer/playReducer'
 import { FileItem } from '../../api'
 import { isDanmaku, isSubtitle, isVideo, path } from '../../util/util'
-import { GET_VTT_SUBTITLE } from '../../api/video'
-let player: Player
+import Artplayer from 'artplayer'
+import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
+let player: Artplayer
+function getInfoLists(fileList: FileItem[]) {
+  const playlist = fileList.filter((item) => {
+    return isVideo(item.name)
+  })
+  const danmakuList = fileList.filter((item) => {
+    return isDanmaku(item.name)
+  })
+  const subtitleList = fileList.filter((item) => {
+    return isSubtitle(item.name)
+  })
+  return {
+    playlist,
+    danmakuList,
+    subtitleList,
+  }
+}
 export function useSetupHook() {
   const location = useLocation()
   const playerRef = useRef<HTMLDivElement>(null)
   const playerContainerRef = useRef(null)
   const dispatch = useAppDispatch()
-  const { playlist } = useAppSelector((state) => state.play)
-
-  const loadPlayer = async () => {
-    const {
-      fileItem,
-      fileList,
-    }: {
-      fileItem: FileItem
-      fileList: FileItem[]
-    } = location.state
-    const videoLink = getServerStaticUrl(fileItem.link)
+  const { fileList, subtitleOptions, currentFileItem } = useAppSelector(
+    (state) => state.play,
+  )
+  const { playlist, danmakuList, subtitleList } = useMemo(
+    () => getInfoLists(fileList),
+    [fileList],
+  )
+  const loadPlayer = async (options: {
+    currentVideoItem: FileItem //当前播放的文件
+    fileList: FileItem[] //整个播放列表，包括是视频格式以外的文件
+  }) => {
+    const { currentVideoItem, fileList } = options
+    const videoLink = currentVideoItem.link
     const files = fileList.filter((item) => {
       return !item.isFolder
     })
-    const videoList = files.filter((item) => {
-      return isVideo(item.name)
+    dispatch(setFileListAction(files))
+    dispatch(setCurrentFileItemAction(currentVideoItem))
+
+    player = new Artplayer({
+      container: playerRef.current!,
+      url: videoLink,
+      title: 'unknown',
+      volume: 0.5,
+      autoplay: true,
+      pip: true,
+      autoSize: true,
+      autoMini: true,
+      screenshot: true,
+      setting: true,
+      flip: true,
+      playbackRate: true,
+      aspectRatio: true,
+      fullscreen: true,
+      fullscreenWeb: true,
+      subtitleOffset: true,
+      miniProgressBar: true,
+      lang: navigator.language.toLowerCase(),
+      whitelist: ['*'],
+      moreVideoAttr: {
+        crossOrigin: 'anonymous',
+      },
+      plugins: [
+        artplayerPluginDanmuku({
+          danmuku: '',
+          speed: 5, // 弹幕持续时间，单位秒，范围在[1 ~ 10]
+          opacity: 1, // 弹幕透明度，范围在[0 ~ 1]
+          fontSize: 25, // 字体大小，支持数字和百分比
+          color: '#FFFFFF', // 默认字体颜色
+          mode: 0, // 默认模式，0-滚动，1-静止
+          margin: [10, '25%'], // 弹幕上下边距，支持数字和百分比
+          antiOverlap: true, // 是否防重叠
+          useWorker: true, // 是否使用 web worker
+          synchronousPlayback: false, // 是否同步到播放速度
+          filter: (danmu) => danmu.text.length < 50, // 弹幕过滤函数，返回 true 则可以发送
+          lockTime: 5, // 输入框锁定时间，单位秒，范围在[1 ~ 60]
+          maxLength: 100, // 输入框最大可输入的字数，范围在[0 ~ 500]
+          minWidth: 200, // 输入框最小宽度，范围在[0 ~ 500]，填 0 则为无限制
+          maxWidth: 400, // 输入框最大宽度，范围在[0 ~ Infinity]，填 0 则为 100% 宽度
+          theme: 'dark', // 输入框自定义挂载时的主题色，默认为 dark，可以选填亮色 light
+          beforeEmit: (danmu) => !!danmu.text.trim(), // 发送弹幕前的自定义校验，返回 true 则可以发送
+          // 通过 mount 选项可以自定义输入框挂载的位置，默认挂载于播放器底部，仅在当宽度小于最小值时生效
+          // mount: document.querySelector('.artplayer-danmuku'),
+        }),
+      ],
+      contextmenu: [
+        {
+          html: 'Custom menu',
+          click: function (contextmenu) {
+            console.info('You clicked on the custom menu')
+            contextmenu.show = false
+          },
+        },
+      ],
     })
-    dispatch(setCurrentFileItemAction(fileItem))
-    dispatch(setPlaylistAction(videoList))
-    loadSubtitles(files, fileItem)
-    player = new Player({
-      src: videoLink,
-    })
-    if (playerRef.current) {
-      player.mount(playerRef.current)
-      // player.video.addTextTrack()
-    }
+    loadSubtitleAndDanmaku(files, currentVideoItem)
   }
-  async function loadSubtitles(fileList: FileItem[], currentItem: FileItem) {
-    console.log({ fileList })
-    const danmakuList = fileList.filter((item) => {
-      return isDanmaku(item.name)
-    })
-    const subtitleList = fileList.filter((item) => {
-      return isSubtitle(item.name)
-    })
+
+  async function loadSubtitleAndDanmaku(
+    fileList: FileItem[],
+    currentItem: FileItem,
+  ) {
+    const { playlist, danmakuList, subtitleList } = getInfoLists(fileList)
     const currentIndex = playlist.findIndex((item) => {
       return item.path === currentItem.path
     })
@@ -68,21 +131,41 @@ export function useSetupHook() {
       currentIndex,
       playlist,
     )
-    await GET_VTT_SUBTITLE({
-      path: currentSubtitle.path,
-    })
+    // console.log({ currentDanmaku, currentSubtitle, currentIndex, currentItem })
+    loadSubtitle(currentSubtitle)
+    loadDanmaku(currentDanmaku)
     dispatch(
       setSubtitleOptionsAction({
-        danmakuList,
-        subtitleList,
         currentDanmaku,
+        currentSubtitle,
+      }),
+    )
+    // return currentSubtitle
+  }
+  function loadDanmaku(currentDanmaku: FileItem) {
+    player.plugins.artplayerPluginDanmuku.config({
+      danmuku: getServerStaticUrl(currentDanmaku.link),
+    })
+    player.plugins.artplayerPluginDanmuku.load()
+    dispatch(
+      setSubtitleOptionsAction({
+        ...subtitleOptions,
+        currentDanmaku,
+      }),
+    )
+  }
+  function loadSubtitle(currentSubtitle: FileItem) {
+    player.subtitle.switch(getServerStaticUrl(currentSubtitle.link))
+    dispatch(
+      setSubtitleOptionsAction({
+        ...subtitleOptions,
         currentSubtitle,
       }),
     )
   }
   // 选择字幕的逻辑
   function chooseSubtitle(
-    sublist: FileItem[],
+    subList: FileItem[],
     currentFile: FileItem,
     currentIndex: number,
     videoList: FileItem[],
@@ -90,7 +173,7 @@ export function useSetupHook() {
     const baseName = path.basename(currentFile.name)
 
     // 先按照名字匹配选择
-    const nameMatchedList = sublist.filter((item) => {
+    const nameMatchedList = subList.filter((item) => {
       return item.name.startsWith(baseName)
     })
     if (nameMatchedList.length > 0) {
@@ -98,25 +181,38 @@ export function useSetupHook() {
     }
     // 名字不匹配的情况，按照顺序匹配
     // 有简繁等多个文件的情况，字幕文件会比视频文件多
-    if (sublist.length > videoList.length) {
-      return sublist[currentIndex * 2]
+    if (subList.length > videoList.length) {
+      return subList[currentIndex * 2]
     }
     //其他默认是一对一匹配的情况
-    return sublist?.[currentIndex]
+    return subList?.[currentIndex]
   }
   // 切换播放列表
   const handleChangeSet = (item: FileItem) => {
     player.video.src = getServerStaticUrl(item.link)
+    loadSubtitleAndDanmaku(fileList, item)
     dispatch(setCurrentFileItemAction(item))
-    player.play()
   }
   const handleChangeTabs = (key: string) => {
-    console.log(key)
+    // console.log(key)
   }
   useEffect(() => {
-    loadPlayer()
+    if (location.state) {
+      console.log('state', location.state)
+
+      loadPlayer(location.state)
+    }
+    // else {
+    //   console.log({ fileList, currentFileItem })
+
+    //   loadPlayer({
+    //     fileList,
+    //     currentVideoItem: currentFileItem!,
+    //   })
+    // }
+
     return () => {
-      player.dispose()
+      player.destroy()
     }
   }, [])
   const { newSize } = useWindowAutoSizeHook(playerContainerRef.current, {
@@ -134,8 +230,13 @@ export function useSetupHook() {
     playerRef,
     playerContainerRef,
     newSize,
+    playlist,
+    danmakuList,
+    subtitleList,
     handleChangeSet,
     handleChangeTabs,
+    loadDanmaku,
+    loadSubtitle,
   }
 }
 // 根据窗口大小，缩放播放器大小的逻辑
@@ -184,7 +285,7 @@ export const useWindowAutoSizeHook = (
           height: innerHeight < 900 ? newHeight : defaultSize.height,
         })
       } else {
-        console.log('height small')
+        // console.log('height small')
         // 高度缩小更多的情况，按照高度计算宽度
         const tempHeight = defaultSize.height * heightScale
         const newHeight =
