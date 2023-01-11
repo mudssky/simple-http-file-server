@@ -3,23 +3,25 @@ import { RootState } from '../store'
 import { FileItem } from '../../api'
 
 interface SubtitleOptions {
-  danmakuList: FileItem[]
-  subtitleList: FileItem[]
+  // danmakuList: FileItem[]
+  // subtitleList: FileItem[]
   currentDanmaku?: FileItem
   currentSubtitle?: FileItem
 }
 interface State {
-  currentVideo: FileItem | null
-  playlist: FileItem[]
+  currentFileItem: FileItem | null
+  // playlist: FileItem[]
   subtitleOptions: SubtitleOptions
+  fileList: FileItem[]
 }
 
 const initialState: State = {
-  currentVideo: null,
-  playlist: [],
+  currentFileItem: null,
+  // playlist: [],
+  fileList: [],
   subtitleOptions: {
-    danmakuList: [],
-    subtitleList: [],
+    // danmakuList: [],
+    // subtitleList: [],
   },
 }
 
@@ -28,10 +30,13 @@ export const playSlice = createSlice({
   initialState,
   reducers: {
     setCurrentFileItemAction: (state, action: PayloadAction<FileItem>) => {
-      state.currentVideo = action.payload
+      state.currentFileItem = action.payload
     },
-    setPlaylistAction: (state, action: PayloadAction<FileItem[]>) => {
-      state.playlist = action.payload
+    // setPlaylistAction: (state, action: PayloadAction<FileItem[]>) => {
+    //   state.playlist = action.payload
+    // },
+    setFileListAction: (state, action: PayloadAction<FileItem[]>) => {
+      state.fileList = action.payload
     },
     setSubtitleOptionsAction: (
       state,
@@ -44,8 +49,9 @@ export const playSlice = createSlice({
 
 export const {
   setCurrentFileItemAction,
-  setPlaylistAction,
+  // setPlaylistAction,
   setSubtitleOptionsAction,
+  setFileListAction,
 } = playSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type

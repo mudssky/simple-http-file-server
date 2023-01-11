@@ -9,35 +9,40 @@ export default function Play() {
     playerRef,
     playerContainerRef,
     newSize,
+    playlist,
+    subtitleList,
+    danmakuList,
     handleChangeSet,
     handleChangeTabs,
+    loadDanmaku,
+    loadSubtitle,
   } = useSetupHook()
-  const { currentVideo, playlist, subtitleOptions } = useAppSelector(
+  const { currentFileItem: currentVideo, subtitleOptions } = useAppSelector(
     (state) => state.play,
   )
   return (
     <div>
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
         <div
           style={{
             height: `${newSize.height}px`,
           }}
-          className='flex  mt-[20px] max-h-[720px] min-h-[360px] '
+          className="flex  mt-[20px] max-h-[720px] min-h-[360px] "
         >
           <div
             ref={playerContainerRef}
-            className='flex-grow max-w-[1280px] min-w-[640px]'
+            className="flex-grow max-w-[1280px] min-w-[640px]"
           >
             <div
               style={{
                 width: `${newSize.width}px`,
               }}
-              className=' h-full'
+              className=" h-full"
               ref={playerRef}
             />
           </div>
-          <div className='flex flex-col   ml-[20px] w-[402px]  border border-solid rounded-2xl border-gray-300 overflow-hidden'>
-            <div className='bg-white p-4'>播放列表 {currentVideo?.path}</div>
+          <div className="flex flex-col   ml-[20px] w-[402px]  border border-solid rounded-2xl border-gray-300 overflow-hidden">
+            <div className="bg-white p-4">播放列表 {currentVideo?.path}</div>
             <div
               className={` bg-gray-100 overflow-y-auto ${styles['playlist']}`}
             >
@@ -61,13 +66,13 @@ export default function Play() {
           </div>
         </div>
       </div>
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
         <div
           style={{
             width: `${newSize.width + 422}px`,
           }}
         >
-          <div className='text-lg mt-10'>字幕列表</div>
+          <div className="text-lg mt-10">字幕列表</div>
           <Tabs
             defaultActiveKey="1"
             onChange={handleChangeTabs}
@@ -76,10 +81,11 @@ export default function Play() {
                 label: '字幕',
                 key: '1',
                 children: (
-                  <ul className='bg-[#f4f4f4] p-2 h-[400px] overflow-y-auto'>
-                    {subtitleOptions.subtitleList.map((item) => {
+                  <ul className="bg-[#f4f4f4] p-2 h-[400px] overflow-y-auto">
+                    {subtitleList.map((item) => {
                       return (
                         <li
+                          onClick={() => loadSubtitle(item)}
                           key={item.path}
                           className={`${
                             subtitleOptions.currentSubtitle?.name === item.name
@@ -89,7 +95,7 @@ export default function Play() {
                         >
                           {subtitleOptions.currentSubtitle?.name ===
                           item.name ? (
-                            <CheckOutlined className='text-blue-400' />
+                            <CheckOutlined className="text-blue-400" />
                           ) : null}{' '}
                           <span>{item.name}</span>
                         </li>
@@ -102,8 +108,8 @@ export default function Play() {
                 label: '弹幕',
                 key: '2',
                 children: (
-                  <ul className='bg-[#f4f4f4] p-2 h-[400px] overflow-y-auto'>
-                    {subtitleOptions.danmakuList.map((item) => {
+                  <ul className="bg-[#f4f4f4] p-2 h-[400px] overflow-y-auto">
+                    {danmakuList.map((item) => {
                       return (
                         <li
                           key={item.path}
@@ -112,10 +118,11 @@ export default function Play() {
                               ? 'bg-white'
                               : ''
                           } hover:bg-white p-2 cursor-pointer my-2 rounded-sm`}
+                          onClick={() => loadDanmaku(item)}
                         >
                           {subtitleOptions.currentDanmaku?.name ===
                           item.name ? (
-                            <CheckOutlined className='text-blue-400' />
+                            <CheckOutlined className="text-blue-400" />
                           ) : null}{' '}
                           <span>{item.name}</span>
                         </li>

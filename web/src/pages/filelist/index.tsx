@@ -13,7 +13,13 @@ import {
   Popover,
   Row,
 } from 'antd'
-import { filesizeFormatter, isImage, isVideo, path } from '../../util/util'
+import {
+  filesizeFormatter,
+  isImage,
+  isMusic,
+  isVideo,
+  path,
+} from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
@@ -86,6 +92,33 @@ export default function FileList() {
     {
       title: '文件名',
       dataIndex: 'name',
+      filters: [
+        {
+          text: '视频',
+          value: '视频',
+        },
+        {
+          text: '音乐',
+          value: '音乐',
+        },
+        {
+          text: '图片',
+          value: '图片',
+        },
+      ],
+      onFilter: (value: string | number | boolean, record) => {
+        type FileType = '视频' | '音乐' | '图片'
+        switch (value as FileType) {
+          case '视频':
+            return isVideo(record.name)
+          case '图片':
+            return isImage(record.name)
+          case '音乐':
+            return isMusic(record.name)
+          default:
+            return true
+        }
+      },
       render: (value: unknown, record: FileItem) => {
         return (
           <div>

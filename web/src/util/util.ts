@@ -16,6 +16,11 @@ export function isVideo(filename: string): boolean {
   return videoPattern.test(filename)
 }
 
+export function isMusic(filename: string): boolean {
+  const pattern = /[\S\s]+\.(m4a|mp3|opus|mka|aac)$/i
+  return pattern.test(filename)
+}
+
 /**
  * 根据文件后缀名判断是否是字幕
  * @param filename
