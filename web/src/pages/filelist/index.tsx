@@ -13,13 +13,20 @@ import {
   Popover,
   Row,
 } from 'antd'
-import { filesizeFormatter, isImage, path } from '../../util/util'
+import {
+  filesizeFormatter,
+  isImage,
+  isMusic,
+  isVideo,
+  path,
+} from '../../util/util'
 import FileIcon from '../../components/fileIcon'
 import {
   ArrowDownOutlined,
   DeleteTwoTone,
   EditOutlined,
   PictureOutlined,
+  PlayCircleOutlined,
   QrcodeOutlined,
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
@@ -47,6 +54,7 @@ export default function FileList() {
     currentWorkDir,
     state,
     currentUploadFileList,
+    handleJumpPlaylist,
     getUploadFolderData,
     cancelUploadProgressModal,
     showRenameModal,
@@ -62,7 +70,7 @@ export default function FileList() {
     handleCreateNewFolder,
     handleDeleteItem,
     handleCreateNewText,
-    refreshCurentWorkDir,
+    refreshCurrentWorkDir,
     handleUploadChange,
     handleRenameSubmit,
     handleDownloadItem,
@@ -84,6 +92,33 @@ export default function FileList() {
     {
       title: '文件名',
       dataIndex: 'name',
+      filters: [
+        {
+          text: '视频',
+          value: '视频',
+        },
+        {
+          text: '音乐',
+          value: '音乐',
+        },
+        {
+          text: '图片',
+          value: '图片',
+        },
+      ],
+      onFilter: (value: string | number | boolean, record) => {
+        type FileType = '视频' | '音乐' | '图片'
+        switch (value as FileType) {
+          case '视频':
+            return isVideo(record.name)
+          case '图片':
+            return isImage(record.name)
+          case '音乐':
+            return isMusic(record.name)
+          default:
+            return true
+        }
+      },
       render: (value: unknown, record: FileItem) => {
         return (
           <div>
@@ -168,6 +203,14 @@ export default function FileList() {
                     />
                   </Tooltip>
                 ) : null}
+                {permissionMap?.read && isVideo(record.name) ? (
+                  <Tooltip title="播放视频">
+                    <PlayCircleOutlined
+                      className="cursor-pointer text-xl text-blue-400"
+                      onClick={() => handleJumpPlaylist(record)}
+                    />
+                  </Tooltip>
+                ) : null}
                 {permissionMap.read ? (
                   <ArrowDownOutlined
                     className="cursor-pointer text-xl text-green-500"
@@ -243,7 +286,7 @@ export default function FileList() {
           ) : null}
         </div>
         <Space className="mb-3">
-          <div onClick={refreshCurentWorkDir}>
+          <div onClick={refreshCurrentWorkDir}>
             <span className="text-blue-500 cursor-pointer">刷新</span>
             <span className="p-1 text-black">|</span>
           </div>
@@ -397,7 +440,7 @@ export default function FileList() {
         <Image.PreviewGroup
           preview={{
             visible: isPreviewVisible,
-            onVisibleChange: hanldePreviewVisibleChange,
+            onVisibleChange: handlePreviewVisibleChange,
           }}
         >
           {previewList.map((item) => {

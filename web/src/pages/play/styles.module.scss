@@ -1,0 +1,4 @@
+@import '../../style/scss/mixin.scss';
+.playlist {
+  @include scrollbar-custom;
+}

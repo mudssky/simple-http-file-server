@@ -21,7 +21,7 @@ var (
 )
 
 func Version() string {
-	return "1.0.3"
+	return "1.1.0"
 }
 
 func PrintVersion() {
@@ -71,7 +71,7 @@ func NotifyUpdate() error {
 
 // 多个版本字符串，比较最新版本
 // 字符串是v1.0.0这种格式的
-// func LastestVersion(version... string){
+// func LatestVersion(version... string){
 // versionPrefix:="v"
 // for
 // }
@@ -124,22 +124,23 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 		binaryName = "ghs.exe"
 
 	}
-	fmt.Println("unpack zip file...")
+	targetPath := path.Join(systemInfo.ProgramFolder, binaryName)
+	fmt.Printf("unpack zip file... ,path: %s,target: %s", zipPath, targetPath)
 	binaryBytes, err := util.UnzipCertain(zipPath, binaryName)
 	if err != nil {
 		log.Fatalln("unzip error:", err.Error())
 	}
-	err = os.WriteFile(path.Join(systemInfo.ProgramFolder, binaryName), binaryBytes, os.ModePerm)
+	err = os.WriteFile(targetPath, binaryBytes, os.ModePerm)
 	if err != nil {
 		log.Fatalln("write file error:", err.Error())
 	}
-	fmt.Println("unpack zip file succeed")
+	// fmt.Println("unpack zip file succeed")
 	fmt.Println("remove zip...")
 	err = os.Remove(zipPath)
 	if err != nil {
 		log.Fatalln("remove file error:", err.Error())
 	}
-	fmt.Println("remove zip succeed")
+	// fmt.Println("remove zip succeed")
 	fmt.Printf("new version %s install succeed,run ghs --version to check", latestVersionStr)
 	os.Exit(0)
 

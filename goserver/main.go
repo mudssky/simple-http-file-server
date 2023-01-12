@@ -37,7 +37,7 @@ func locateFileSystem(dir string) http.FileSystem {
 
 // @title           Swagger Example API
 // @version         1.0
-// @description     This is a sample server celler server.
+// @description     This is a sample server.
 // @termsOfService  http://swagger.io/terms/
 
 // @contact.name   API Support
@@ -73,9 +73,10 @@ func main() {
 		}
 		c.Data(http.StatusOK, "text/html; charset=utf-8", htmlByte)
 	})
-
-	fmt.Printf(`
-	localhost:http://127.0.0.1:%v`, global.Config.Port)
+	fmt.Print(`
+	ghs 文件服务器
+	`)
+	fmt.Printf(`localhost:http://127.0.0.1:%v`, global.Config.Port)
 	Ips, err := util.ClientIPs()
 	if err != nil {
 		global.Logger.Warn(err.Error())
