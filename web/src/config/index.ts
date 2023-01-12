@@ -2,5 +2,6 @@
 export const STATIC_SERVER_PREFIX = '/static/'
 
 export function getServerStaticUrl(link: string) {
-  return STATIC_SERVER_PREFIX + link
+  // return STATIC_SERVER_PREFIX + link
+  return link
 }

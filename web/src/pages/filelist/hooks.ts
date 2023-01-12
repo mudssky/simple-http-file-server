@@ -14,6 +14,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   BreadcrumbItem,
+  initialState,
   rootBreadcrumbItem,
   setBreadcrumbitemList,
   setCurrentRenameItemAction,
@@ -33,6 +34,7 @@ import {
 import { checkResponse, isImage, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 import { getServerStaticUrl } from '../../config'
+import { useNavigate } from 'react-router-dom'
 
 export default function useSetupHook() {
   const state = useAppSelector((state) => state.home)
@@ -54,11 +56,16 @@ export default function useSetupHook() {
   } = state
   const [newTextForm] = Form.useForm()
 
+  const navigate = useNavigate()
   const currentWorkDir = useMemo(
     () => breadcrumbitemList.at(-1)?.key ?? rootBreadcrumbItem.key,
     [breadcrumbitemList],
   )
   const getData = async () => {
+    // 如果状态没清空的情况下，再次进入不刷新数据
+    if (state !== initialState) {
+      return
+    }
     await enterFolder({ path: '' })
   }
   const enterFolder = async (
@@ -81,7 +88,7 @@ export default function useSetupHook() {
       message.error(res.msg)
     }
   }
-  const refreshCurentWorkDir = async () => {
+  const refreshCurrentWorkDir = async () => {
     // const currentWorkDir = getCurrentWorkDir()
     enterFolder({
       path: currentWorkDir,
@@ -158,7 +165,7 @@ export default function useSetupHook() {
     })
     checkResponse(res, {
       successCallback: () => {
-        refreshCurentWorkDir()
+        refreshCurrentWorkDir()
         cancelNewTextModal()
       },
     })
@@ -181,7 +188,7 @@ export default function useSetupHook() {
       successCallback: () => {
         cancelNewFolderModal()
         dispatch(setNewFolderName(''))
-        refreshCurentWorkDir()
+        refreshCurrentWorkDir()
       },
     })
   }
@@ -194,7 +201,7 @@ export default function useSetupHook() {
           path: record.path,
         })
         checkResponse(res, {
-          successCallback: refreshCurentWorkDir,
+          successCallback: refreshCurrentWorkDir,
         })
       },
     })
@@ -202,7 +209,6 @@ export default function useSetupHook() {
 
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const getUploadFolderData = (file: any) => {
-    // console.log('dsad')
     // if (file?.webkitRelativePath) {
     //   return
     // }
@@ -229,7 +235,7 @@ export default function useSetupHook() {
         return item.status === 'done'
       })
     ) {
-      refreshCurentWorkDir()
+      refreshCurrentWorkDir()
       setTimeout(() => {
         dispatch(
           setUploadProgressModalOptions({
@@ -277,7 +283,7 @@ export default function useSetupHook() {
           confirmLoading: false,
         }),
       )
-      refreshCurentWorkDir()
+      refreshCurrentWorkDir()
     }
   }
   const handleDownloadItem = async (record: FileItem) => {
@@ -329,8 +335,17 @@ export default function useSetupHook() {
       }),
     )
   }
-  const hanldePreviewVisibleChange = (value: boolean) => {
+  const handlePreviewVisibleChange = (value: boolean) => {
     dispatch(setIsPreviewVisibleAction(value))
+  }
+
+  const handleJumpPlaylist = (record: FileItem) => {
+    navigate('/play', {
+      state: {
+        currentVideoItem: record,
+        fileList: currentFileList,
+      },
+    })
   }
   useEffect(() => {
     getData()
@@ -361,11 +376,12 @@ export default function useSetupHook() {
     handleDeleteItem,
     showNewTextModal,
     handleCreateNewText,
-    refreshCurentWorkDir,
+    refreshCurrentWorkDir,
     handleUploadChange,
     handleRenameSubmit,
     showRenameModal,
     handleDownloadItem,
-    hanldePreviewVisibleChange,
+    handlePreviewVisibleChange,
+    handleJumpPlaylist,
   }
 }

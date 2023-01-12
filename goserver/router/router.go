@@ -21,19 +21,20 @@ func InitRouter() *gin.Engine {
 
 	r.Use(middleware.IPLimit())
 	// 这个设置信用代理，似乎影响的是ClientIP()获取ip的过程，设为nil之后就会直接返回remoteIP
-	// 似乎是有ngix之类做代理的时候，通过header转发被代理的ip时需要设置一下
+	// 似乎是有Nginx之类做代理的时候，通过header转发被代理的ip时需要设置一下
 	r.SetTrustedProxies(nil)
 	// r.SetTrustedProxies([]string{"127.0.0.1"})
 	// 设置默认上传大小限制1gb（不设置的情况下默认是32gb）
 	r.MaxMultipartMemory = 1 << 30
 
 	// 遍历生成静态文件目录
-	for _, folderpath := range global.Config.FolderList {
+	for _, folderPath := range global.Config.FolderList {
+		// // cSpell:enableCompoundWords
 		// l.Debug("static path: /static/" + path.Base(folderpath))
 		// r.StaticFS("/static/"+path.Base(folderpath), http.Dir(folderpath))
 		// 使用url安全的base64根据路径生成静态服务前缀
-		l.Debug("static path: /static/" + base64.RawURLEncoding.EncodeToString([]byte(folderpath)))
-		r.StaticFS("/static/"+base64.RawURLEncoding.EncodeToString([]byte(folderpath)), http.Dir(folderpath))
+		l.Debug("static path: /static/" + base64.RawURLEncoding.EncodeToString([]byte(folderPath)))
+		r.StaticFS("/static/"+base64.RawURLEncoding.EncodeToString([]byte(folderPath)), http.Dir(folderPath))
 
 	}
 
@@ -43,7 +44,7 @@ func InitRouter() *gin.Engine {
 		})
 
 	})
-	r.GET("/testshutdown", func(ctx *gin.Context) {
+	r.GET("/testShutdown", func(ctx *gin.Context) {
 		time.Sleep(5 * time.Second)
 		ctx.String(http.StatusOK, "gin %s", "ok")
 	})
@@ -55,7 +56,7 @@ func InitRouter() *gin.Engine {
 		{
 			userApi := api.ApiGroupApp.UserAPI
 			PublicGroup.POST("/login", userApi.Login)
-			PublicGroup.GET("/getWebpermission", userApi.GetWebpermisson)
+			PublicGroup.GET("/getWebpermission", userApi.GetWebpermission)
 			serverApi := api.ApiGroupApp.ServerAPI
 			PublicGroup.GET("/getServerInfo", serverApi.GetServerInfo)
 		}
@@ -73,6 +74,8 @@ func InitRouter() *gin.Engine {
 			privateGroup.POST("/renameItem", fileListAPI.RenameItem)
 			privateGroup.POST("/downloadItem", fileListAPI.DownloadItem)
 			// r.POST("/uploadSingle", fileListAPI.UploadSingle)
+			videoAPI := api.ApiGroupApp.VideoAPI
+			privateGroup.POST("/getVttSubtitle", videoAPI.GetVttSubtitle)
 
 		}
 

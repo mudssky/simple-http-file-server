@@ -13,6 +13,7 @@ ghs是一个命令行启动的文件服务器
 - 地址二维码方便手机使用
 - 图片预览功能
 - 支持从github检查/更新版本
+- 弹幕播放器，可以从同文件夹加载字幕(srt,ass,vtt)和bilibili弹幕(xml)
 
 ## Install
 1. [去发布页面下载](https://github.com/mudssky/simple-http-file-server/releases/)
@@ -80,7 +81,7 @@ ghs -o -p 5006 --folderlist='D:/coding','D:/games'
 ```yaml
 # port: 8792
 # folderlist: ['D:/coding']
-# 可以按如下配置用户列表，其中role分为四种 vistor是不登录也有的游客类型权限
+# 可以按如下配置用户列表，其中role分为四种 visitor是不登录也有的游客类型权限
 # 其次可以填admin，
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级

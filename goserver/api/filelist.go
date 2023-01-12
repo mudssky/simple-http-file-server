@@ -45,27 +45,27 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 	if err != nil {
 		return nil, err
 	}
-	reslist := []response.FileInfo{}
+	resList := []response.FileInfo{}
 	for _, dirEntry := range dirEntryList {
 		fileinfo, err := dirEntry.Info()
 		if err != nil {
 			return nil, err
 		}
-		itempath := path.Join(pathname, fileinfo.Name())
-		staticPath := strings.TrimPrefix(itempath, rootPath)
+		itemPath := path.Join(pathname, fileinfo.Name())
+		staticPath := strings.TrimPrefix(itemPath, rootPath)
 		rootPathEncode := base64.RawURLEncoding.EncodeToString([]byte(rootPath))
-		reslist = append(reslist, response.FileInfo{
+		resList = append(resList, response.FileInfo{
 			Name:           fileinfo.Name(),
 			LastModTime:    fileinfo.ModTime().UnixMilli(),
-			Path:           itempath,
+			Path:           itemPath,
 			IsFolder:       fileinfo.IsDir(),
 			Size:           fileinfo.Size(),
 			RootPath:       rootPath,
 			RootPathEncode: rootPathEncode,
-			Link:           rootPathEncode + staticPath,
+			Link:           "/static/" + rootPathEncode + staticPath,
 		})
 	}
-	return reslist, nil
+	return resList, nil
 
 }
 
@@ -106,20 +106,20 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 		}), c)
 		return
 	} else {
-		filestat, err := os.Stat(req.Path)
+		fileStat, err := os.Stat(req.Path)
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("获取文件状态出错%v", err), c)
 			return
 		}
 		// 是文件夹的情况获取文件夹列表
-		if filestat.IsDir() {
-			reslist, err := f.ReadDir(req.Path)
+		if fileStat.IsDir() {
+			resList, err := f.ReadDir(req.Path)
 			// dirEntryList, err := os.ReadDir(req.Path)
 			if err != nil {
 				response.FailWithMessage(fmt.Sprintf("读取文件列表失败%v", err), c)
 				return
 			}
-			response.SuccessWithData(reslist, c)
+			response.SuccessWithData(resList, c)
 			// fmt.Printf("f : %+v\n", dirEntryList)
 		} else {
 			response.FailWithMessage("不支持文件路径", c)
@@ -164,12 +164,12 @@ func (f *FileListAPI) MakeDir(c *gin.Context) {
 // @Tags         filelist
 // @Accept       application/json
 // @Produce      application/json
-// @Param        data   body  request.OprateFilePath true "路径"
+// @Param        data   body  request.OperateFilePath true "路径"
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /removeItem [post]
 func (f *FileListAPI) RemoveItem(c *gin.Context) {
 	// l := global.Logger
-	var req request.OprateFilePath
+	var req request.OperateFilePath
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)

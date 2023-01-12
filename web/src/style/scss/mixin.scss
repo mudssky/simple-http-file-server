@@ -1,0 +1,22 @@
+// 定制滚动条
+@mixin scrollbar-custom(
+  $width: 8px,
+  $borderRadius: 8px,
+  $bgColor: #606060,
+  $hoverColor: #909090
+) {
+  // 滚动条定制
+  // 整个滚动条
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  // 滑块
+  &::-webkit-scrollbar-thumb {
+    background-color: $bgColor;
+    border-radius: $borderRadius;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: $hoverColor;
+  }
+}

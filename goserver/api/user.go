@@ -63,7 +63,7 @@ func (u *UserAPI) Login(c *gin.Context) {
 	response.FailWithMessage("登录失败,用户名或密码错误", c)
 }
 
-// GetWebpermisson
+// GetWebpermission
 // @Summary      获取前端权限信息
 // @Description  获取前端权限信息
 // @Tags         server
@@ -71,7 +71,7 @@ func (u *UserAPI) Login(c *gin.Context) {
 // @Produce      application/json
 // @Success      200  {object}  response.Response{data=any} "操作成功"
 // @Router       /getWebpermission [get]
-func (u *UserAPI) GetWebpermisson(c *gin.Context) {
+func (u *UserAPI) GetWebpermission(c *gin.Context) {
 	currentUsername := c.GetString("username")
 	fmt.Println("currentUsername", currentUsername)
 	// 游客的情况
