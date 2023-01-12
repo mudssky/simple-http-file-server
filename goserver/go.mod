@@ -3,6 +3,7 @@ module github.com/mudssky/simple-http-file-server/goserver
 go 1.19
 
 require (
+	github.com/asticode/go-astisub v0.23.0
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.1
@@ -22,7 +23,6 @@ require (
 require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/asticode/go-astikit v0.20.0 // indirect
-	github.com/asticode/go-astisub v0.23.0 // indirect
 	github.com/asticode/go-astits v1.8.0 // indirect
 )
 
