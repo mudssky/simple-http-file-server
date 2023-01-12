@@ -21,7 +21,7 @@ var (
 )
 
 func Version() string {
-	return "1.1.0"
+	return "1.1.1"
 }
 
 func PrintVersion() {
@@ -130,9 +130,20 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 	if err != nil {
 		log.Fatalln("unzip error:", err.Error())
 	}
+	renameTargetPath := path.Join(systemInfo.ProgramFolder, "old_"+binaryName)
+	// 无法向正在运行的程序路径写入内容，或者删除，但是可以重命名、
+	// 所以我们先重命名，然后下载完程序以后删除旧的重命名的程序就完成了exe自动更新
+	err = os.Rename(targetPath, renameTargetPath)
+	if err != nil {
+		log.Fatalln("rename file error:", err.Error())
+	}
 	err = os.WriteFile(targetPath, binaryBytes, os.ModePerm)
 	if err != nil {
 		log.Fatalln("write file error:", err.Error())
+	}
+	err = os.Remove(renameTargetPath)
+	if err != nil {
+		log.Fatalln("del old program error: ", err.Error())
 	}
 	// fmt.Println("unpack zip file succeed")
 	fmt.Println("remove zip...")
