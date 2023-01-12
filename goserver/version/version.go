@@ -21,7 +21,7 @@ var (
 )
 
 func Version() string {
-	return "1.0.3"
+	return "1.1.0"
 }
 
 func PrintVersion() {
@@ -71,7 +71,7 @@ func NotifyUpdate() error {
 
 // 多个版本字符串，比较最新版本
 // 字符串是v1.0.0这种格式的
-// func LastestVersion(version... string){
+// func LatestVersion(version... string){
 // versionPrefix:="v"
 // for
 // }
