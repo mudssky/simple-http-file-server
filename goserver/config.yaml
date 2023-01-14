@@ -4,7 +4,7 @@
 # 控制台输出的记录等级
 loglevel: 'info'
 mode: 'release'
-check-update: true
+check-update: false
 jwt:
   secret: eqweqeqe
   expires: 3600

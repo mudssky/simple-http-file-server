@@ -7,6 +7,7 @@
   // words - list of words to be always considered correct
   "words": [
     "antd",
+    "Aplayer",
     "arrayutil",
     "Artplayer",
     "asticode",
@@ -33,12 +34,15 @@
     "myerror",
     "nplayer",
     "Qrcode",
+    "rawurl",
     "reduxjs",
+    "sizedict",
     "swaggo",
     "sysinfo",
     "tailwindcss",
     "userlist",
     "USERPROFILE",
+    "videoplay",
     "watchexec",
     "webpermission"
   ],

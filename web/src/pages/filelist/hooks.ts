@@ -23,6 +23,7 @@ import {
   setIsNewTextModalVisible,
   setIsPreviewVisibleAction,
   setIsTableLoadingAction,
+  setMusicListAction,
   setNewFolderName,
   setNewNameAction,
   setPhotoPreviewOptionsAction,
@@ -31,7 +32,7 @@ import {
   setRootFolderList,
   setUploadProgressModalOptions,
 } from '../../store/reducer/homeReducer'
-import { checkResponse, isImage, path } from '../../util/util'
+import { checkResponse, isImage, isMusic, path } from '../../util/util'
 import { flushSync } from 'react-dom'
 import { getServerStaticUrl } from '../../config'
 import { useNavigate } from 'react-router-dom'
@@ -327,6 +328,26 @@ export default function useSetupHook() {
     )
     showPreviewGroup()
   }
+  const handleMusicMode = () => {
+    const audioList = currentFileList.filter((item) => {
+      return !item.isFolder && isMusic(item.name)
+    })
+    if (audioList.length < 1) {
+      message.info('当前目录未发现支持的音频文件')
+      return
+    }
+    const musicList = audioList.map((item) => {
+      return {
+        name: item.name,
+        url: item.link,
+        // artist: '测试',
+        // cover: 'cover',
+      }
+    })
+    console.log({ musicList })
+
+    dispatch(setMusicListAction(musicList.slice(0, 30)))
+  }
   function showPreviewGroup() {
     dispatch(
       setPhotoPreviewOptionsAction({
@@ -361,6 +382,7 @@ export default function useSetupHook() {
     state,
     currentUploadFileList,
     handleGalleryMode,
+    handleMusicMode,
     handleSinglePicPreview,
     getUploadFolderData,
     cancelUploadProgressModal,
