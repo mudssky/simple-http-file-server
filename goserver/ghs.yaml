@@ -1,9 +1,9 @@
 # port: 8799
-folderlist: ['D:/迅雷下载']
+folderlist: ['D:/迅雷下载', 'D:/BaiduSyncdisk/MusicLibrary']
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级
 loglevel: 'info'
-check-update: true
+check-update: false
 
 jwt:
   secret: eqweqeqe

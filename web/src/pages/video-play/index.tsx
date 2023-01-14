@@ -4,7 +4,7 @@ import { useAppSelector } from '../../store/hooks'
 import { useSetupHook } from './hooks'
 import styles from './styles.module.scss'
 
-export default function Play() {
+export default function VideoPlay() {
   const {
     playerRef,
     playerContainerRef,
