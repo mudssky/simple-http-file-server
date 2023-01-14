@@ -5,6 +5,7 @@ import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
 import { DataType } from 'react-photo-view/dist/types'
 import React from 'react'
+import { AudioItem } from '../../components/aplayer'
 export interface BreadcrumbItem {
   key: string
   name: string
@@ -45,6 +46,7 @@ interface State {
   currentRenameItem: FileItem | null
   previewList: PreviewItem[]
   photoPreviewOptions: PhotoPreviewOptions
+  musicList: AudioItem[]
 }
 export const rootBreadcrumbItem = {
   key: '',
@@ -66,6 +68,7 @@ export const initialState: State = {
   newName: '',
   currentRenameItem: null,
   photoPreviewOptions: DefaultPhotoPreviewOptions,
+  musicList: [],
 }
 export const homeSlice = createSlice({
   name: 'counter',
@@ -123,6 +126,9 @@ export const homeSlice = createSlice({
     ) => {
       state.photoPreviewOptions = action.payload
     },
+    setMusicListAction: (state, action: PayloadAction<AudioItem[]>) => {
+      state.musicList = action.payload
+    },
   },
 })
 
@@ -141,6 +147,7 @@ export const {
   setIsTableLoadingAction,
   setIsPreviewVisibleAction,
   setPhotoPreviewOptionsAction,
+  setMusicListAction,
 } = homeSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type

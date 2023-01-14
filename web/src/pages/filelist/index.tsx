@@ -38,9 +38,9 @@ import {
   setPhotoPreviewOptionsAction,
   setRenameModalOptionsAction,
 } from '../../store/reducer/homeReducer'
-import { STATIC_SERVER_PREFIX } from '../../config'
 import CustomPhotoViewer from '../../components/customPhotoView'
 import { QRCodeSVG } from 'qrcode.react'
+import Aplayer from '../../components/aplayer'
 
 export default function FileList() {
   const dispatch = useAppDispatch()
@@ -76,6 +76,7 @@ export default function FileList() {
     handleDownloadItem,
     handleSinglePicPreview,
     handleGalleryMode,
+    handleMusicMode,
   } = useSetupHook()
   const {
     uploadProgressModalOptions,
@@ -84,6 +85,7 @@ export default function FileList() {
     previewList,
     isTableLoading,
     photoPreviewOptions,
+    musicList,
   } = state
   const { serverInfo } = useAppSelector((state) => state.server)
   const { permissionMap } = useAppSelector((state) => state.user)
@@ -135,11 +137,7 @@ export default function FileList() {
                   {value as string}
                 </span>
               ) : (
-                <a
-                  href={`${STATIC_SERVER_PREFIX}${record.link}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={`${record.link}`} target="_blank" rel="noreferrer">
                   {value as string}
                 </a>
               )}
@@ -282,6 +280,9 @@ export default function FileList() {
               {permissionMap?.read ? (
                 <Button onClick={handleGalleryMode}>相册模式</Button>
               ) : null}
+              {permissionMap?.read ? (
+                <Button onClick={handleMusicMode}>音乐播放</Button>
+              ) : null}
             </Space>
           ) : null}
         </div>
@@ -307,6 +308,7 @@ export default function FileList() {
             })}
           </Breadcrumb>
         </Space>
+        <Aplayer className="my-2" playlist={musicList}></Aplayer>
         <Upload.Dragger
           openFileDialogOnClick={false}
           action={`${PROXY_SUFFIX}/uploadMulti`}
