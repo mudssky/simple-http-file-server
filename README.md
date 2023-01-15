@@ -14,6 +14,7 @@ ghs是一个命令行启动的文件服务器
 - 图片预览功能
 - 支持从github检查/更新版本
 - 弹幕播放器，可以从同文件夹加载字幕(srt,ass,vtt)和bilibili弹幕(xml)
+- 添加aplayer音乐播放器，基于html5的audio标签，支持mp3,m4a等格式
 
 ## Install
 1. [去发布页面下载](https://github.com/mudssky/simple-http-file-server/releases/)
