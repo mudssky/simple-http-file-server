@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/asticode/go-astisub v0.23.0
+	github.com/dhowden/tag v0.0.0-20220618230019-adf36e896086
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.1

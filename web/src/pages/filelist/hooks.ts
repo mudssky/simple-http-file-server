@@ -328,7 +328,7 @@ export default function useSetupHook() {
     )
     showPreviewGroup()
   }
-  const handleMusicMode = () => {
+  const handleMusicMode = async () => {
     const audioList = currentFileList.filter((item) => {
       return !item.isFolder && isMusic(item.name)
     })
@@ -340,13 +340,10 @@ export default function useSetupHook() {
       return {
         name: item.name,
         url: item.link,
-        // artist: '测试',
-        // cover: 'cover',
+        path: item.path,
       }
     })
-    console.log({ musicList })
-
-    dispatch(setMusicListAction(musicList.slice(0, 30)))
+    dispatch(setMusicListAction(musicList))
   }
   function showPreviewGroup() {
     dispatch(

@@ -76,6 +76,9 @@ func InitRouter() *gin.Engine {
 			// r.POST("/uploadSingle", fileListAPI.UploadSingle)
 			videoAPI := api.ApiGroupApp.VideoAPI
 			privateGroup.POST("/getVttSubtitle", videoAPI.GetVttSubtitle)
+			audioAPI := api.ApiGroupApp.AudioApi
+			// privateGroup.POST("/audioList", audioAPI.AudioList)
+			privateGroup.POST("/audioInfo", audioAPI.AudioInfo)
 
 		}
 
