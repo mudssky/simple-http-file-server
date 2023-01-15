@@ -5,6 +5,7 @@ type ApiGroup struct {
 	ServerAPI   ServerAPI
 	UserAPI     UserAPI
 	VideoAPI    VideoAPI
+	AudioApi    AudioApi
 }
 
 var ApiGroupApp = new(ApiGroup)
