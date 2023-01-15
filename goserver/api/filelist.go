@@ -36,6 +36,7 @@ type FileListAPI struct{}
 //	}
 func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo, err error) {
 	var rootPath string
+	// 配置文件里面的folderlist就是根路径，通过对比路径前缀，判断是哪个根路径
 	for _, folder := range global.Config.FolderList {
 		if strings.HasPrefix(pathname, folder) {
 			rootPath = folder
@@ -66,7 +67,6 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 		})
 	}
 	return resList, nil
-
 }
 
 // GetFileList

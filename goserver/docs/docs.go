@@ -25,6 +25,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/audioList": {
+            "post": {
+                "description": "获取指定文件的音频信息，图片会被转为base64，大于10mb则不进行转换，避免传输数据包过大",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "audio"
+                ],
+                "summary": "获取指定文件的音频信息",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.AudioInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/createTxt": {
             "post": {
                 "description": "传入文件名和内容，创建txt文本文件",
@@ -201,6 +236,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/getVttSubtitle": {
+            "get": {
+                "description": "将本地的ass，srt格式的字幕转成vtt返回字符串",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "video"
+                ],
+                "summary": "获取vtt字幕",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/getWebpermission": {
             "get": {
                 "description": "获取前端权限信息",
@@ -337,7 +407,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.OprateFilePath"
+                            "$ref": "#/definitions/request.OperateFilePath"
                         }
                     }
                 ],
@@ -478,7 +548,7 @@ const docTemplate = `{
                 }
             }
         },
-        "request.OprateFilePath": {
+        "request.OperateFilePath": {
             "type": "object",
             "required": [
                 "path"
@@ -521,6 +591,112 @@ const docTemplate = `{
                 }
             }
         },
+        "response.AudioInfo": {
+            "type": "object",
+            "properties": {
+                "album": {
+                    "description": "专辑",
+                    "type": "string"
+                },
+                "albumArtist": {
+                    "description": "专辑艺术家",
+                    "type": "string"
+                },
+                "artist": {
+                    "description": "艺术家",
+                    "type": "string"
+                },
+                "comment": {
+                    "description": "评论",
+                    "type": "string"
+                },
+                "composer": {
+                    "description": "作曲",
+                    "type": "string"
+                },
+                "cover": {
+                    "description": "封面 base64",
+                    "type": "string"
+                },
+                "discNum": {
+                    "description": "disc数",
+                    "type": "integer"
+                },
+                "discTotal": {
+                    "description": "disc总数",
+                    "type": "integer"
+                },
+                "fileType": {
+                    "description": "文件类型",
+                    "type": "string"
+                },
+                "format": {
+                    "description": "标签格式",
+                    "type": "string"
+                },
+                "genre": {
+                    "description": "分类",
+                    "type": "string"
+                },
+                "isFolder": {
+                    "description": "是否是文件夹",
+                    "type": "boolean"
+                },
+                "lastModTime": {
+                    "description": "上次修改时间,单位为毫秒",
+                    "type": "integer"
+                },
+                "link": {
+                    "description": "静态链接",
+                    "type": "string"
+                },
+                "lyrics": {
+                    "description": "歌词",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "文件名",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "路径",
+                    "type": "string"
+                },
+                "raw": {
+                    "description": "原始标签数据",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "rootPath": {
+                    "description": "根路径",
+                    "type": "string"
+                },
+                "rootPathEncode": {
+                    "description": "根路径 urlsafe base64",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "文件大小",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "track": {
+                    "description": "音轨数",
+                    "type": "integer"
+                },
+                "trackTotal": {
+                    "description": "音轨总数",
+                    "type": "integer"
+                },
+                "year": {
+                    "description": "年代",
+                    "type": "integer"
+                }
+            }
+        },
         "response.FileInfo": {
             "description": "文件信息",
             "type": "object",
@@ -534,7 +710,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "link": {
-                    "description": "静态链接,文件夹则为空串",
+                    "description": "静态链接",
                     "type": "string"
                 },
                 "name": {
@@ -543,6 +719,14 @@ const docTemplate = `{
                 },
                 "path": {
                     "description": "路径",
+                    "type": "string"
+                },
+                "rootPath": {
+                    "description": "根路径",
+                    "type": "string"
+                },
+                "rootPathEncode": {
+                    "description": "根路径 urlsafe base64",
                     "type": "string"
                 },
                 "size": {
@@ -594,7 +778,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "Swagger Example API",
-	Description:      "This is a sample server celler server.",
+	Description:      "This is a sample server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
