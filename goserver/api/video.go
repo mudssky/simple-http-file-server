@@ -15,7 +15,7 @@ type VideoAPI struct{}
 // @Tags         video
 // @Accept       application/json
 // @Produce      application/json
-// @Success      200  {object}  response.Response{data=any} "操作成功"
+// @Success      200  {object}  response.Response{data=string} "操作成功"
 // @Router       /getVttSubtitle [get]
 func (v *VideoAPI) GetVttSubtitle(c *gin.Context) {
 	var req request.OperateFilePath

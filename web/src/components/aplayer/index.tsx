@@ -5,6 +5,7 @@ export interface AudioItem {
   artist?: string
   url: string
   cover?: string
+  path: string
 }
 export interface Props {
   playlist: AudioItem[]
