@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -107,10 +108,10 @@ func initViper() {
 	if err != nil {
 		log.Fatalln("读取内嵌默认配置失败", err.Error())
 	}
-	if Viper.GetBool("verbose") {
-		loadViper()
-		fmt.Printf("default config:%#v\n", Config)
-	}
+	// if Viper.GetBool("verbose") {
+	// 	loadViper()
+	// 	fmt.Printf("default config:%#v\n", Config)
+	// }
 	// 然后用用户的配置文件进行覆盖
 	err = viper.MergeInConfig()
 	// err = viper.ReadInConfig() // 查找并读取配置文件
@@ -123,17 +124,21 @@ func initViper() {
 				fmt.Println("user config file not found:", t.Error())
 			}
 			// 找不到的情况,写入默认配置到用户目录
-			isExist, err := util.PathExists(SystemInfo.HomePath)
+			isExist, err := util.PathExists(homeconfigPath)
 			if err != nil {
 				log.Fatalln("check homepath failed:", err.Error())
 			}
+			if Viper.GetBool("verbose") {
+				fmt.Println("path exist", isExist, homeconfigPath)
+			}
 			if !isExist {
-				err := os.MkdirAll(SystemInfo.HomePath, os.ModeDir)
+				err := os.MkdirAll(homeconfigPath, os.ModeDir)
 				if err != nil {
 					log.Fatalln("create home path failed:", err.Error())
 				}
 			}
-			homeconfigfilePath := path.Join(homeconfigPath, configname+".yaml")
+
+			homeconfigfilePath := filepath.Join(homeconfigPath, configname+".yaml")
 			err = os.WriteFile(homeconfigfilePath, []byte(defaultConfig), os.ModePerm)
 			if err != nil {
 				log.Fatalln("create home path config failed:", err.Error())
