@@ -6,8 +6,10 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mdp/qrterminal"
 	_ "github.com/mudssky/simple-http-file-server/goserver/docs"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
@@ -85,7 +87,10 @@ func main() {
 		fmt.Printf(`
 	NetWork%v:http://%v:%v`, index+1, ip, global.Config.Port)
 	}
+	fmt.Println()
 
+	localUrl := fmt.Sprintf("http://%v:%v\n", Ips[0], global.Config.Port)
+	qrterminal.Generate(localUrl, qrterminal.L, os.Stdout)
 	if global.Config.Mode != "release" {
 		fmt.Printf(`
 	默认自动化文档地址:http://127.0.0.1:%v/swagger/index.html

@@ -11,6 +11,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/hashicorp/go-version v1.6.0
 	github.com/joho/godotenv v1.4.0
+	github.com/mdp/qrterminal v1.0.1
 	github.com/samber/lo v1.37.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.14.0
@@ -25,6 +26,7 @@ require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/asticode/go-astikit v0.20.0 // indirect
 	github.com/asticode/go-astits v1.8.0 // indirect
+	rsc.io/qr v0.2.0 // indirect
 )
 
 require (
