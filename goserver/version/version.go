@@ -86,6 +86,26 @@ func GithubReleaseVersion(latestURL string) (version string) {
 	}
 	return
 }
+func removeOldVersion(zipPath, oldPath string) {
+	isExist, _ := util.PathExists(oldPath)
+	if isExist {
+		err := os.Remove(oldPath)
+		if err != nil {
+			log.Fatalln("del old program error: ", err.Error())
+		}
+	}
+
+	isZipExist, _ := util.PathExists(zipPath)
+	if isZipExist {
+		// fmt.Println("unpack zip file succeed")
+		// fmt.Println("remove zip...")
+		err := os.Remove(oldPath)
+		if err != nil {
+			log.Fatalln("remove file error:", err.Error())
+		}
+	}
+
+}
 
 func Update(systemInfo *sysinfo.SystemInfo) {
 	needUpdate, err := CheckUpdate()
@@ -109,30 +129,34 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 		systemInfo.GOOS,
 		systemInfo.GOARCH,
 	}
-	fileName := strings.Join(fileNameList, "_") + achieveSuffix
-	latestDownloadURL := downloadPrefix + fileName
+	zipFileName := strings.Join(fileNameList, "_") + achieveSuffix
+	latestDownloadURL := downloadPrefix + zipFileName
+	zipPath := path.Join(systemInfo.ProgramFolder, zipFileName)
+	binaryName := "ghs"
+	if systemInfo.GOOS == "windows" {
+		binaryName = "ghs.exe"
+	}
+	renameTargetPath := path.Join(systemInfo.ProgramFolder, "old_"+binaryName)
+	removeOldVersion(zipPath, renameTargetPath)
 	fmt.Println("download link:", latestDownloadURL)
 	fmt.Println("download path:", systemInfo)
 	resp, err := grab.Get(systemInfo.ProgramFolder, latestDownloadURL)
 	if err != nil {
 		log.Fatal("download update failed:", err)
 	}
-	zipPath := path.Join(systemInfo.ProgramFolder, fileName)
-	fmt.Println("Download saved to", resp.Filename)
-	binaryName := "ghs"
-	if systemInfo.GOOS == "windows" {
-		binaryName = "ghs.exe"
 
-	}
+	fmt.Println("Download saved to", resp.Filename)
+
 	targetPath := path.Join(systemInfo.ProgramFolder, binaryName)
 	fmt.Printf("unpack zip file... ,path: %s,target: %s", zipPath, targetPath)
 	binaryBytes, err := util.UnzipCertain(zipPath, binaryName)
 	if err != nil {
 		log.Fatalln("unzip error:", err.Error())
 	}
-	renameTargetPath := path.Join(systemInfo.ProgramFolder, "old_"+binaryName)
+
 	// 无法向正在运行的程序路径写入内容，或者删除，但是可以重命名、
-	// 所以我们先重命名，然后下载完程序以后删除旧的重命名的程序就完成了exe自动更新
+	// 所以我们只能等下次启动时清理上次的东西了。
+
 	err = os.Rename(targetPath, renameTargetPath)
 	if err != nil {
 		log.Fatalln("rename file error:", err.Error())
@@ -141,16 +165,7 @@ func Update(systemInfo *sysinfo.SystemInfo) {
 	if err != nil {
 		log.Fatalln("write file error:", err.Error())
 	}
-	err = os.Remove(renameTargetPath)
-	if err != nil {
-		log.Fatalln("del old program error: ", err.Error())
-	}
-	// fmt.Println("unpack zip file succeed")
-	fmt.Println("remove zip...")
-	err = os.Remove(zipPath)
-	if err != nil {
-		log.Fatalln("remove file error:", err.Error())
-	}
+
 	// fmt.Println("remove zip succeed")
 	fmt.Printf("new version %s install succeed,run ghs --version to check", latestVersionStr)
 	os.Exit(0)
