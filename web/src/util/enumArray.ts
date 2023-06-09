@@ -40,7 +40,7 @@ export class EnumArray<
       return item.label === label
     })
   }
-  getItemByValue(value: ValueOf<T>) {
+  getItemByValue(value: ValueOf<T>): ItemOf<T> | undefined {
     return this.find((item) => {
       return item.value === value
     })
