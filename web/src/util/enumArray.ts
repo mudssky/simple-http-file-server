@@ -2,7 +2,7 @@
 export interface EnumArrayObj {
   value: number | string
   label: string //中文key，方便阅读
-  displayText?: string //展示的文字
+  displayText?: string //展示的文字,只有和label不同的时候使用，
 }
 
 type ValueOf<T extends readonly EnumArrayObj[]> = T[number]['value']
@@ -12,12 +12,14 @@ type ItemOf<T extends readonly EnumArrayObj[]> = {
   label: LabelOf<T>
   displayText?: string
 }
+/**
+ * 枚举数组类，继承了Array
+ */
 export class EnumArray<
   T extends readonly EnumArrayObj[],
 > extends Array<EnumArrayObj> {
   private readonly kvMap = new Map<string, ValueOf<T>>()
   private readonly vkMap = new Map<string, LabelOf<T>>()
-
   constructor(list: T) {
     super(list.length)
     for (let i = 0; i < list.length; i++) {
@@ -57,8 +59,7 @@ export class EnumArray<
 export function createEnum<T extends readonly EnumArrayObj[]>(enums: T) {
   return Object.freeze(new EnumArray(enums))
 }
-
-const sexEnum = createEnum([
+const sexList = [
   {
     label: '男',
     value: 1,
@@ -67,4 +68,8 @@ const sexEnum = createEnum([
     label: '女',
     value: 2,
   },
-] as const)
+] as const
+const sexEnum = createEnum(sexList)
+
+export type ll = LabelOf<typeof sexList>
+sexEnum.getValueByLabel('女')
