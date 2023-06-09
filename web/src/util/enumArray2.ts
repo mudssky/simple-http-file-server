@@ -9,7 +9,6 @@ export class EnumArray<
 > extends Array<EnumArrayObj> {
   constructor(list: T) {
     super(...list)
-    Object.setPrototypeOf(this, Array.prototype)
   }
 }
 export const sexEnum = Object.freeze(
