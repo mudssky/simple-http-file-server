@@ -6,7 +6,7 @@ test('EnumArray should be able to retrieve values by label or value', () => {
     { value: 2, label: 'Two' },
     { value: 3, label: 'Three' },
   ] as const)
-  console.log({ enumArray })
+  // console.log({ enumArray })
 
   expect(enumArray.getValueByLabel('One')).toBe(1)
   expect(enumArray.getValueByLabel('Two')).toBe(2)
@@ -17,7 +17,7 @@ test('EnumArray should be able to retrieve values by label or value', () => {
 
   expect(
     enumArray.filter((item) => {
-      console.log({ item })
+      // console.log({ item })
       return item.label === 'One'
     })?.[0].value,
   ).toBe(1)
