@@ -8,8 +8,8 @@ export interface EnumArrayObj {
 type ValueOf<T extends readonly EnumArrayObj[]> = T[number]['value']
 type LabelOf<T extends readonly EnumArrayObj[]> = T[number]['label']
 type ItemOf<T extends readonly EnumArrayObj[]> = {
-  value: T[number]['value']
-  label: T[number]['label']
+  value: ValueOf<T>
+  label: LabelOf<T>
   displayText?: string
 }
 export class EnumArray<
