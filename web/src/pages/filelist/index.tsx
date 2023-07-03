@@ -41,7 +41,6 @@ import {
 import CustomPhotoViewer from '../../components/customPhotoView'
 import { QRCodeSVG } from 'qrcode.react'
 import Aplayer from '../../components/aplayer'
-import { sexEnum } from '../../util/enumArray2'
 
 export default function FileList() {
   const dispatch = useAppDispatch()
@@ -90,16 +89,6 @@ export default function FileList() {
   } = state
   const { serverInfo } = useAppSelector((state) => state.server)
   const { permissionMap } = useAppSelector((state) => state.user)
-
-  for (const ll of sexEnum) {
-    console.log({ ll })
-  }
-  console.log(
-    'test enum filter',
-    sexEnum.filter((item) => {
-      return item.label === '女'
-    }),
-  )
 
   const columns: ColumnsType<FileItem> = [
     {

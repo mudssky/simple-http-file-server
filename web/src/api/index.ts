@@ -76,8 +76,14 @@ export const DOWNLOAD_ITEM = async (data: FileItem) => {
   const res = resP.data
   // json的情况说明是报错
   if (res.type !== 'application/json') {
-    const filename =
-      resP.headers?.['content-disposition']?.split('=')?.at(-1) ?? data.name
+    const filenamePatten = /filename(\*=.*?'.*?')?(.*?)$/
+    const encodedFileName = filenamePatten.exec(
+      resP.headers?.['content-disposition'],
+    )?.[2]
+    const filename = encodedFileName
+      ? decodeURIComponent(encodedFileName)
+      : data.name
+
     downloadFile(res, filename)
     // if (res.type === 'application/zip') {
     //   downloadFile(res, `${data.name}.zip`)
