@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-// 获取本地ip地址列表
+// 获取本地ip地址列表,只包含ipv4
 func ClientIPs() (IPs []string, err error) {
 	// 这个函数返回系统单播地址的列表。
 	addrs, err := net.InterfaceAddrs()
@@ -32,6 +32,10 @@ func ClientIPs() (IPs []string, err error) {
 			continue
 		}
 		if !ipAddr.IP.IsGlobalUnicast() {
+			continue
+		}
+		// 排除ipv6地址
+		if ipAddr.IP.To4() == nil {
 			continue
 		}
 		IPs = append(IPs, ipAddr.IP.String())
