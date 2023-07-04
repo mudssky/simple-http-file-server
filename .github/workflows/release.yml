@@ -1,0 +1,46 @@
+name: release
+
+on:
+  push:
+    # 只有主分支提交tag时执行
+    tags:
+      - '*'
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'checkout'
+        uses: actions/checkout@v3
+      - name: 'setup pnpm'
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.2
+      - name: 'setup node'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'pnpm'
+      - name: 'build frontend'
+        run: |
+          cd ./web
+          pnpm install --frozen-lockfile
+          cp -r dist ../goserver/public
+          cd ../goserver
+      - name: fetch git tags
+        run: git fetch --force --tags
+      - name: 'build and release'
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro':
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
