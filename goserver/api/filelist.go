@@ -382,9 +382,15 @@ func (f *FileListAPI) DownloadItem(c *gin.Context) {
 			return
 		}
 	} else {
-		c.Header("Content-Disposition", "attachment; filename="+req.Name)
-		// c.Header("Content-Transfer-Encoding", "binary")
+		// l := global.Logger
+		// l.Debug("download file name", zap.String("filename", req.Name))
 		// c.Header("Content-Type", "application/octet-stream")
+		//
+		contentStr := "attachment; filename*=UTF-8''" + url.QueryEscape(req.Name)
+
+		c.Header("Content-Disposition", contentStr)
+		// l.Debug("content-do", zap.String("cd", contentStr))
+		// c.Header("Content-Transfer-Encoding", "binary")
 		c.File(req.Path)
 	}
 	fmt.Println("req", req)
