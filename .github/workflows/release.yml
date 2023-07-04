@@ -17,8 +17,6 @@ jobs:
     steps:
       - name: 'checkout'
         uses: actions/checkout@v3
-      - name: 'move to frontend workdir'
-        run: cd ./web
       - name: 'setup pnpm'
         uses: pnpm/action-setup@v2
         with:
@@ -28,8 +26,10 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+          cache-dependency-path: ./web/pnpm-lock.yaml,
       - name: 'build frontend'
-        run: 
+        run: |
+          cd ./web
           pnpm install --frozen-lockfile
           cp -r dist ../goserver/public
           cd ../goserver
