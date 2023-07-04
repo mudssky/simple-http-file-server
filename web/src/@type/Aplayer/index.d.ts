@@ -1,4 +1,4 @@
-declare module 'APlayer'
+declare module 'aplayer'
 
 // interface Aplayer {
 //   on(eventname: string, callback?: (e: unknown) => void): void

@@ -1,6 +1,6 @@
 import { Props } from '.'
-import APlayer from 'APlayer'
-import 'APlayer/dist/APlayer.min.css'
+import APlayer from 'aplayer'
+import 'aplayer/dist/APlayer.min.css'
 import { useEffect } from 'react'
 import { cloneDeep } from 'lodash-es'
 
