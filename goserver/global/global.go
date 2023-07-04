@@ -1,7 +1,6 @@
 package global
 
 import (
-	_ "embed"
 	"fmt"
 	"log"
 	"os"
@@ -16,6 +15,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/mudssky/simple-http-file-server/goserver/cmd"
+	"github.com/mudssky/simple-http-file-server/goserver/conf"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
 	"github.com/mudssky/simple-http-file-server/goserver/sysinfo"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
@@ -27,14 +27,11 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-//go:embed ..\rabc_modal.conf
-var casbinModalStr string
+var casbinModalStr = conf.CasbinModalStr
 
-//go:embed ..\policy.csv
-var policyCSV string
+var policyCSV string = conf.PolicyCSV
 
-//go:embed ..\config.yaml
-var defaultConfig string
+var defaultConfig string = conf.DefaultConfig
 
 var (
 	Viper          *viper.Viper
