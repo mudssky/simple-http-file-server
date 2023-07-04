@@ -5,9 +5,7 @@ on:
     # 只有主分支提交tag时执行
     tags:
       - '*'
-    branches:
-      - main
-
+      
 permissions:
   contents: write
 
