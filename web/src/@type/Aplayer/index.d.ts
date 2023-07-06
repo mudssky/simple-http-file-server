@@ -6,4 +6,5 @@ declare module 'aplayer'
 //   audio: any
 // }
 
-type Aplayer = unknown
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+type Aplayer = any
