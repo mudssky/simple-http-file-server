@@ -26,12 +26,12 @@ export class EnumArray<
       const item = list[i]
       this[i] = item
       this.kvMap.set(item.label, item.value)
-      this.vkMap.set(item.value + '', item.label)
+      this.vkMap.set(`${item.value}`, item.label)
     }
   }
 
   getLabelByValue(value: ValueOf<T>) {
-    return this.vkMap.get(value + '')
+    return this.vkMap.get(`${value}`)
   }
 
   getValueByLabel(label: LabelOf<T>) {
