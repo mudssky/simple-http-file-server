@@ -21,7 +21,7 @@ var (
 )
 
 func Version() string {
-	return "1.2.5"
+	return "1.2.6"
 }
 
 func PrintVersion() {
