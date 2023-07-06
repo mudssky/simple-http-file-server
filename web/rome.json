@@ -7,21 +7,22 @@
     }
   },
   "files": {
-    "ignore": ["./dist/*", "./src/request/deprecated/*", "./.commitlintrc,cjs"]
+    "ignore": [
+      "./dist/*",
+      "./src/request/deprecated/*",
+      "./.commitlintrc,cjs",
+      "./.vscode"
+    ]
   },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space"
-    // "indentSize": 2,
-    // "lineWidth": 80,
-    // "ignore": []
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      // "all": true,
       "suspicious": {
         "noExplicitAny": "error"
       },

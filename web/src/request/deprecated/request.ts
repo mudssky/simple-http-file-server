@@ -61,8 +61,9 @@ export const uploadFiles = (
 ) =>
   new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
-    xhr.upload.addEventListener('progress', (e) =>
-      options?.onProgress?.(e.loaded, e.total),
+    xhr.upload.addEventListener(
+      'progress',
+      (e) => options?.onProgress?.(e.loaded, e.total),
     )
     xhr.addEventListener('load', () =>
       resolve({ status: xhr.status, body: xhr.responseText }),

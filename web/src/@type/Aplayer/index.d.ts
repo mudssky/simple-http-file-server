@@ -6,4 +6,4 @@ declare module 'aplayer'
 //   audio: any
 // }
 
-type Aplayer = any
+type Aplayer = unknown
