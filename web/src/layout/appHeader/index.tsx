@@ -28,11 +28,12 @@ export default function AppHeader() {
     },
   ]
   return (
-    <div>
+    <div className='container  w-full md:mx-auto'>
       <Row justify={'space-between'} align='middle'>
         <div>
           <Popover
             overlayClassName='w-[150px]'
+            // placement='rightBottom'
             content={
               <Row justify={'center'}>
                 <QRCodeSVG
