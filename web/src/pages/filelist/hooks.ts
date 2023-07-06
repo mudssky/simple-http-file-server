@@ -106,22 +106,13 @@ export default function useSetupHook() {
           ...breadcrumbitemList,
           {
             key: record.path,
-            name: record.name,
+            title: record.name,
           },
         ]),
       )
     })
   }
 
-  // const getStaticPath = (item: FileItem) => {
-  //   rootFolderList.forEach((rootfolder) => {
-  //     // 检查是否匹配根路径前缀，匹配
-  //     if (item.path.startsWith(rootfolder.path)) {
-  //       return rootfolder.name + '/' + item.path.slice(rootfolder.path.length)
-  //     }
-  //   })
-  //   return ''
-  // }
   const handleBreadcrumbJump = async (index: number, item: BreadcrumbItem) => {
     if (index >= breadcrumbitemList.length - 1 || index < 0) {
       return

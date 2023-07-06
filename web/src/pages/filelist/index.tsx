@@ -295,18 +295,20 @@ export default function FileList() {
             <span className='text-blue-500 cursor-pointer'>返回上一层</span>
             <span className='p-1 text-black'>|</span>
           </div>
-          <Breadcrumb>
-            {breadcrumbitemList.map((item, index) => {
-              return (
-                <Breadcrumb.Item
-                  key={item.key}
-                  onClick={() => handleBreadcrumbJump(index, item)}
-                >
-                  {item.name}
-                </Breadcrumb.Item>
-              )
+          <Breadcrumb
+            items={breadcrumbitemList.map((item, index) => {
+              return {
+                title: (
+                  <div
+                    key={item.key}
+                    onClick={() => handleBreadcrumbJump(index, item)}
+                  >
+                    {item.title}
+                  </div>
+                ),
+              }
             })}
-          </Breadcrumb>
+          />
         </Space>
         <Aplayer className='my-2' playlist={musicList} />
         <Upload.Dragger
@@ -416,7 +418,6 @@ export default function FileList() {
           )
         })}
       </Modal>
-      {/* <div style={{ display: 'none' }}> */}
       <CustomPhotoViewer
         images={previewList.map((item) => ({ src: item.src, key: item.src }))}
         visible={photoPreviewOptions.visible}
@@ -438,18 +439,6 @@ export default function FileList() {
           )
         }
       />
-      {/* <div style={{ display: 'none' }}>
-        <Image.PreviewGroup
-          preview={{
-            visible: isPreviewVisible,
-            onVisibleChange: handlePreviewVisibleChange,
-          }}
-        >
-          {previewList.map((item) => {
-            return <Image key={item.src} src={item.src} />
-          })}
-        </Image.PreviewGroup>
-      </div> */}
     </div>
   )
 }
