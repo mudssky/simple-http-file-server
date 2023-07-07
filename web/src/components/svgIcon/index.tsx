@@ -12,12 +12,13 @@ export default function SvgIcon(props: SvgIconProps) {
   const symbolId = useMemo(() => `#${prefix}-${name}`, [prefix, name])
   return (
     <svg
-      aria-hidden="true"
+      aria-hidden='true'
       width={size}
       height={size}
       fill={color}
       {...restProps}
     >
+      <title>{name}</title>
       <use href={symbolId} fill={color} />
     </svg>
   )

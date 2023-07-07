@@ -79,7 +79,7 @@ const getIcon = (params: Props) => {
   if (lowExt in iconDict) {
     return <SvgIcon name={iconDict[lowExt as FileExt] ?? ''} />
   }
-  return <SvgIcon name="filetype-unknown" />
+  return <SvgIcon name='filetype-unknown' />
 }
 export default function FileIcon(props: Props) {
   // const { isFolder = false, ext } = props

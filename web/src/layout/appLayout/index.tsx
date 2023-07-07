@@ -9,10 +9,10 @@ export default function AppLayout() {
   useSetupHook()
   return (
     <Layout>
-      <Header className="bg-[#0080FF]">
+      <Header className='bg-[#0080FF]'>
         <AppHeader />
       </Header>
-      <Content className="bg-white">
+      <Content className='bg-white'>
         <Outlet />
       </Content>
       {/* <Footer>Footer</Footer> */}

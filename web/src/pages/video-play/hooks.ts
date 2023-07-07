@@ -53,7 +53,6 @@ export function useSetupHook() {
       player = new Artplayer({
         container: playerRef.current,
         url: videoLink,
-        title: 'unknown',
         volume: 0.5,
         autoplay: true,
         pip: true,
@@ -69,7 +68,6 @@ export function useSetupHook() {
         subtitleOffset: true,
         miniProgressBar: true,
         lang: navigator.language.toLowerCase(),
-        whitelist: ['*'],
         moreVideoAttr: {
           crossOrigin: 'anonymous',
         },
