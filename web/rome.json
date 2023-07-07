@@ -7,7 +7,12 @@
     }
   },
   "files": {
-    "ignore": ["./dist/*", "./src/request/deprecated/*", "./.commitlintrc,cjs"]
+    "ignore": [
+      "./dist/*",
+      "./src/request/deprecated/*",
+      "./.commitlintrc,cjs",
+      "./.vscode"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -21,9 +26,14 @@
       "suspicious": {
         "noExplicitAny": "error"
       },
-      "style": { "useSelfClosingElements": "warn" },
+      "style": {
+        "useSelfClosingElements": "warn"
+      },
       "a11y": {
         "useKeyWithClickEvents": "off"
+      },
+      "complexity": {
+        "noExtraSemicolon": "off"
       }
     }
   }

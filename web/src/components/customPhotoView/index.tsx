@@ -34,7 +34,7 @@ export default function CustomPhotoViewer(props: IPhotoSliderProps) {
       // speed={() => 0}
       toolbarRender={({ onScale, scale, onRotate, rotate }) => {
         return (
-          <div className="space-x-5">
+          <div className='space-x-5'>
             <PlusCircleOutlined
               className='photo-viewer-toobar-item'
               // style={{

@@ -15,5 +15,5 @@ export interface Props {
 export default function Aplayer(props: Props) {
   const { className } = props
   useSetupHook(props)
-  return <div className={className} id="aplayer"></div>
+  return <div className={className} id='aplayer' />
 }

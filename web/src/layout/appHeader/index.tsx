@@ -28,11 +28,12 @@ export default function AppHeader() {
     },
   ]
   return (
-    <div>
-      <Row justify={'space-between'} align="middle">
+    <div className='container  w-full md:mx-auto'>
+      <Row justify={'space-between'} align='middle'>
         <div>
           <Popover
-            overlayClassName="w-[150px]"
+            overlayClassName='w-[150px]'
+            // placement='rightBottom'
             content={
               <Row justify={'center'}>
                 <QRCodeSVG
@@ -47,12 +48,12 @@ export default function AppHeader() {
                 />
               </Row>
             }
-            title="扫码访问"
+            title='扫码访问'
           >
-            <QrcodeOutlined className="cursor-pointer text-xl text-white mr-2" />
+            <QrcodeOutlined className='cursor-pointer text-xl text-white mr-2' />
           </Popover>
           <span
-            className="text-[20px]  text-white cursor-pointer"
+            className='text-[20px]  text-white cursor-pointer'
             onClick={() => {
               navigate('/')
             }}
@@ -62,7 +63,7 @@ export default function AppHeader() {
         </div>
         {userInfo ? (
           <Dropdown menu={{ items }}>
-            <Space className="text-white text-[16px]">
+            <Space className='text-white text-[16px]'>
               <span className='text-white'>{userInfo.username}</span>
               <DownOutlined />
             </Space>
@@ -72,22 +73,22 @@ export default function AppHeader() {
         )}
       </Row>
       <Modal
-        title="用户登录"
+        title='用户登录'
         open={loginModalOptions.open}
         onCancel={cancelLoginModal}
         onOk={handleLoginSubmit}
       >
         <Form form={loginForm} layout='vertical'>
           <Form.Item
-            label="用户名"
-            name="username"
+            label='用户名'
+            name='username'
             rules={[{ required: true, message: 'Please input your username!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="密码"
-            name="password"
+            label='密码'
+            name='password'
             rules={[{ required: true, message: 'Please input your password!' }]}
           >
             <Input.Password />

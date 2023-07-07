@@ -131,13 +131,13 @@ export default function FileList() {
               />
               {record.isFolder ? (
                 <span
-                  className="btn-link"
+                  className='btn-link'
                   onClick={() => handleFileClick(record)}
                 >
                   {value as string}
                 </span>
               ) : (
-                <a href={`${record.link}`} target="_blank" rel="noreferrer">
+                <a href={`${record.link}`} target='_blank' rel='noreferrer'>
                   {value as string}
                 </a>
               )}
@@ -180,7 +180,7 @@ export default function FileList() {
               <Space wrap={true}>
                 {!record.isFolder && permissionMap.read ? (
                   <Popover
-                    overlayClassName="w-[150px]"
+                    overlayClassName='w-[150px]'
                     content={
                       <Row justify={'center'}>
                         <QRCodeSVG
@@ -188,43 +188,43 @@ export default function FileList() {
                         />
                       </Row>
                     }
-                    title="扫码访问"
+                    title='扫码访问'
                   >
-                    <QrcodeOutlined className="cursor-pointer text-xl text-black" />
+                    <QrcodeOutlined className='cursor-pointer text-xl text-black' />
                   </Popover>
                 ) : null}
                 {permissionMap?.read && isImage(record.name) ? (
-                  <Tooltip title="预览图片">
+                  <Tooltip title='预览图片'>
                     <PictureOutlined
-                      className="cursor-pointer text-xl text-blue-400"
+                      className='cursor-pointer text-xl text-blue-400'
                       onClick={() => handleSinglePicPreview(record)}
                     />
                   </Tooltip>
                 ) : null}
                 {permissionMap?.read && isVideo(record.name) ? (
-                  <Tooltip title="播放视频">
+                  <Tooltip title='播放视频'>
                     <PlayCircleOutlined
-                      className="cursor-pointer text-xl text-blue-400"
+                      className='cursor-pointer text-xl text-blue-400'
                       onClick={() => handleJumpPlaylist(record)}
                     />
                   </Tooltip>
                 ) : null}
                 {permissionMap.read ? (
                   <ArrowDownOutlined
-                    className="cursor-pointer text-xl text-green-500"
+                    className='cursor-pointer text-xl text-green-500'
                     onClick={() => handleDownloadItem(record)}
                   />
                 ) : null}
                 {permissionMap.delete ? (
                   <DeleteTwoTone
                     twoToneColor={'#ff0000'}
-                    className="cursor-pointer text-xl"
+                    className='cursor-pointer text-xl'
                     onClick={() => handleDeleteItem(record)}
                   />
                 ) : null}
                 {permissionMap.rename ? (
                   <EditOutlined
-                    className="cursor-pointer text-xl text-blue-500"
+                    className='cursor-pointer text-xl text-blue-500'
                     onClick={() => showRenameModal(record)}
                   />
                 ) : null}
@@ -237,8 +237,8 @@ export default function FileList() {
   ]
   return (
     <div>
-      <div className="container w-full  md:mx-auto lg:w-3/4  ">
-        <div className="py-1">
+      <div className='container w-full  md:mx-auto lg:w-3/4  '>
+        <div className='py-1'>
           {/* 根目录不能操作 */}
           {breadcrumbitemList.length > 1 ? (
             <Space wrap={true}>
@@ -249,12 +249,12 @@ export default function FileList() {
 
                   <Upload
                     action={`${PROXY_SUFFIX}/uploadMulti`}
-                    name="file"
+                    name='file'
                     data={{
                       path: currentWorkDir,
                     }}
                     multiple={true}
-                    method="POST"
+                    method='POST'
                     // 不显示文件列表，当作一个普通的下载按钮使用
                     showUploadList={false}
                     fileList={currentUploadFileList}
@@ -264,9 +264,9 @@ export default function FileList() {
                   </Upload>
                   <Upload
                     action={`${PROXY_SUFFIX}/uploadMulti`}
-                    name="file"
+                    name='file'
                     data={getUploadFolderData}
-                    method="POST"
+                    method='POST'
                     directory={true}
                     // 不显示文件列表，当作一个普通的下载按钮使用
                     showUploadList={false}
@@ -286,36 +286,38 @@ export default function FileList() {
             </Space>
           ) : null}
         </div>
-        <Space className="mb-3">
+        <Space className='mb-3'>
           <div onClick={refreshCurrentWorkDir}>
-            <span className="text-blue-500 cursor-pointer">刷新</span>
-            <span className="p-1 text-black">|</span>
+            <span className='text-blue-500 cursor-pointer'>刷新</span>
+            <span className='p-1 text-black'>|</span>
           </div>
           <div onClick={handleBackToParent}>
-            <span className="text-blue-500 cursor-pointer">返回上一层</span>
-            <span className="p-1 text-black">|</span>
+            <span className='text-blue-500 cursor-pointer'>返回上一层</span>
+            <span className='p-1 text-black'>|</span>
           </div>
-          <Breadcrumb>
-            {breadcrumbitemList.map((item, index) => {
-              return (
-                <Breadcrumb.Item
-                  key={item.key}
-                  onClick={() => handleBreadcrumbJump(index, item)}
-                >
-                  {item.name}
-                </Breadcrumb.Item>
-              )
+          <Breadcrumb
+            items={breadcrumbitemList.map((item, index) => {
+              return {
+                title: (
+                  <div
+                    key={item.key}
+                    onClick={() => handleBreadcrumbJump(index, item)}
+                  >
+                    {item.title}
+                  </div>
+                ),
+              }
             })}
-          </Breadcrumb>
+          />
         </Space>
-        <Aplayer className="my-2" playlist={musicList}></Aplayer>
+        <Aplayer className='my-2' playlist={musicList} />
         <Upload.Dragger
           openFileDialogOnClick={false}
           action={`${PROXY_SUFFIX}/uploadMulti`}
-          name="file"
+          name='file'
           data={getUploadFolderData}
           multiple={true}
-          method="POST"
+          method='POST'
           directory={true}
           // 不显示文件列表，当作一个普通的下载按钮使用
           showUploadList={false}
@@ -323,32 +325,32 @@ export default function FileList() {
           onChange={handleUploadChange}
         >
           <Table
-            className="w-full"
+            className='w-full'
             dataSource={currentFileList}
             columns={columns}
             pagination={{
               defaultPageSize: 100,
             }}
             loading={isTableLoading}
-            rowKey="name"
+            rowKey='name'
           />
         </Upload.Dragger>
         <FloatButton.BackTop />
       </div>
       <Modal
-        title="新建目录"
+        title='新建目录'
         open={isNewFolderModalVisible}
         onCancel={cancelNewFolderModal}
         onOk={handleCreateNewFolder}
       >
         <Input
-          placeholder="请输入目录名称"
+          placeholder='请输入目录名称'
           value={newFolderName}
           onChange={handleNewFolderNameChange}
         />
       </Modal>
       <Modal
-        title="重命名"
+        title='重命名'
         {...renameModalOptions}
         onCancel={() =>
           dispatch(
@@ -361,21 +363,21 @@ export default function FileList() {
         onOk={handleRenameSubmit}
       >
         <Input
-          placeholder="请输入"
+          placeholder='请输入'
           value={newName}
           onChange={handleNewNameChange}
         />
       </Modal>
       <Modal
-        title="新建文本"
+        title='新建文本'
         open={isNewTextModalVisible}
         onCancel={cancelNewTextModal}
         onOk={handleCreateNewText}
       >
-        <Form form={newTextForm} layout="vertical">
+        <Form form={newTextForm} layout='vertical'>
           <Form.Item
-            label="文件名"
-            name="filename"
+            label='文件名'
+            name='filename'
             rules={[
               {
                 required: true,
@@ -385,13 +387,13 @@ export default function FileList() {
           >
             <Input />
           </Form.Item>
-          <Form.Item label="内容" name="content">
+          <Form.Item label='内容' name='content'>
             <Input.TextArea showCount rows={6} />
           </Form.Item>
         </Form>
       </Modal>
       <Modal
-        title="上传文件"
+        title='上传文件'
         {...uploadProgressModalOptions}
         footer={null}
         onCancel={cancelUploadProgressModal}
@@ -416,7 +418,6 @@ export default function FileList() {
           )
         })}
       </Modal>
-      {/* <div style={{ display: 'none' }}> */}
       <CustomPhotoViewer
         images={previewList.map((item) => ({ src: item.src, key: item.src }))}
         visible={photoPreviewOptions.visible}
@@ -438,18 +439,6 @@ export default function FileList() {
           )
         }
       />
-      {/* <div style={{ display: 'none' }}>
-        <Image.PreviewGroup
-          preview={{
-            visible: isPreviewVisible,
-            onVisibleChange: handlePreviewVisibleChange,
-          }}
-        >
-          {previewList.map((item) => {
-            return <Image key={item.src} src={item.src} />
-          })}
-        </Image.PreviewGroup>
-      </div> */}
     </div>
   )
 }

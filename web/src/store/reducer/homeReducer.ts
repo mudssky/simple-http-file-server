@@ -8,7 +8,7 @@ import React from 'react'
 import { AudioItem } from '../../components/aplayer'
 export interface BreadcrumbItem {
   key: string
-  name: string
+  title: string
 }
 export type UploadProgressItem = Omit<
   UploadFile<unknown>,
@@ -48,9 +48,9 @@ interface State {
   photoPreviewOptions: PhotoPreviewOptions
   musicList: AudioItem[]
 }
-export const rootBreadcrumbItem = {
+export const rootBreadcrumbItem: BreadcrumbItem = {
   key: '',
-  name: 'root',
+  title: 'root',
 }
 
 export const initialState: State = {

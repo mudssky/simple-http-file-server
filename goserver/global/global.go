@@ -207,21 +207,6 @@ func loadViper() {
 		homeconfigPath := path.Join(SystemInfo.HomePath, ".ghs")
 		Config.Zap.Filename = path.Join(homeconfigPath, "ghs.log")
 	}
-	// usermap := Viper.GetString("usermap")
-	// fmt.Printf("usermap:%s\n", usermap)
-	// if usermap != "" {
-	// 	user := config.User{}
-	// 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
-	// 	err := json.Unmarshal([]byte(usermap), &user)
-	// 	if err != nil {
-	// 		log.Fatalln("usermap parse failed:", err.Error(), usermap)
-	// 	}
-	// 	if err := validate.Struct(user); err != nil {
-	// 		log.Fatalln("usermap validate failed:", err.Error())
-	// 	}
-	// 	Config.UserList = append(Config.UserList, user)
-	// }
-
 }
 func initCasbin() {
 	if Viper.GetBool("verbose") {
