@@ -18,7 +18,7 @@ jobs:
       - name: 'setup pnpm'
         uses: pnpm/action-setup@v2
         with:
-          version: 8.6.2
+          version: 8.6.6
       - name: 'setup node'
         uses: actions/setup-node@v3
         with:
@@ -44,4 +44,3 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
