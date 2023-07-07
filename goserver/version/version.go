@@ -11,6 +11,7 @@ import (
 
 	"github.com/cavaliergopher/grab/v3"
 	goversion "github.com/hashicorp/go-version"
+	"github.com/mudssky/simple-http-file-server/goserver/conf"
 	"github.com/mudssky/simple-http-file-server/goserver/sysinfo"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
 )
@@ -21,12 +22,14 @@ var (
 )
 
 func Version() string {
-	return "1.2.6"
+	return strings.TrimSpace(conf.Version)
 }
 
 func PrintVersion() {
 	version := Version()
 	fmt.Printf("ghs: version %s\n", version)
+	fmt.Printf("ghs: version %v\n", len(version))
+
 }
 
 // 获取最新版本
@@ -68,13 +71,6 @@ func NotifyUpdate() error {
 	}
 	return nil
 }
-
-// 多个版本字符串，比较最新版本
-// 字符串是v1.0.0这种格式的
-// func LatestVersion(version... string){
-// versionPrefix:="v"
-// for
-// }
 
 func GithubReleaseVersion(latestURL string) (version string) {
 	for l := len(latestURL) - 1; l >= 0; l-- {
