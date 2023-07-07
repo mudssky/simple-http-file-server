@@ -12,3 +12,6 @@ var PolicyCSV string
 
 //go:embed config.yaml
 var DefaultConfig string
+
+//go:embed version
+var Version string
