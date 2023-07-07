@@ -1,0 +1,47 @@
+name: Test release
+
+on:
+  # 主分支提交后，测试有没有构建错误。
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  test-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'checkout'
+        uses: actions/checkout@v3
+      - name: 'setup pnpm'
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.2
+      - name: 'setup node'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.1
+          cache: 'pnpm'
+          cache-dependency-path: web/pnpm-lock.yaml
+      - name: 'build frontend'
+        run: |
+          cd ./web
+          pnpm install --frozen-lockfile
+          pnpm build
+          cp -r dist ../goserver/public
+          cd ..
+      - name: fetch git tags
+        run: git fetch --force --tags
+      - name: 'build and release'
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro':
+          workdir: ./goserver
+          distribution: goreleaser
+          version: latest
+          # 本地测试，不进行发布
+          args: release --snapshot --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
