@@ -1,16 +1,16 @@
-name: release
+name: Test release
 
 on:
-  push:
-    # 只有主分支提交tag时执行
-    tags:
-      - '*'
+  # 主分支提交后，测试有没有构建错误。
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  test-release:
     runs-on: ubuntu-latest
     steps:
       - name: 'checkout'
@@ -18,7 +18,7 @@ jobs:
       - name: 'setup pnpm'
         uses: pnpm/action-setup@v2
         with:
-          version: 8.6.6
+          version: 8.6.2
       - name: 'setup node'
         uses: actions/setup-node@v3
         with:
@@ -41,6 +41,7 @@ jobs:
           workdir: ./goserver
           distribution: goreleaser
           version: latest
-          args: release --clean
+          # 本地测试，不进行发布
+          args: release --snapshot --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
