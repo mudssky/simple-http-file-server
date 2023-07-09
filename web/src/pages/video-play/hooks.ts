@@ -129,8 +129,12 @@ export function useSetupHook() {
       playlist,
     )
     // console.log({ currentDanmaku, currentSubtitle, currentIndex, currentItem })
-    loadSubtitle(currentSubtitle)
-    loadDanmaku(currentDanmaku)
+    if (currentSubtitle) {
+      loadSubtitle(currentSubtitle)
+    }
+    if (currentDanmaku) {
+      loadDanmaku(currentDanmaku)
+    }
     dispatch(
       setSubtitleOptionsAction({
         currentDanmaku,
@@ -199,17 +203,8 @@ export function useSetupHook() {
 
       loadPlayer(location.state)
     }
-    // else {
-    //   console.log({ fileList, currentFileItem })
-
-    //   loadPlayer({
-    //     fileList,
-    //     currentVideoItem: currentFileItem!,
-    //   })
-    // }
-
     return () => {
-      player.destroy()
+      player?.destroy()
     }
   }, [])
   const { newSize } = useWindowAutoSizeHook(playerContainerRef.current, {

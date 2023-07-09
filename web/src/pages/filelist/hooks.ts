@@ -349,6 +349,8 @@ export default function useSetupHook() {
   }
 
   const handleJumpPlaylist = (record: FileItem) => {
+    console.log({ record })
+
     navigate('/play', {
       state: {
         currentVideoItem: record,
