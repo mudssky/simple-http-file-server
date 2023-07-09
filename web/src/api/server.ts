@@ -1,6 +1,4 @@
-import { PROXY_SUFFIX } from '.'
-import { PromiseResponseData } from '../global'
-import { request } from '../request/request'
+import request from '../request/request'
 
 export interface ServerInfo {
   localIpList: string[]
@@ -11,6 +9,6 @@ export interface ServerInfo {
  * @param params
  * @returns
  */
-export const GET_SERVER_INFO = async (): PromiseResponseData<ServerInfo> => {
-  return request.get(`${PROXY_SUFFIX}/getServerInfo`)
+export const GET_SERVER_INFO = async () => {
+  return request.get<ServerInfo>('/getServerInfo')
 }

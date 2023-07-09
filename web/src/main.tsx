@@ -27,11 +27,11 @@ ConfigProvider.config({
   prefixCls: 'ant',
 })
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ConfigProvider locale={zhCN}>
-        <RouterProvider router={globalRouter} />
-      </ConfigProvider>
-    </Provider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Provider store={store}>
+    <ConfigProvider locale={zhCN}>
+      <RouterProvider router={globalRouter} />
+    </ConfigProvider>
+  </Provider>,
+  // </React.StrictMode>,
 )

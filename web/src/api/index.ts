@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { message } from 'antd'
-import { PromiseResponseData } from '../global'
-import { downloadFile, request } from '../request/request'
-import { handleDownloadProgress } from '../util/util'
-
+import request, {
+  downloadFile,
+  handleDownloadProgress,
+} from '../request/request'
+import { AxiosResponse } from 'axios'
 export const PROXY_SUFFIX = '/api'
 
 export interface FileItem {
@@ -24,8 +25,8 @@ export interface FileItem {
  */
 export const GET_FILELIST = async (data: {
   path: string
-}): PromiseResponseData<FileItem[]> => {
-  return request.post(`${PROXY_SUFFIX}/filelist`, data)
+}) => {
+  return request.post<FileItem[]>('/filelist', data)
 }
 
 /**
@@ -35,8 +36,8 @@ export const GET_FILELIST = async (data: {
  */
 export const MKDIR = async (data: {
   path: string //文件夹路径
-}): PromiseResponseData<unknown> => {
-  return request.post(`${PROXY_SUFFIX}/mkdir`, data)
+}) => {
+  return request.post('/mkdir', data)
 }
 
 /**
@@ -46,8 +47,8 @@ export const MKDIR = async (data: {
  */
 export const REMOVE_ITEM = async (data: {
   path: string
-}): PromiseResponseData<unknown> => {
-  return request.post(`${PROXY_SUFFIX}/removeItem`, data)
+}) => {
+  return request.post('/removeItem', data)
 }
 /**
  * 创建txt文件
@@ -57,22 +58,23 @@ export const REMOVE_ITEM = async (data: {
 export const CREATE_TXT = async (data: {
   path: string //文件路径
   content: string //文件内容
-}): PromiseResponseData<unknown> => {
-  return request.post(`${PROXY_SUFFIX}/createTxt`, data)
+}) => {
+  return request.post('/createTxt', data)
 }
 
 export const RENAME_ITEM = async (data: {
   path: string //文件路径
   newName: string //新文件名
-}): PromiseResponseData<unknown> => {
-  return request.post(`${PROXY_SUFFIX}/renameItem`, data)
+}) => {
+  return request.post('/renameItem', data)
 }
 
 export const DOWNLOAD_ITEM = async (data: FileItem) => {
-  const resP = await request.post(`${PROXY_SUFFIX}/downloadItem`, data, {
+  const resP = (await request.post('/downloadItem', data, {
     responseType: 'blob',
     onDownloadProgress: handleDownloadProgress,
-  })
+    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  })) as unknown as AxiosResponse<any>
   const res = resP.data
   // json的情况说明是报错
   if (res.type !== 'application/json') {
@@ -85,11 +87,6 @@ export const DOWNLOAD_ITEM = async (data: FileItem) => {
       : data.name
 
     downloadFile(res, filename)
-    // if (res.type === 'application/zip') {
-    //   downloadFile(res, `${data.name}.zip`)
-    // } else {
-    //   downloadFile(res, data.name)
-    // }
   } else {
     const r = await res.text()
     message.error(JSON.parse(r)?.msg)

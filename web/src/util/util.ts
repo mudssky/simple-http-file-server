@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { message } from 'antd'
 import { AxiosProgressEvent } from 'axios'
-import { ResponseData } from '../global'
+import { ResponseData } from '../request/request'
 
 export const imgPattern = /[\S\s]+\.(jpg|jpeg|png|gif|bmp|webp)$/i
 /**
@@ -108,7 +109,9 @@ export function filesizeFormatter(filesize: number, decimalPlaces = 2) {
  * @param res
  * @param options
  */
-export function checkResponse<T>(
+
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function checkResponse<T = any>(
   res: ResponseData<T>,
   options?: {
     successCallback?: (data: T) => void
@@ -132,15 +135,6 @@ export function formatProgressMsg(progressEvent: AxiosProgressEvent) {
   return `下载进度:${((progressEvent.progress ?? 0) * 100).toPrecision(
     4,
   )}% Speed:${filesizeFormatter(progressEvent.rate ?? 0)}/s`
-}
-
-/**
- * 通用处理下载进度的函数
- * @param progressEvent
- */
-export function handleDownloadProgress(progressEvent: AxiosProgressEvent) {
-  const progressMsg = formatProgressMsg(progressEvent)
-  console.log(progressMsg)
 }
 
 /**

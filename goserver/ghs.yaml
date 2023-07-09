@@ -1,17 +1,17 @@
 # port: 8799
-folderlist: ['D:/迅雷下载', 'D:/BaiduSyncdisk/MusicLibrary','D:/Book']
+folderlist: ["D:/迅雷下载", "D:/BaiduSyncdisk/MusicLibrary", "D:/Book"]
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级
-loglevel: 'info'
+loglevel: "info"
 check-update: false
-
+userlist: [{ username: "mudssky", password: "123456", role: "admin" }]
 jwt:
   secret: eqweqeqe
   expires: 3600
 zap:
   # 这边配置日志文件的记录等级
   level: debug
-  prefix: '[ghs]'
+  prefix: "[ghs]"
   format: console
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
@@ -30,11 +30,11 @@ zap:
 webpermission:
   # 新建文本，新建目录之类统一归类为write
   # 重命名和删除单独分类
-  admin: ['write', 'read', 'rename', 'delete']
-  user: ['write', 'read', 'rename']
-  visitor: ['read', 'write']
-  uploader: ['write']
+  admin: ["write", "read", "rename", "delete"]
+  user: ["write", "read", "rename"]
+  visitor: ["read", "write"]
+  uploader: ["write"]
 
 security:
-  ip-whitelist: ['dsada']
+  ip-whitelist: ["dsada"]
   trust-lan: true
