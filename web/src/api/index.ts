@@ -23,9 +23,7 @@ export interface FileItem {
  * @param params
  * @returns
  */
-export const GET_FILELIST = async (data: {
-  path: string
-}) => {
+export const GET_FILELIST = async (data: { path: string }) => {
   return request.post<FileItem[]>('/filelist', data)
 }
 
@@ -45,9 +43,7 @@ export const MKDIR = async (data: {
  * @param params
  * @returns
  */
-export const REMOVE_ITEM = async (data: {
-  path: string
-}) => {
+export const REMOVE_ITEM = async (data: { path: string }) => {
   return request.post('/removeItem', data)
 }
 /**
@@ -73,7 +69,7 @@ export const DOWNLOAD_ITEM = async (data: FileItem) => {
   const resP = (await request.post('/downloadItem', data, {
     responseType: 'blob',
     onDownloadProgress: handleDownloadProgress,
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   })) as unknown as AxiosResponse<any>
   const res = resP.data
   // json的情况说明是报错

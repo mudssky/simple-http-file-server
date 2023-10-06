@@ -110,7 +110,7 @@ export function filesizeFormatter(filesize: number, decimalPlaces = 2) {
  * @param options
  */
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function checkResponse<T = any>(
   res: ResponseData<T>,
   options?: {
