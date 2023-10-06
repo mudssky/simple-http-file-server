@@ -4,7 +4,6 @@ import { UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { useEffect, useMemo, useState } from 'react'
 import {
   CREATE_TXT,
-  DOWNLOAD_ITEM,
   FileItem,
   GET_FILELIST,
   MKDIR,
@@ -199,7 +198,7 @@ export default function useSetupHook() {
     })
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const getUploadFolderData = (file: any) => {
     // if (file?.webkitRelativePath) {
     //   return
@@ -210,7 +209,7 @@ export default function useSetupHook() {
     }
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleUploadChange = (info: UploadChangeParam<UploadFile<any>>) => {
     console.log('info', info)
     dispatch(
@@ -279,7 +278,8 @@ export default function useSetupHook() {
     }
   }
   const handleDownloadItem = async (record: FileItem) => {
-    await DOWNLOAD_ITEM(record)
+    window.open(record.link)
+    // await DOWNLOAD_ITEM(record)
     // console.log(record)
   }
   const cancelUploadProgressModal = () => [

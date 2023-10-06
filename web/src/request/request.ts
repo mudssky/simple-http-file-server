@@ -195,7 +195,7 @@ export class Request {
     return this.instance.request(config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public get<T = any>(
     url: string,
     config?: AxiosRequestConfig,
@@ -203,27 +203,27 @@ export class Request {
     return this.instance.get(url, config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public post<T = any>(
     url: string,
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     data?: any,
     config?: AxiosRequestConfig,
   ): Promise<ResponseData<T>> {
     return this.instance.post(url, data, config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public put<T = any>(
     url: string,
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     data?: any,
     config?: AxiosRequestConfig,
   ): Promise<ResponseData<T>> {
     return this.instance.put(url, data, config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public delete<T = any>(
     url: string,
     config?: AxiosRequestConfig,

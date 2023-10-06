@@ -13,10 +13,7 @@ export interface UserInfo {
  * @param params
  * @returns
  */
-export const LOGIN = async (data: {
-  username: string
-  password: string
-}) => {
+export const LOGIN = async (data: { username: string; password: string }) => {
   return request.post<LoginRes>('/login', data)
 }
 
