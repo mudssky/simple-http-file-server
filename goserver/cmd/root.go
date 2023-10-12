@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/mudssky/simple-http-file-server/goserver/internal/version"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
-	"github.com/mudssky/simple-http-file-server/goserver/version"
 	"github.com/spf13/cobra"
 )
 
