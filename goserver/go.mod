@@ -1,6 +1,8 @@
 module github.com/mudssky/simple-http-file-server/goserver
 
-go 1.19
+go 1.21
+
+toolchain go1.21.2
 
 require (
 	github.com/asticode/go-astisub v0.26.0
@@ -12,7 +14,7 @@ require (
 	github.com/hashicorp/go-version v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/mdp/qrterminal v1.0.1
-	github.com/samber/lo v1.38.1
+	github.com/mudssky/goutils v0.0.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
 	github.com/swaggo/files v1.0.1
@@ -71,10 +73,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
-	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.14.0
-	golang.org/x/exp v0.0.0-20231005195138-3e424a577f31 // indirect
 	golang.org/x/net v0.16.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
