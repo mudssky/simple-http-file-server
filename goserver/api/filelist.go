@@ -11,12 +11,13 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mudssky/goutils"
 	myerror "github.com/mudssky/simple-http-file-server/goserver/error"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/request"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
-	"github.com/samber/lo"
+
 	"go.uber.org/zap"
 )
 
@@ -94,7 +95,7 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 			return
 		}
 		l.Debug(fmt.Sprintf("global config : %v", global.Config.FolderList))
-		response.SuccessWithData(lo.Map(global.Config.FolderList, func(item string, index int) response.FileInfo {
+		response.SuccessWithData(goutils.Map(global.Config.FolderList, func(item string, index int) response.FileInfo {
 			return response.FileInfo{
 				Path:           item,
 				IsFolder:       true,
