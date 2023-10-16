@@ -13,14 +13,8 @@ import {
   Popover,
   Row,
 } from 'antd'
-import {
-  filesizeFormatter,
-  isImage,
-  isMusic,
-  isVideo,
-  path,
-} from '../../util/util'
-import FileIcon from '../../components/fileIcon'
+import { filesizeFormatter, isImage, isMusic, isVideo, path } from '@/util/util'
+import FileIcon from '@/components/fileIcon'
 import {
   ArrowDownOutlined,
   DeleteTwoTone,
@@ -33,14 +27,14 @@ import useSetupHook from './hooks'
 import dayjs from 'dayjs'
 import { FileItem, PROXY_SUFFIX } from '../../api'
 import { ColumnsType } from 'antd/es/table'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   setPhotoPreviewOptionsAction,
   setRenameModalOptionsAction,
-} from '../../store/reducer/homeReducer'
-import CustomPhotoViewer from '../../components/customPhotoView'
+} from '@/store/reducer/homeReducer'
+import CustomPhotoViewer from '@/components/customPhotoView'
+import Aplayer from '@/components/aplayer'
 import { QRCodeSVG } from 'qrcode.react'
-import Aplayer from '../../components/aplayer'
 
 export default function FileList() {
   const dispatch = useAppDispatch()
