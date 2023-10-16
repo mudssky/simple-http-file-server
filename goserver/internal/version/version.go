@@ -12,7 +12,7 @@ import (
 	"github.com/cavaliergopher/grab/v3"
 	goversion "github.com/hashicorp/go-version"
 	"github.com/mudssky/simple-http-file-server/goserver/conf"
-	"github.com/mudssky/simple-http-file-server/goserver/sysinfo"
+	"github.com/mudssky/simple-http-file-server/goserver/internal/sysinfo"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
 )
 

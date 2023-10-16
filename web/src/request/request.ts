@@ -138,9 +138,9 @@ export class Request {
       },
       // 任何超过2xx范围的状态码，会触发这个函数
       // 这里用来处理http常见错误，进行全局提示
-      function (error) {
+      function (error: AxiosError) {
         let message = ''
-        switch (error.response.status) {
+        switch (error.response?.status) {
           case 400:
             message = '请求错误(400)'
             break
@@ -178,12 +178,12 @@ export class Request {
             message = 'HTTP版本不受支持(505)'
             break
           default:
-            message = `连接出错(${error.response.status})!`
+            message = `连接出错(${error.response?.status})!`
         }
         if (error.response) {
           notification.error({
-            message: message,
-            description: error?.response?.data?.msg ?? '服务端异常',
+            message: error.response.statusText,
+            description: message,
           })
         }
       },
@@ -195,7 +195,7 @@ export class Request {
     return this.instance.request(config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public get<T = any>(
     url: string,
     config?: AxiosRequestConfig,
@@ -203,27 +203,27 @@ export class Request {
     return this.instance.get(url, config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public post<T = any>(
     url: string,
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     data?: any,
     config?: AxiosRequestConfig,
   ): Promise<ResponseData<T>> {
     return this.instance.post(url, data, config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public put<T = any>(
     url: string,
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     data?: any,
     config?: AxiosRequestConfig,
   ): Promise<ResponseData<T>> {
     return this.instance.put(url, data, config)
   }
 
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public delete<T = any>(
     url: string,
     config?: AxiosRequestConfig,

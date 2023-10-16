@@ -27,5 +27,4 @@ func Info() (info *SystemInfo, err error) {
 	info.ProgramPath = os.Args[0]
 	info.ProgramFolder = filepath.Dir(info.ProgramPath)
 	return
-
 }

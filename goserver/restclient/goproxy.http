@@ -1,0 +1,33 @@
+
+@host=goproxy.cn
+
+
+# 获取服务的摘要信息，如服务中所有模块版本的总尺寸和总数等。
+GET {{host}}/stats/summary
+
+###
+
+# 获取服务中的模块趋势，如最近一段时间内最活跃的最多前 1000 个模块。
+
+# latest（最新趋势）、last-7-days（最近 7 天的趋势）和 last-30-days（最近 30 天的趋势）
+# @prompt trend
+GET {{host}}/stats/trends/{{trend}}
+
+
+
+###
+# 获取服务中指定模块（版本）的统计，如指定模块（版本）的总下载次数和其在最近 30 天内的单日下载次数。
+
+
+# @prompt module-path
+# @prompt module-version
+
+GET {{host}}/stats/{{module-path}}@{{module-version}}
+
+
+###
+
+# 获取服务中指定模块的总下载次数徽章。
+
+# @prompt module-path
+GET {{host}}/stats/{{module-path}}/badges/download-count.svg
