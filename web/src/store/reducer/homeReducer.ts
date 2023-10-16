@@ -4,7 +4,6 @@ import { FileItem } from '../../api'
 import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
 import { DataType } from 'react-photo-view/dist/types'
-import React from 'react'
 import { AudioItem } from '../../components/aplayer'
 export interface BreadcrumbItem {
   key: string
@@ -20,7 +19,7 @@ export interface PreviewItem extends ImageProps {
 }
 
 export interface PhotoPreviewImgItem extends DataType {
-  key: React.Key
+  key: string | number
   src: string
 }
 export interface PhotoPreviewOptions {
