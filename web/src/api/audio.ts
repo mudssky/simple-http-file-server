@@ -5,8 +5,6 @@ import request from '../request/request'
  * @param data
  * @returns
  */
-export const AUDIO_INFO = async (data: {
-  path: string
-}) => {
+export const AUDIO_INFO = async (data: { path: string }) => {
   return request.post('/audioInfo', data)
 }

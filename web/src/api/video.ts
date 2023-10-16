@@ -5,8 +5,6 @@ import request from '../request/request'
  * @param params
  * @returns
  */
-export const GET_VTT_SUBTITLE = async (data: {
-  path: string
-}) => {
+export const GET_VTT_SUBTITLE = async (data: { path: string }) => {
   return request.post('/getVttSubtitle', data)
 }

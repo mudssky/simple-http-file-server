@@ -12,11 +12,11 @@ import (
 	"github.com/mdp/qrterminal"
 	_ "github.com/mudssky/simple-http-file-server/goserver/docs"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
+	"github.com/mudssky/simple-http-file-server/goserver/internal/validator"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
 	"github.com/mudssky/simple-http-file-server/goserver/router"
 	"github.com/mudssky/simple-http-file-server/goserver/server"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
-	"github.com/mudssky/simple-http-file-server/goserver/validator"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )

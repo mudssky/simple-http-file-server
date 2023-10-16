@@ -6,5 +6,6 @@ declare module 'aplayer'
 //   audio: any
 // }
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Aplayer = any
