@@ -37,22 +37,27 @@ func locateFileSystem(dir string) http.FileSystem {
 //go:generate go mod tidy
 //go:generate go mod download
 
-// @title           Swagger Example API
-// @version         1.0
-// @description     This is a sample server.
-// @termsOfService  http://swagger.io/terms/
+//	@title			Swagger Example API
+//	@version		1.0
+//	@description	This is a sample server.
+//	@termsOfService	http://swagger.io/terms/
 
-// @contact.name   API Support
-// @contact.url    http://www.swagger.io/support
-// @contact.email  support@swagger.io
+//	@contact.name	API Support
+//	@contact.url	http://www.swagger.io/support
+//	@contact.email	support@swagger.io
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      127.0.0.1:7888
-// @BasePath  /api
+//	@host		127.0.0.1:7888
+//	@BasePath	/api
 
-// @securityDefinitions.basic  BasicAuth
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@in							header
+//	@name						x-token
+
+//	@externalDocs.description	OpenAPI
+//	@externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
 
 	global.InitGlobalConfig()

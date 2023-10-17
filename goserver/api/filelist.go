@@ -71,14 +71,14 @@ func (f *FileListAPI) ReadDir(pathname string) (fileinfoList []response.FileInfo
 }
 
 // GetFileList
-// @Summary      传入文件夹路径获取文件列表，不传参时返回根列表
-// @Description  传入路径获取文件列表，不传参时返回根列表
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.FilePath  true "文件列表路径"
-// @Success      200  {object}  response.Response{data=[]response.FileInfo} "文件列表信息"
-// @Router       /filelist [post]
+//	@Summary		传入文件夹路径获取文件列表，不传参时返回根列表
+//	@Description	传入路径获取文件列表，不传参时返回根列表
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.FilePath							true	"文件列表路径"
+//	@Success		200		{object}	response.Response{data=[]response.FileInfo}	"文件列表信息"
+//	@Router			/filelist [post]
 func (f *FileListAPI) GetFileList(c *gin.Context) {
 	l := global.Logger
 	var req request.FilePath
@@ -130,14 +130,14 @@ func (f *FileListAPI) GetFileList(c *gin.Context) {
 }
 
 // MakeDir
-// @Summary      新建文件夹
-// @Description  传入文件夹的路径，新建文件夹
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.MkdirPath true "目录信息"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /mkdir [post]
+//	@Summary		新建文件夹
+//	@Description	传入文件夹的路径，新建文件夹
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.MkdirPath			true	"目录信息"
+//	@Success		200		{object}	response.Response{data=any}	"操作成功"
+//	@Router			/mkdir [post]
 func (f *FileListAPI) MakeDir(c *gin.Context) {
 	// l := global.Logger
 	var req request.MkdirPath
@@ -160,14 +160,14 @@ func (f *FileListAPI) MakeDir(c *gin.Context) {
 }
 
 // removeItem
-// @Summary      删除目录或文件
-// @Description  传入路径，删除目录或文件
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.OperateFilePath true "路径"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /removeItem [post]
+//	@Summary		删除目录或文件
+//	@Description	传入路径，删除目录或文件
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.OperateFilePath		true	"路径"
+//	@Success		200		{object}	response.Response{data=any}	"操作成功"
+//	@Router			/removeItem [post]
 func (f *FileListAPI) RemoveItem(c *gin.Context) {
 	// l := global.Logger
 	var req request.OperateFilePath
@@ -185,14 +185,14 @@ func (f *FileListAPI) RemoveItem(c *gin.Context) {
 }
 
 // createTxt
-// @Summary      创建txt文本文件
-// @Description  传入文件名和内容，创建txt文本文件
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.TxtFile true "创建txt需要的参数"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /createTxt [post]
+//	@Summary		创建txt文本文件
+//	@Description	传入文件名和内容，创建txt文本文件
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.TxtFile				true	"创建txt需要的参数"
+//	@Success		200		{object}	response.Response{data=any}	"操作成功"
+//	@Router			/createTxt [post]
 func (f *FileListAPI) CreateTxt(c *gin.Context) {
 	// l := global.Logger
 	var req request.TxtFile
@@ -218,14 +218,14 @@ func (f *FileListAPI) CreateTxt(c *gin.Context) {
 }
 
 // uploadMulti
-// @Summary      多文件上传
-// @Description  传入文件名和内容，创建txt文本文件
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.TxtFile true "创建txt需要的参数"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /uploadMulti [post]
+//	@Summary		多文件上传
+//	@Description	传入文件名和内容，创建txt文本文件
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.TxtFile				true	"创建txt需要的参数"
+//	@Success		200		{object}	response.Response{data=any}	"操作成功"
+//	@Router			/uploadMulti [post]
 func (f *FileListAPI) UploadMulti(c *gin.Context) {
 	l := global.Logger
 	fmt.Println("enter upload multi")
@@ -278,14 +278,14 @@ func (f *FileListAPI) UploadMulti(c *gin.Context) {
 }
 
 // renameItem
-// @Summary      重命名文件或文件夹
-// @Description  传入文件名和路径，重命名文件或文件夹
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  request.Rename true "重命名需要的参数"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /renameItem [post]
+//	@Summary		重命名文件或文件夹
+//	@Description	传入文件名和路径，重命名文件或文件夹
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.Rename				true	"重命名需要的参数"
+//	@Success		200		{object}	response.Response{data=any}	"操作成功"
+//	@Router			/renameItem [post]
 func (f *FileListAPI) RenameItem(c *gin.Context) {
 	var req request.Rename
 	err := c.ShouldBindJSON(&req)
@@ -342,14 +342,14 @@ func (f *FileListAPI) checkDirBeforeCompress(dir string, option DownloadDirCheck
 }
 
 // downloadItem
-// @Summary      下载项目
-// @Description  传入fileitem下载指定项目，文件夹和文件的情况区别处理
-// @Tags         filelist
-// @Accept       application/json
-// @Produce      application/json
-// @Param        data   body  response.FileInfo true "下载文件对应的信息"
-// @Success      200  {object}  response.Response{data=any} "操作成功"
-// @Router       /downloadItem [post]
+//	@Summary		下载项目
+//	@Description	传入fileitem下载指定项目，文件夹和文件的情况区别处理
+//	@Tags			filelist
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		response.FileInfo			true	"下载文件对应的信息"
+//	@Success		200		{object}	response.Response{data=any}	"操作成功"
+//	@Router			/downloadItem [post]
 func (f *FileListAPI) DownloadItem(c *gin.Context) {
 	var req request.FileInfo
 	// 这一步已经校验了路径存在

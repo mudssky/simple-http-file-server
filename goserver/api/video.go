@@ -10,13 +10,13 @@ import (
 type VideoAPI struct{}
 
 // Login
-// @Summary      获取vtt字幕
-// @Description  将本地的ass，srt格式的字幕转成vtt返回字符串
-// @Tags         video
-// @Accept       application/json
-// @Produce      application/json
-// @Success      200  {object}  response.Response{data=string} "操作成功"
-// @Router       /getVttSubtitle [get]
+//	@Summary		获取vtt字幕
+//	@Description	将本地的ass，srt格式的字幕转成vtt返回字符串
+//	@Tags			video
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Success		200	{object}	response.Response{data=string}	"操作成功"
+//	@Router			/getVttSubtitle [get]
 func (v *VideoAPI) GetVttSubtitle(c *gin.Context) {
 	var req request.OperateFilePath
 	err := c.ShouldBindJSON(&req)

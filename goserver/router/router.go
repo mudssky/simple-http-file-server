@@ -80,6 +80,7 @@ func InitRouter() *gin.Engine {
 			// privateGroup.POST("/audioList", audioAPI.AudioList)
 			privateGroup.POST("/audioInfo", audioAPI.AudioInfo)
 
+			privateGroup.POST("/playAudio", audioAPI.PlayAudio)
 		}
 
 	}
