@@ -8,13 +8,19 @@ import (
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
+	"go.uber.org/zap"
 )
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.Request.Header.Get("x-token")
+		l := global.Logger
+		token := c.Request.Header.Get("X-Token")
+
 		c.Set("token", token)
+
+		l.Debug("jwt auth", zap.String("token", token), zap.Any("header", c.Request.Header))
 		if token == "" {
+
 			c.Set("username", "visitor")
 			// token为空的情况下，按游客来计算，根据casbin里面visitor的权限来决定是否能访问
 			c.Next()

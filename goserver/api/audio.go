@@ -69,13 +69,14 @@ func (a *AudioApi) ReadDir(pathname string) (audioInfoList []response.AudioInfo,
 }
 
 // AudioList
-// @Summary      获取当前目录的音频信息列表
-// @Description  获取当前目录的音频信息列表，封面图片如果有会转为base64
-// @Tags         audio
-// @Accept       application/json
-// @Produce      application/json
-// @Success      200  {object}  response.Response{data=[]response.AudioInfo} "操作成功"
-// @Router       /audioList [post]
+//
+//	@Summary		获取当前目录的音频信息列表
+//	@Description	获取当前目录的音频信息列表，封面图片如果有会转为base64
+//	@Tags			audio
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Success		200	{object}	response.Response{data=[]response.AudioInfo}	"操作成功"
+//	@Router			/audioList [post]
 func (a *AudioApi) AudioList(c *gin.Context) {
 	var req request.AudioListReq
 	err := c.ShouldBindJSON(&req)
@@ -92,13 +93,17 @@ func (a *AudioApi) AudioList(c *gin.Context) {
 }
 
 // AudioInfo
-// @Summary      获取指定文件的音频信息
-// @Description  获取指定文件的音频信息，图片会被转为base64，大于10mb则不进行转换，避免传输数据包过大
-// @Tags         audio
-// @Accept       application/json
-// @Produce      application/json
-// @Success      200  {object}  response.Response{data=response.AudioInfo} "操作成功"
-// @Router       /audioList [post]
+//
+//	@Summary		获取指定文件的音频信息
+//	@Description	获取指定文件的音频信息，图片会被转为base64，大于10mb则不进行转换，避免传输数据包过大
+//	@Tags			audio
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.AudioListReq						true	"音频文件定位信息"
+//	@Success		200		{object}	response.Response{data=response.AudioInfo}	"操作成功"
+//	@Router			/audioInfo [post]
+//
+//	@Security		ApiKeyAuth
 func (a *AudioApi) AudioInfo(c *gin.Context) {
 	var req request.AudioListReq
 	err := c.ShouldBindJSON(&req)
@@ -159,4 +164,28 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 	}
 
 	return audioInfo, nil
+}
+
+// PlayAudio
+//
+//	@Summary	播放音频，通过ffmpeg转换音频流
+//	@Description
+//	@Tags		audio
+//	@Accept		application/json
+//	@Produce	application/json
+//	@Success	200	{object}	response.Response{data=response.AudioInfo}	"操作成功"
+//	@Router		/playAudio [post]
+func (a *AudioApi) PlayAudio(c *gin.Context) {
+	var req request.AudioListReq
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	audioInfo, err := a.Info(req.Path)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	response.SuccessWithData(audioInfo, c)
 }

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
@@ -31,6 +32,20 @@ func CasbinHandler() gin.HandlerFunc {
 			return
 		}
 		if !isPass {
+			var bodyJson string
+			if c.Request.Header.Get("Content-Type") == "application/json" {
+				bodyBytes, err := io.ReadAll(c.Request.Body)
+				if err != nil {
+					l.Warn("read body error", zap.String("err", err.Error()))
+
+				}
+				bodyJson = string(bodyBytes)
+			}
+
+			l.Info("permission denied,request info:", zap.String("path", c.Request.URL.Path),
+				zap.String("query", c.Request.URL.RawQuery),
+				zap.String("body", bodyJson),
+			)
 			response.FailWithMessage("权限不足："+fmt.Sprintf("sub:%v,obj:%v,act:%v\n", sub, obj, act), c)
 			c.Abort()
 			return

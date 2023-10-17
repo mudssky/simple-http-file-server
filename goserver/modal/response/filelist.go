@@ -1,7 +1,7 @@
 package response
 
 // 文件信息
-// @Description 文件信息
+//	@Description	文件信息
 type FileInfo struct {
 	Name           string `json:"name"`           // 文件名
 	LastModTime    int64  `json:"lastModTime"`    //上次修改时间,单位为毫秒

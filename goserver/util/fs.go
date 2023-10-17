@@ -6,10 +6,10 @@ import (
 	"path"
 )
 
-// @function: PathExists
-// @description: 文件目录是否存在
-// @param: path string
-// @return: bool, error
+//	@function:		PathExists
+//	@description:	文件目录是否存在
+//	@param:			path string
+//	@return:		bool, error
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	// 报错的情况分两种，一种是文件不存在，另一种是其他报错
