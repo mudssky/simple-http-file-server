@@ -16,6 +16,7 @@ import (
 type UserAPI struct{}
 
 // Login
+//
 //	@Summary		登录
 //	@Description	登录
 //	@Tags			server
@@ -32,7 +33,6 @@ func (u *UserAPI) Login(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	fmt.Println("login enter")
 	if len(global.Config.UserList) < 1 {
 		response.FailWithMessage("未配置用户列表，请先在配置文件中配置用户", c)
 		l.Error("登录失败，用户列表未配置")
@@ -64,6 +64,7 @@ func (u *UserAPI) Login(c *gin.Context) {
 }
 
 // GetWebpermission
+//
 //	@Summary		获取前端权限信息
 //	@Description	获取前端权限信息
 //	@Tags			server

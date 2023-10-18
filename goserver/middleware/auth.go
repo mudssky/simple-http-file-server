@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +17,7 @@ func JWTAuth() gin.HandlerFunc {
 
 		c.Set("token", token)
 
-		l.Debug("jwt auth", zap.String("token", token), zap.Any("header", c.Request.Header))
+		l.Debug("jwt auth enter", zap.String("token", token), zap.Any("header", c.Request.Header))
 		if token == "" {
 
 			c.Set("username", "visitor")
@@ -33,8 +32,9 @@ func JWTAuth() gin.HandlerFunc {
 		}
 		jwtS := util.NewJWT(global.Config.Jwt.Secret)
 		claims, err := jwtS.ParseToken(token)
-		fmt.Println("token: ", token)
-		fmt.Println("claims: ", claims)
+		l.Debug("jwt auth parse",
+			zap.Any("claims", claims),
+		)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, response.Response{
 				Code: 1,

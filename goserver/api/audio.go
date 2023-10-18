@@ -16,6 +16,8 @@ import (
 
 type AudioApi struct{}
 
+// var l = global.Logger
+
 // 用于从文件名判断是否音频类文件
 func IsAudio(fileName string) bool {
 	pattern := regexp.MustCompile(`(?i)[\S\s]+\.(m4a|mp3|opus|mka|aac|flac)$`)
@@ -138,7 +140,6 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 	if fileInfo.IsDir() || !IsAudio(fileInfo.Name()) {
 		// 不是音频文件跳过
 		return audioInfo, errors.New("目录或者不是音频文件")
-
 	}
 
 	itemPath := path.Join(pathname, fileInfo.Name())
