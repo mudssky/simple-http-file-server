@@ -14,7 +14,7 @@ require (
 	github.com/hashicorp/go-version v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/mdp/qrterminal v1.0.1
-	github.com/mudssky/goutils v0.0.1
+	github.com/mudssky/goutils v0.0.2
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.17.0
 	github.com/swaggo/files v1.0.1
