@@ -12,7 +12,6 @@ import (
 	"github.com/mdp/qrterminal"
 	_ "github.com/mudssky/simple-http-file-server/goserver/docs"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
-	"github.com/mudssky/simple-http-file-server/goserver/internal/validator"
 	"github.com/mudssky/simple-http-file-server/goserver/modal/response"
 	"github.com/mudssky/simple-http-file-server/goserver/router"
 	"github.com/mudssky/simple-http-file-server/goserver/server"
@@ -56,12 +55,10 @@ func locateFileSystem(dir string) http.FileSystem {
 //	@in							header
 //	@name						x-token
 
-//	@externalDocs.description	OpenAPI
-//	@externalDocs.url			https://swagger.io/resources/open-api/
+// @externalDocs.description	OpenAPI
+// @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
 
-	global.InitGlobalConfig()
-	validator.InitValidator()
 	// 模式设置,按照env,配置文件的顺序读取模式
 	gin.SetMode(global.Config.Mode)
 	var r = router.InitRouter()

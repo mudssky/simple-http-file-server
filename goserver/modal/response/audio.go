@@ -5,7 +5,12 @@ import (
 	"os"
 
 	"github.com/dhowden/tag"
+	"github.com/mudssky/simple-http-file-server/goserver/global"
+	"go.uber.org/zap"
 )
+
+// 全局变量在init函数里加载了，所以不会出现空指针问题。
+var l *zap.Logger = global.Logger
 
 type AudioMetadata struct {
 	FileType    string                 `json:"fileType"`    //文件类型
@@ -35,7 +40,7 @@ type AudioInfo struct {
 func AudioMetaData(pathName string) (res AudioMetadata, err error) {
 	file, err := os.Open(pathName)
 	if err != nil {
-		// return nil, err
+		l.Debug("open audio file error", zap.Error(err))
 		return
 	}
 	audioMeta, err := tag.ReadFrom(file)
