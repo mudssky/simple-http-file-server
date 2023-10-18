@@ -40,7 +40,9 @@ type AudioInfo struct {
 func AudioMetaData(pathName string) (res AudioMetadata, err error) {
 	file, err := os.Open(pathName)
 	if err != nil {
-		l.Debug("open audio file error", zap.Error(err))
+		l.Debug("open audio file error",
+			zap.String("path", pathName),
+			zap.Error(err))
 		return
 	}
 	audioMeta, err := tag.ReadFrom(file)
