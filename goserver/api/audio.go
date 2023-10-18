@@ -146,7 +146,7 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 	staticPath := strings.TrimPrefix(itemPath, rootPath)
 	rootPathEncode := base64.RawURLEncoding.EncodeToString([]byte(rootPath))
 
-	audioMetaData, err := response.AudioMetaData(itemPath)
+	audioMetaData, err := response.AudioMetaData(pathname)
 	if err != nil {
 		return audioInfo, errors.New("获取音频信息出错:" + err.Error())
 	}
