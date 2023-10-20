@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
@@ -16,8 +17,10 @@ func CasbinHandler() gin.HandlerFunc {
 		l := global.Logger
 		// keys是中间件上下文自带的一个map键值对，可以用来在中间件之间传递值
 		// fmt.Println("keys", c.Keys)
+
 		sub := c.GetString("username")
-		obj := c.Request.URL.Path
+		// 移除api前缀，不然policy体积会大不少，写起来更麻烦
+		obj := strings.TrimPrefix(c.Request.URL.Path, global.Config.RouterPrefix)
 		act := c.Request.Method
 		// fmt.Printf("sub:%v,obj:%v,act:%v\n", sub, obj, act)
 		isPass, err := global.CasbinEnforcer.Enforce(sub, obj, act)

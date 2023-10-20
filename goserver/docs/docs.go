@@ -114,7 +114,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/createTxt": {
+        "/fileList/createTxt": {
             "post": {
                 "description": "传入文件名和内容，创建txt文本文件",
                 "consumes": [
@@ -160,7 +160,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/downloadItem": {
+        "/fileList/downloadItem": {
             "post": {
                 "description": "传入fileitem下载指定项目，文件夹和文件的情况区别处理",
                 "consumes": [
@@ -206,7 +206,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/filelist": {
+        "/fileList/filelist": {
             "post": {
                 "description": "传入路径获取文件列表，不传参时返回根列表",
                 "consumes": [
@@ -246,6 +246,190 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/response.FileInfo"
                                             }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/fileList/mkdir": {
+            "post": {
+                "description": "传入文件夹的路径，新建文件夹",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filelist"
+                ],
+                "summary": "新建文件夹",
+                "parameters": [
+                    {
+                        "description": "目录信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.MkdirPath"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/fileList/removeItem": {
+            "post": {
+                "description": "传入路径，删除目录或文件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filelist"
+                ],
+                "summary": "删除目录或文件",
+                "parameters": [
+                    {
+                        "description": "路径",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.OperateFilePath"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/fileList/renameItem": {
+            "post": {
+                "description": "传入文件名和路径，重命名文件或文件夹",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filelist"
+                ],
+                "summary": "重命名文件或文件夹",
+                "parameters": [
+                    {
+                        "description": "重命名需要的参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Rename"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/fileList/uploadMulti": {
+            "post": {
+                "description": "传入文件名和内容，创建txt文本文件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filelist"
+                ],
+                "summary": "多文件上传",
+                "parameters": [
+                    {
+                        "description": "创建txt需要的参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.TxtFile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
                                         }
                                     }
                                 }
@@ -395,52 +579,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/mkdir": {
-            "post": {
-                "description": "传入文件夹的路径，新建文件夹",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "filelist"
-                ],
-                "summary": "新建文件夹",
-                "parameters": [
-                    {
-                        "description": "目录信息",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.MkdirPath"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "操作成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/playAudio": {
             "post": {
                 "consumes": [
@@ -466,144 +604,6 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/response.AudioInfo"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/removeItem": {
-            "post": {
-                "description": "传入路径，删除目录或文件",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "filelist"
-                ],
-                "summary": "删除目录或文件",
-                "parameters": [
-                    {
-                        "description": "路径",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.OperateFilePath"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "操作成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/renameItem": {
-            "post": {
-                "description": "传入文件名和路径，重命名文件或文件夹",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "filelist"
-                ],
-                "summary": "重命名文件或文件夹",
-                "parameters": [
-                    {
-                        "description": "重命名需要的参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.Rename"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "操作成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/uploadMulti": {
-            "post": {
-                "description": "传入文件名和内容，创建txt文本文件",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "filelist"
-                ],
-                "summary": "多文件上传",
-                "parameters": [
-                    {
-                        "description": "创建txt需要的参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.TxtFile"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "操作成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
                                         }
                                     }
                                 }

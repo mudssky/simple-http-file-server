@@ -25,7 +25,7 @@ import {
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
-import { FileItem, PROXY_SUFFIX } from '../../api'
+import { FileItem, PROXY_SUFFIX } from '@/api/fileList'
 import { ColumnsType } from 'antd/es/table'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
