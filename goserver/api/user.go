@@ -43,9 +43,9 @@ func (u *UserAPI) Login(c *gin.Context) {
 			if err := bcrypt.CompareHashAndPassword([]byte(req.Password), []byte(user.Password)); err != nil {
 				response.FailWithMessage("登录失败,用户名或密码错误", c)
 			}
-			token, err := global.Config.Jwt.GenJwtToken(config.CustomClaims{
+			token, err := global.Config.JWT.GenJwtToken(config.CustomClaims{
 				Username:       req.Username,
-				StandardClaims: jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Second * time.Duration(global.Config.Jwt.Expires)).Unix()},
+				StandardClaims: jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Second * time.Duration(global.Config.JWT.Expires)).Unix()},
 			})
 			if err != nil {
 				response.FailWithMessage("token生成失败："+err.Error(), c)

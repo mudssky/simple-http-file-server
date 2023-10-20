@@ -42,8 +42,8 @@ export function filesizeFormatter(filesize: number, decimalPlaces = 2) {
     kb: 1 << 10,
     mb: 1 << 20,
     gb: 1 << 30,
-    tb: Math.pow(1024, 4),
-    pb: Math.pow(1024, 5),
+    tb: 1024 ** 4,
+    pb: 1024 ** 5,
   }
   type SizeUnit = keyof typeof sizedict
   let unit: Uppercase<SizeUnit> = 'B'

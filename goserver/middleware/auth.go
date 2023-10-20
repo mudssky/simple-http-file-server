@@ -30,7 +30,7 @@ func JWTAuth() gin.HandlerFunc {
 			// c.Abort()
 			return
 		}
-		jwtS := util.NewJWT(global.Config.Jwt.Secret)
+		jwtS := util.NewJWT(global.Config.JWT.Secret)
 		claims, err := jwtS.ParseToken(token)
 		l.Debug("jwt auth parse",
 			zap.Any("claims", claims),
