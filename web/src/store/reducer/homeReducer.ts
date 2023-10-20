@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ImageProps, UploadFile } from 'antd'
-import { FileItem } from '../../api'
+import { FileItem } from '../../api/fileList'
 import { DefaultModalOptions, ModalOptions } from '../../util/state'
 import { RootState } from '../store'
 import { DataType } from 'react-photo-view/dist/types'

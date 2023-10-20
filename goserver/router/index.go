@@ -9,7 +9,10 @@ import (
 	"github.com/mudssky/simple-http-file-server/goserver/api"
 	"github.com/mudssky/simple-http-file-server/goserver/global"
 	"github.com/mudssky/simple-http-file-server/goserver/middleware"
+	"github.com/mudssky/simple-http-file-server/goserver/router/routers"
 )
+
+var RouterGroupApp = new(routers.RouterGroup)
 
 func InitRouter() *gin.Engine {
 	l := global.Logger
@@ -49,40 +52,30 @@ func InitRouter() *gin.Engine {
 		ctx.String(http.StatusOK, "gin %s", "ok")
 	})
 
-	apiGroup := r.Group("/api")
+	PublicGroup := r.Group(global.Config.RouterPrefix)
+
+	PublicGroup.Use(middleware.JWTAuth())
+	{
+		userApi := api.ApiGroupApp.UserAPI
+		PublicGroup.POST("/login", userApi.Login)
+		PublicGroup.GET("/getWebpermission", userApi.GetWebpermission)
+		serverApi := api.ApiGroupApp.ServerAPI
+		PublicGroup.GET("/getServerInfo", serverApi.GetServerInfo)
+	}
+
+	PrivateGroup := r.Group(global.Config.RouterPrefix)
+	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
 
-		PublicGroup := apiGroup.Group("").Use(middleware.JWTAuth())
-		{
-			userApi := api.ApiGroupApp.UserAPI
-			PublicGroup.POST("/login", userApi.Login)
-			PublicGroup.GET("/getWebpermission", userApi.GetWebpermission)
-			serverApi := api.ApiGroupApp.ServerAPI
-			PublicGroup.GET("/getServerInfo", serverApi.GetServerInfo)
-		}
+		RouterGroupApp.InitFileListRouter(PrivateGroup)
+		// r.POST("/uploadSingle", fileListAPI.UploadSingle)
+		videoAPI := api.ApiGroupApp.VideoAPI
+		PrivateGroup.POST("/getVttSubtitle", videoAPI.GetVttSubtitle)
+		audioAPI := api.ApiGroupApp.AudioApi
+		// privateGroup.POST("/audioList", audioAPI.AudioList)
+		PrivateGroup.POST("/audioInfo", audioAPI.AudioInfo)
 
-		privateGroup := apiGroup.Group("").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
-		{
-			// fileListApi := new(api.FileListAPI)
-			// GET local
-			fileListAPI := api.ApiGroupApp.FileListAPI
-			privateGroup.POST("/filelist", fileListAPI.GetFileList)
-			privateGroup.POST("/mkdir", fileListAPI.MakeDir)
-			privateGroup.POST("/removeItem", fileListAPI.RemoveItem)
-			privateGroup.POST("/createTxt", fileListAPI.CreateTxt)
-			privateGroup.POST("/uploadMulti", fileListAPI.UploadMulti)
-			privateGroup.POST("/renameItem", fileListAPI.RenameItem)
-			privateGroup.POST("/downloadItem", fileListAPI.DownloadItem)
-			// r.POST("/uploadSingle", fileListAPI.UploadSingle)
-			videoAPI := api.ApiGroupApp.VideoAPI
-			privateGroup.POST("/getVttSubtitle", videoAPI.GetVttSubtitle)
-			audioAPI := api.ApiGroupApp.AudioApi
-			// privateGroup.POST("/audioList", audioAPI.AudioList)
-			privateGroup.POST("/audioInfo", audioAPI.AudioInfo)
-
-			privateGroup.POST("/playAudio", audioAPI.PlayAudio)
-		}
-
+		PrivateGroup.POST("/playAudio", audioAPI.PlayAudio)
 	}
 
 	return r

@@ -242,7 +242,7 @@ paths:
       summary: 获取当前目录的音频信息列表
       tags:
       - audio
-  /createTxt:
+  /fileList/createTxt:
     post:
       consumes:
       - application/json
@@ -269,7 +269,7 @@ paths:
       summary: 创建txt文本文件
       tags:
       - filelist
-  /downloadItem:
+  /fileList/downloadItem:
     post:
       consumes:
       - application/json
@@ -296,7 +296,7 @@ paths:
       summary: 下载项目
       tags:
       - filelist
-  /filelist:
+  /fileList/filelist:
     post:
       consumes:
       - application/json
@@ -323,6 +323,114 @@ paths:
                   type: array
               type: object
       summary: 传入文件夹路径获取文件列表，不传参时返回根列表
+      tags:
+      - filelist
+  /fileList/mkdir:
+    post:
+      consumes:
+      - application/json
+      description: 传入文件夹的路径，新建文件夹
+      parameters:
+      - description: 目录信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.MkdirPath'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 新建文件夹
+      tags:
+      - filelist
+  /fileList/removeItem:
+    post:
+      consumes:
+      - application/json
+      description: 传入路径，删除目录或文件
+      parameters:
+      - description: 路径
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.OperateFilePath'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 删除目录或文件
+      tags:
+      - filelist
+  /fileList/renameItem:
+    post:
+      consumes:
+      - application/json
+      description: 传入文件名和路径，重命名文件或文件夹
+      parameters:
+      - description: 重命名需要的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.Rename'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 重命名文件或文件夹
+      tags:
+      - filelist
+  /fileList/uploadMulti:
+    post:
+      consumes:
+      - application/json
+      description: 传入文件名和内容，创建txt文本文件
+      parameters:
+      - description: 创建txt需要的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.TxtFile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 多文件上传
       tags:
       - filelist
   /getServerInfo:
@@ -405,33 +513,6 @@ paths:
       summary: 登录
       tags:
       - server
-  /mkdir:
-    post:
-      consumes:
-      - application/json
-      description: 传入文件夹的路径，新建文件夹
-      parameters:
-      - description: 目录信息
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.MkdirPath'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 新建文件夹
-      tags:
-      - filelist
   /playAudio:
     post:
       consumes:
@@ -451,87 +532,6 @@ paths:
       summary: 播放音频，通过ffmpeg转换音频流
       tags:
       - audio
-  /removeItem:
-    post:
-      consumes:
-      - application/json
-      description: 传入路径，删除目录或文件
-      parameters:
-      - description: 路径
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.OperateFilePath'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 删除目录或文件
-      tags:
-      - filelist
-  /renameItem:
-    post:
-      consumes:
-      - application/json
-      description: 传入文件名和路径，重命名文件或文件夹
-      parameters:
-      - description: 重命名需要的参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.Rename'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 重命名文件或文件夹
-      tags:
-      - filelist
-  /uploadMulti:
-    post:
-      consumes:
-      - application/json
-      description: 传入文件名和内容，创建txt文本文件
-      parameters:
-      - description: 创建txt需要的参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.TxtFile'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 多文件上传
-      tags:
-      - filelist
 securityDefinitions:
   ApiKeyAuth:
     in: header

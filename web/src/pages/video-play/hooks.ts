@@ -7,7 +7,7 @@ import {
   setFileListAction,
   setSubtitleOptionsAction,
 } from '../../store/reducer/playReducer'
-import { FileItem } from '../../api'
+import { FileItem } from '../../api/fileList'
 import { isDanmaku, isSubtitle, isVideo, path } from '../../util/util'
 import Artplayer from 'artplayer'
 import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'

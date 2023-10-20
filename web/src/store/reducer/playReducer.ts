@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { FileItem } from '../../api'
+import { FileItem } from '../../api/fileList'
 
 interface SubtitleOptions {
   // danmakuList: FileItem[]

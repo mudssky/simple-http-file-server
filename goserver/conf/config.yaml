@@ -5,6 +5,7 @@
 loglevel: "info"
 mode: "release"
 check-update: false
+router-prefix: "/api"
 jwt:
   secret: eqweqeqe
   expires: 36000
