@@ -183,10 +183,11 @@ func (a *AudioApi) PlayAudio(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	audioInfo, err := a.Info(req.Path)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	response.SuccessWithData(audioInfo, c)
+	// audioInfo, err := a.Info(req.Path)
+	// if err != nil {
+	// 	response.FailWithMessage(err.Error(), c)
+	// 	return
+	// }
+	c.File(req.Path)
+	// response.SuccessWithData(audioInfo, c)
 }

@@ -173,7 +173,7 @@ func excuteCMDAfterViper() {
 	if viper.GetBool("update") {
 		version.Update(SystemInfo)
 	} else {
-		if viper.GetBool("check-update") {
+		if Config.CheckUpdate {
 			err := version.NotifyUpdate()
 			if err != nil {
 				log.Fatalln("notify update error:", err.Error())
