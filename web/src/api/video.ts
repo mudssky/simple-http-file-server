@@ -6,5 +6,5 @@ import request from '../request/request'
  * @returns
  */
 export const GET_VTT_SUBTITLE = async (data: { path: string }) => {
-  return request.post('/getVttSubtitle', data)
+  return request.post('/video/getVttSubtitle', data)
 }

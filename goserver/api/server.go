@@ -10,13 +10,14 @@ import (
 type ServerAPI struct{}
 
 // GetServerInfo
+//
 //	@Summary		获取服务器信息
 //	@Description	获取本地ip等服务器信息
 //	@Tags			server
 //	@Accept			application/json
 //	@Produce		application/json
 //	@Success		200	{object}	response.Response{data=response.ServerInfoRes}	"操作成功"
-//	@Router			/getServerInfo [get]
+//	@Router			/server/getServerInfo [get]
 func (s *ServerAPI) GetServerInfo(c *gin.Context) {
 	// l := global.Logger
 	// ip, err := util.GetClientIp()

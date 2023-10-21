@@ -78,7 +78,7 @@ func (a *AudioApi) ReadDir(pathname string) (audioInfoList []response.AudioInfo,
 //	@Accept			application/json
 //	@Produce		application/json
 //	@Success		200	{object}	response.Response{data=[]response.AudioInfo}	"操作成功"
-//	@Router			/audioList [post]
+//	@Router			/audio/audioList [post]
 func (a *AudioApi) AudioList(c *gin.Context) {
 	var req request.AudioListReq
 	err := c.ShouldBindJSON(&req)
@@ -103,7 +103,7 @@ func (a *AudioApi) AudioList(c *gin.Context) {
 //	@Produce		application/json
 //	@Param			data	body		request.AudioListReq						true	"音频文件定位信息"
 //	@Success		200		{object}	response.Response{data=response.AudioInfo}	"操作成功"
-//	@Router			/audioInfo [post]
+//	@Router			/audio/audioInfo [post]
 //
 //	@Security		ApiKeyAuth
 func (a *AudioApi) AudioInfo(c *gin.Context) {
@@ -175,7 +175,7 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 //	@Accept		application/json
 //	@Produce	application/json
 //	@Success	200	{object}	response.Response{data=response.AudioInfo}	"操作成功"
-//	@Router		/playAudio [post]
+//	@Router		/audio/playAudio [post]
 func (a *AudioApi) PlayAudio(c *gin.Context) {
 	var req request.AudioListReq
 	err := c.ShouldBindJSON(&req)
