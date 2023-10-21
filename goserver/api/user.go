@@ -19,11 +19,11 @@ type UserAPI struct{}
 //
 //	@Summary		登录
 //	@Description	登录
-//	@Tags			server
+//	@Tags			user
 //	@Accept			application/json
 //	@Produce		application/json
 //	@Success		200	{object}	response.Response{data=any}	"操作成功"
-//	@Router			/login [post]
+//	@Router			/user/login [post]
 func (u *UserAPI) Login(c *gin.Context) {
 	l := global.Logger
 	// ip, err := util.GetClientIp()
@@ -67,11 +67,11 @@ func (u *UserAPI) Login(c *gin.Context) {
 //
 //	@Summary		获取前端权限信息
 //	@Description	获取前端权限信息
-//	@Tags			server
+//	@Tags			user
 //	@Accept			application/json
 //	@Produce		application/json
 //	@Success		200	{object}	response.Response{data=any}	"操作成功"
-//	@Router			/getWebpermission [get]
+//	@Router			/user/getWebpermission [get]
 func (u *UserAPI) GetWebpermission(c *gin.Context) {
 	currentUsername := c.GetString("username")
 	fmt.Println("currentUsername", currentUsername)

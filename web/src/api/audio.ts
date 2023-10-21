@@ -6,5 +6,5 @@ import request from '../request/request'
  * @returns
  */
 export const AUDIO_INFO = async (data: { path: string }) => {
-  return request.post('/audioInfo', data)
+  return request.post('/audio/audioInfo', data)
 }

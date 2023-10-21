@@ -191,7 +191,7 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /audioInfo:
+  /audio/audioInfo:
     post:
       consumes:
       - application/json
@@ -220,7 +220,7 @@ paths:
       summary: 获取指定文件的音频信息
       tags:
       - audio
-  /audioList:
+  /audio/audioList:
     post:
       consumes:
       - application/json
@@ -240,6 +240,25 @@ paths:
                   type: array
               type: object
       summary: 获取当前目录的音频信息列表
+      tags:
+      - audio
+  /audio/playAudio:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.AudioInfo'
+              type: object
+      summary: 播放音频，通过ffmpeg转换音频流
       tags:
       - audio
   /fileList/createTxt:
@@ -433,7 +452,7 @@ paths:
       summary: 多文件上传
       tags:
       - filelist
-  /getServerInfo:
+  /server/getServerInfo:
     get:
       consumes:
       - application/json
@@ -453,7 +472,47 @@ paths:
       summary: 获取服务器信息
       tags:
       - server
-  /getVttSubtitle:
+  /user/getWebpermission:
+    get:
+      consumes:
+      - application/json
+      description: 获取前端权限信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 获取前端权限信息
+      tags:
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 登录
+      tags:
+      - user
+  /video/getVttSubtitle:
     get:
       consumes:
       - application/json
@@ -473,65 +532,6 @@ paths:
       summary: 获取vtt字幕
       tags:
       - video
-  /getWebpermission:
-    get:
-      consumes:
-      - application/json
-      description: 获取前端权限信息
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 获取前端权限信息
-      tags:
-      - server
-  /login:
-    post:
-      consumes:
-      - application/json
-      description: 登录
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 登录
-      tags:
-      - server
-  /playAudio:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.AudioInfo'
-              type: object
-      summary: 播放音频，通过ffmpeg转换音频流
-      tags:
-      - audio
 securityDefinitions:
   ApiKeyAuth:
     in: header
