@@ -323,7 +323,12 @@ export default function FileList() {
             dataSource={currentFileList}
             columns={columns}
             pagination={{
-              defaultPageSize: 100,
+              defaultPageSize: 50,
+              hideOnSinglePage: true,
+              showTitle: true,
+              showTotal: (total) => {
+                return `共${total}条`
+              },
             }}
             loading={isTableLoading}
             rowKey="name"
