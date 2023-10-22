@@ -358,6 +358,7 @@ export default function useSetupHook() {
       },
     })
   }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     getData()
   }, [])

@@ -3,7 +3,9 @@ p,visitor,/fileList/downloadItem,POST
 p,visitor,/fileList/uploadMulti,POST
 p,visitor,/fileList/mkdir,POST
 p,visitor,/fileList/createTxt,POST
-p,visitor,/api/getVttSubtitle,POST
+p,visitor,/video/getVttSubtitle,POST
+p,visitor,/audio/playAudio,POST
+p,visitor,/audio/audioInfo,POST
 p,uploader,/fileList/filelist,POST
 p,uploader,/fileList/uploadMulti,POST
 p,uploader,/fileList/mkdir,POST

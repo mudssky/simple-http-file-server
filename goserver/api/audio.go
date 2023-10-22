@@ -163,7 +163,6 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 		},
 		AudioMetadata: audioMetaData,
 	}
-
 	return audioInfo, nil
 }
 
@@ -183,11 +182,20 @@ func (a *AudioApi) PlayAudio(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	// audioInfo, err := a.Info(req.Path)
-	// if err != nil {
-	// 	response.FailWithMessage(err.Error(), c)
-	// 	return
-	// }
 	c.File(req.Path)
-	// response.SuccessWithData(audioInfo, c)
 }
+
+// 前端播放音频目前有两套api，一个是h5的audio标签，另一个是后面出的web audio API，可以支持更多音频格式。
+// 可以用下面的方式，把音频用audio标签播放。
+// const res =await fetch('/api/audio/playAudio',{
+//             method: 'POST',
+//             body: JSON.stringify({
+//               path: record.path,
+//             }),
+//           })
+//           const audioBlob = await res.blob()
+//           const audioUrl = URL.createObjectURL(audioBlob)
+//           const audioDom=document.getElementById('audioDom')as HTMLAudioElement
+//           audioDom.controls=true
+//           audioDom.src=audioUrl
+//           audioDom.play()
