@@ -33,16 +33,6 @@ export default function useSetupHook(props: Props) {
       lrcType: 1,
       audio: tempPlaylist,
     })
-    // ap.on('listswitch', async (item: any) => {
-    //   console.log({ res: item })
-    //   const res = await AUDIO_INFO({
-    //     path: playlist[item.index].path,
-    //   })
-    //   console.log({ res })
-    //   console.log(ap.lrc)
-    //   ap.list[item.indx].audio.lrc = res.data.lyrics
-    //   ap.lrc.show()
-    // })
   }
 
   useEffect(() => {
