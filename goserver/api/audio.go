@@ -16,6 +16,8 @@ import (
 
 type AudioApi struct{}
 
+// var l = global.Logger
+
 // 用于从文件名判断是否音频类文件
 func IsAudio(fileName string) bool {
 	pattern := regexp.MustCompile(`(?i)[\S\s]+\.(m4a|mp3|opus|mka|aac|flac)$`)
@@ -69,13 +71,14 @@ func (a *AudioApi) ReadDir(pathname string) (audioInfoList []response.AudioInfo,
 }
 
 // AudioList
-// @Summary      获取当前目录的音频信息列表
-// @Description  获取当前目录的音频信息列表，封面图片如果有会转为base64
-// @Tags         audio
-// @Accept       application/json
-// @Produce      application/json
-// @Success      200  {object}  response.Response{data=[]response.AudioInfo} "操作成功"
-// @Router       /audioList [post]
+//
+//	@Summary		获取当前目录的音频信息列表
+//	@Description	获取当前目录的音频信息列表，封面图片如果有会转为base64
+//	@Tags			audio
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Success		200	{object}	response.Response{data=[]response.AudioInfo}	"操作成功"
+//	@Router			/audio/audioList [post]
 func (a *AudioApi) AudioList(c *gin.Context) {
 	var req request.AudioListReq
 	err := c.ShouldBindJSON(&req)
@@ -92,13 +95,17 @@ func (a *AudioApi) AudioList(c *gin.Context) {
 }
 
 // AudioInfo
-// @Summary      获取指定文件的音频信息
-// @Description  获取指定文件的音频信息，图片会被转为base64，大于10mb则不进行转换，避免传输数据包过大
-// @Tags         audio
-// @Accept       application/json
-// @Produce      application/json
-// @Success      200  {object}  response.Response{data=response.AudioInfo} "操作成功"
-// @Router       /audioList [post]
+//
+//	@Summary		获取指定文件的音频信息
+//	@Description	获取指定文件的音频信息，图片会被转为base64，大于10mb则不进行转换，避免传输数据包过大
+//	@Tags			audio
+//	@Accept			application/json
+//	@Produce		application/json
+//	@Param			data	body		request.AudioListReq						true	"音频文件定位信息"
+//	@Success		200		{object}	response.Response{data=response.AudioInfo}	"操作成功"
+//	@Router			/audio/audioInfo [post]
+//
+//	@Security		ApiKeyAuth
 func (a *AudioApi) AudioInfo(c *gin.Context) {
 	var req request.AudioListReq
 	err := c.ShouldBindJSON(&req)
@@ -133,14 +140,13 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 	if fileInfo.IsDir() || !IsAudio(fileInfo.Name()) {
 		// 不是音频文件跳过
 		return audioInfo, errors.New("目录或者不是音频文件")
-
 	}
 
 	itemPath := path.Join(pathname, fileInfo.Name())
 	staticPath := strings.TrimPrefix(itemPath, rootPath)
 	rootPathEncode := base64.RawURLEncoding.EncodeToString([]byte(rootPath))
 
-	audioMetaData, err := response.AudioMetaData(itemPath)
+	audioMetaData, err := response.AudioMetaData(pathname)
 	if err != nil {
 		return audioInfo, errors.New("获取音频信息出错:" + err.Error())
 	}
@@ -157,6 +163,39 @@ func (a *AudioApi) Info(pathname string) (audioInfo response.AudioInfo, err erro
 		},
 		AudioMetadata: audioMetaData,
 	}
-
 	return audioInfo, nil
 }
+
+// PlayAudio
+//
+//	@Summary	播放音频，通过ffmpeg转换音频流
+//	@Description
+//	@Tags		audio
+//	@Accept		application/json
+//	@Produce	application/json
+//	@Success	200	{object}	response.Response{data=response.AudioInfo}	"操作成功"
+//	@Router		/audio/playAudio [post]
+func (a *AudioApi) PlayAudio(c *gin.Context) {
+	var req request.AudioListReq
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	c.File(req.Path)
+}
+
+// 前端播放音频目前有两套api，一个是h5的audio标签，另一个是后面出的web audio API，可以支持更多音频格式。
+// 可以用下面的方式，把音频用audio标签播放。
+// const res =await fetch('/api/audio/playAudio',{
+//             method: 'POST',
+//             body: JSON.stringify({
+//               path: record.path,
+//             }),
+//           })
+//           const audioBlob = await res.blob()
+//           const audioUrl = URL.createObjectURL(audioBlob)
+//           const audioDom=document.getElementById('audioDom')as HTMLAudioElement
+//           audioDom.controls=true
+//           audioDom.src=audioUrl
+//           audioDom.play()

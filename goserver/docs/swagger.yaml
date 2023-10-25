@@ -1,5 +1,13 @@
 basePath: /api
 definitions:
+  request.AudioListReq:
+    properties:
+      path:
+        description: 路径
+        type: string
+    required:
+    - path
+    type: object
   request.FilePath:
     properties:
       path:
@@ -183,11 +191,18 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /audioList:
+  /audio/audioInfo:
     post:
       consumes:
       - application/json
       description: 获取指定文件的音频信息，图片会被转为base64，大于10mb则不进行转换，避免传输数据包过大
+      parameters:
+      - description: 音频文件定位信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.AudioListReq'
       produces:
       - application/json
       responses:
@@ -200,10 +215,53 @@ paths:
                 data:
                   $ref: '#/definitions/response.AudioInfo'
               type: object
+      security:
+      - ApiKeyAuth: []
       summary: 获取指定文件的音频信息
       tags:
       - audio
-  /createTxt:
+  /audio/audioList:
+    post:
+      consumes:
+      - application/json
+      description: 获取当前目录的音频信息列表，封面图片如果有会转为base64
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.AudioInfo'
+                  type: array
+              type: object
+      summary: 获取当前目录的音频信息列表
+      tags:
+      - audio
+  /audio/playAudio:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.AudioInfo'
+              type: object
+      summary: 播放音频，通过ffmpeg转换音频流
+      tags:
+      - audio
+  /fileList/createTxt:
     post:
       consumes:
       - application/json
@@ -230,7 +288,7 @@ paths:
       summary: 创建txt文本文件
       tags:
       - filelist
-  /downloadItem:
+  /fileList/downloadItem:
     post:
       consumes:
       - application/json
@@ -257,7 +315,7 @@ paths:
       summary: 下载项目
       tags:
       - filelist
-  /filelist:
+  /fileList/filelist:
     post:
       consumes:
       - application/json
@@ -286,87 +344,7 @@ paths:
       summary: 传入文件夹路径获取文件列表，不传参时返回根列表
       tags:
       - filelist
-  /getServerInfo:
-    get:
-      consumes:
-      - application/json
-      description: 获取本地ip等服务器信息
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.ServerInfoRes'
-              type: object
-      summary: 获取服务器信息
-      tags:
-      - server
-  /getVttSubtitle:
-    get:
-      consumes:
-      - application/json
-      description: 将本地的ass，srt格式的字幕转成vtt返回字符串
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: 获取vtt字幕
-      tags:
-      - video
-  /getWebpermission:
-    get:
-      consumes:
-      - application/json
-      description: 获取前端权限信息
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 获取前端权限信息
-      tags:
-      - server
-  /login:
-    post:
-      consumes:
-      - application/json
-      description: 登录
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 操作成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  type: object
-              type: object
-      summary: 登录
-      tags:
-      - server
-  /mkdir:
+  /fileList/mkdir:
     post:
       consumes:
       - application/json
@@ -393,7 +371,7 @@ paths:
       summary: 新建文件夹
       tags:
       - filelist
-  /removeItem:
+  /fileList/removeItem:
     post:
       consumes:
       - application/json
@@ -420,7 +398,7 @@ paths:
       summary: 删除目录或文件
       tags:
       - filelist
-  /renameItem:
+  /fileList/renameItem:
     post:
       consumes:
       - application/json
@@ -447,7 +425,7 @@ paths:
       summary: 重命名文件或文件夹
       tags:
       - filelist
-  /uploadMulti:
+  /fileList/uploadMulti:
     post:
       consumes:
       - application/json
@@ -474,7 +452,89 @@ paths:
       summary: 多文件上传
       tags:
       - filelist
+  /server/getServerInfo:
+    get:
+      consumes:
+      - application/json
+      description: 获取本地ip等服务器信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.ServerInfoRes'
+              type: object
+      summary: 获取服务器信息
+      tags:
+      - server
+  /user/getWebpermission:
+    get:
+      consumes:
+      - application/json
+      description: 获取前端权限信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 获取前端权限信息
+      tags:
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 登录
+      tags:
+      - user
+  /video/getVttSubtitle:
+    get:
+      consumes:
+      - application/json
+      description: 将本地的ass，srt格式的字幕转成vtt返回字符串
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 获取vtt字幕
+      tags:
+      - video
 securityDefinitions:
-  BasicAuth:
-    type: basic
+  ApiKeyAuth:
+    in: header
+    name: x-token
+    type: apiKey
 swagger: "2.0"

@@ -9,7 +9,7 @@ import {
   MKDIR,
   REMOVE_ITEM,
   RENAME_ITEM,
-} from '../../api'
+} from '../../api/fileList'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   BreadcrumbItem,
@@ -358,6 +358,7 @@ export default function useSetupHook() {
       },
     })
   }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     getData()
   }, [])

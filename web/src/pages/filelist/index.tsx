@@ -13,14 +13,8 @@ import {
   Popover,
   Row,
 } from 'antd'
-import {
-  filesizeFormatter,
-  isImage,
-  isMusic,
-  isVideo,
-  path,
-} from '../../util/util'
-import FileIcon from '../../components/fileIcon'
+import { filesizeFormatter, isImage, isMusic, isVideo, path } from '@/util/util'
+import FileIcon from '@/components/fileIcon'
 import {
   ArrowDownOutlined,
   DeleteTwoTone,
@@ -31,16 +25,16 @@ import {
 } from '@ant-design/icons'
 import useSetupHook from './hooks'
 import dayjs from 'dayjs'
-import { FileItem, PROXY_SUFFIX } from '../../api'
+import { FileItem, PROXY_SUFFIX } from '@/api/fileList'
 import { ColumnsType } from 'antd/es/table'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   setPhotoPreviewOptionsAction,
   setRenameModalOptionsAction,
-} from '../../store/reducer/homeReducer'
-import CustomPhotoViewer from '../../components/customPhotoView'
+} from '@/store/reducer/homeReducer'
+import CustomPhotoViewer from '@/components/customPhotoView'
+import Aplayer from '@/components/aplayer'
 import { QRCodeSVG } from 'qrcode.react'
-import Aplayer from '../../components/aplayer'
 
 export default function FileList() {
   const dispatch = useAppDispatch()
@@ -329,7 +323,12 @@ export default function FileList() {
             dataSource={currentFileList}
             columns={columns}
             pagination={{
-              defaultPageSize: 100,
+              defaultPageSize: 50,
+              hideOnSinglePage: true,
+              showTitle: true,
+              showTotal: (total) => {
+                return `共${total}条`
+              },
             }}
             loading={isTableLoading}
             rowKey="name"

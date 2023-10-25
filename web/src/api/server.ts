@@ -10,5 +10,5 @@ export interface ServerInfo {
  * @returns
  */
 export const GET_SERVER_INFO = async () => {
-  return request.get<ServerInfo>('/getServerInfo')
+  return request.get<ServerInfo>('/server/getServerInfo')
 }

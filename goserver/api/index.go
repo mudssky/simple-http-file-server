@@ -1,11 +1,11 @@
 package api
 
-type ApiGroup struct {
-	FileListAPI FileListAPI
-	ServerAPI   ServerAPI
-	UserAPI     UserAPI
-	VideoAPI    VideoAPI
-	AudioApi    AudioApi
+type APIGroup struct {
+	FileListAPI
+	ServerAPI
+	UserAPI
+	VideoAPI
+	AudioApi
 }
 
-var ApiGroupApp = new(ApiGroup)
+var ApiGroupApp = new(APIGroup)
