@@ -1,8 +1,6 @@
 module github.com/mudssky/simple-http-file-server/goserver
 
-go 1.21
-
-toolchain go1.21.3
+go 1.20
 
 require (
 	github.com/asticode/go-astisub v0.26.0
