@@ -7,7 +7,7 @@ toolchain go1.21.2
 require (
 	github.com/asticode/go-astisub v0.26.0
 	github.com/dhowden/tag v0.0.0-20230630033851-978a0926ee25
-	github.com/fsnotify/fsnotify v1.6.0
+	github.com/fsnotify/fsnotify v1.7.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/golang-jwt/jwt/v4 v4.5.0
