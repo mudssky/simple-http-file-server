@@ -24,7 +24,7 @@ export interface FileItem {
  * @returns
  */
 export const GET_FILELIST = async (data: { path: string }) => {
-  return request.post<FileItem[]>('/filelist', data)
+  return request.post<FileItem[]>('/fileList/filelist', data)
 }
 
 /**
@@ -35,7 +35,7 @@ export const GET_FILELIST = async (data: { path: string }) => {
 export const MKDIR = async (data: {
   path: string //文件夹路径
 }) => {
-  return request.post('/mkdir', data)
+  return request.post('/fileList/mkdir', data)
 }
 
 /**
@@ -44,7 +44,7 @@ export const MKDIR = async (data: {
  * @returns
  */
 export const REMOVE_ITEM = async (data: { path: string }) => {
-  return request.post('/removeItem', data)
+  return request.post('/fileList/removeItem', data)
 }
 /**
  * 创建txt文件
@@ -55,14 +55,14 @@ export const CREATE_TXT = async (data: {
   path: string //文件路径
   content: string //文件内容
 }) => {
-  return request.post('/createTxt', data)
+  return request.post('/fileList/createTxt', data)
 }
 
 export const RENAME_ITEM = async (data: {
   path: string //文件路径
   newName: string //新文件名
 }) => {
-  return request.post('/renameItem', data)
+  return request.post('/fileList/renameItem', data)
 }
 
 export const DOWNLOAD_ITEM = async (data: FileItem) => {

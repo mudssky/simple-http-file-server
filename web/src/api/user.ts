@@ -14,7 +14,7 @@ export interface UserInfo {
  * @returns
  */
 export const LOGIN = async (data: { username: string; password: string }) => {
-  return request.post<LoginRes>('/login', data)
+  return request.post<LoginRes>('/user/login', data)
 }
 
 /**
@@ -23,5 +23,5 @@ export const LOGIN = async (data: { username: string; password: string }) => {
  * @returns
  */
 export const GET_PERMISSION = async () => {
-  return request.get<PermissionType[]>('/getWebpermission')
+  return request.get<PermissionType[]>('/user/getWebpermission')
 }

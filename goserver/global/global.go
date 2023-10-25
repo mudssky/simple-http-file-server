@@ -18,6 +18,7 @@ import (
 	"github.com/mudssky/simple-http-file-server/goserver/conf"
 	"github.com/mudssky/simple-http-file-server/goserver/config"
 	"github.com/mudssky/simple-http-file-server/goserver/internal/sysinfo"
+	customValidator "github.com/mudssky/simple-http-file-server/goserver/internal/validator"
 	"github.com/mudssky/simple-http-file-server/goserver/internal/version"
 	"github.com/mudssky/simple-http-file-server/goserver/util"
 	scas "github.com/qiangmzsx/string-adapter/v2"
@@ -41,7 +42,10 @@ var (
 	SystemInfo     *sysinfo.SystemInfo
 )
 
-func InitGlobalConfig() {
+func init() {
+	initGlobalConfig()
+}
+func initGlobalConfig() {
 	// 初始化viper，读取各种配置
 	initViper()
 	// 手动校验配置信息
@@ -52,6 +56,7 @@ func InitGlobalConfig() {
 	initZap()
 	// 初始化 casbin
 	initCasbin()
+	customValidator.InitValidator()
 }
 
 // 加载.env文件到全局变量
@@ -168,7 +173,7 @@ func excuteCMDAfterViper() {
 	if viper.GetBool("update") {
 		version.Update(SystemInfo)
 	} else {
-		if viper.GetBool("check-update") {
+		if Config.CheckUpdate {
 			err := version.NotifyUpdate()
 			if err != nil {
 				log.Fatalln("notify update error:", err.Error())

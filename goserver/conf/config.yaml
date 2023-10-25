@@ -2,16 +2,17 @@
 # folderlist: ['D:/coding']
 # userlist: [{ username: 'mudssky', password: '123456', role: 'admin' }]
 # 控制台输出的记录等级
-loglevel: 'info'
-mode: 'release'
+loglevel: "info"
+mode: "release"
 check-update: false
+router-prefix: "/api"
 jwt:
   secret: eqweqeqe
-  expires: 3600
+  expires: 36000
 zap:
   # 这边配置日志文件的记录等级
   level: warn
-  prefix: '[ghs]'
+  prefix: "[ghs]"
   format: console
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
@@ -30,10 +31,10 @@ zap:
 webpermission:
   # 新建文本，新建目录之类统一归类为write
   # 重命名和删除单独分类
-  admin: ['write', 'read', 'rename', 'delete']
-  user: ['write', 'read', 'rename']
-  visitor: ['read', 'write']
-  uploader: ['write']
+  admin: ["write", "read", "rename", "delete"]
+  user: ["write", "read", "rename"]
+  visitor: ["read", "write"]
+  uploader: ["write"]
 
 security:
   ip-whitelist: []

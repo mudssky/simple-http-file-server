@@ -3,7 +3,7 @@ package global
 import (
 	"path"
 
-	"github.com/mudssky/simple-http-file-server/goserver/util"
+	"github.com/mudssky/goutils"
 )
 
 // 检查配置文件，是否有文件路径最后一级目录重复
@@ -12,7 +12,7 @@ func ValidateFoldernameDup() {
 	for _, folderpath := range Config.FolderList {
 		folderNameList = append(folderNameList, path.Base(folderpath))
 	}
-	if util.HasDup(folderNameList) {
+	if goutils.HasDuplicates(folderNameList) {
 		Logger.Fatal("文件夹的名称不能重复")
 	}
 

@@ -11,6 +11,8 @@ export default function useSetupHook(props: Props) {
     // if (ap) {
     //   ap.destroy()
     // }
+    console.log({ playlist })
+
     // aplayer会对传入的属性修改
     // 这和react的理念冲突，react的核心是数据不可变，ref和state在被修改的时候都会报错，
     // 因此这边临时深拷贝一份给aplayer用于修改
@@ -27,8 +29,8 @@ export default function useSetupHook(props: Props) {
       volume: 0.7,
       mutex: true,
       listFolded: false,
-      listMaxHeight: 500,
-      lrcType: 3,
+      listMaxHeight: '300px',
+      lrcType: 1,
       audio: tempPlaylist,
     })
   }
