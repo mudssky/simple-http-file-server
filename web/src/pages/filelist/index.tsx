@@ -162,7 +162,7 @@ export default function FileList() {
       sorter: (a: FileItem, b: FileItem) => {
         return a.lastModTime - b.lastModTime
       },
-      responsive: ['lg', 'md'],
+      responsive: ['sm'],
     },
     {
       title: '操作',
