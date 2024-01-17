@@ -35,7 +35,7 @@ jobs:
       - name: fetch git tags
         run: git fetch --force --tags
       - name: 'build and release'
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v5
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro':
           workdir: ./goserver
