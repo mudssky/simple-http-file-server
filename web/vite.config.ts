@@ -50,9 +50,8 @@ export default defineConfig(({ mode }) => {
          */
         customDomId: '__svg__icons__dom__',
       }),
-      // visualizer({
-      //   open: true,
-      // }),
+
+      // visualizer({ open: true }),
     ],
     server: {
       port: parseInt(env.VITE_PORT),
