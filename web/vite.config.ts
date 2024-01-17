@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
 
 // 分包策略，1.把node_modules中的内容单独打包
 export const vendorRollupOption = {
@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => {
         customDomId: '__svg__icons__dom__',
       }),
 
-      visualizer({ open: true }),
+      // visualizer({ open: true }),
     ],
     server: {
       port: parseInt(env.VITE_PORT),
