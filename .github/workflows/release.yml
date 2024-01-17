@@ -18,11 +18,11 @@ jobs:
       - name: 'setup pnpm'
         uses: pnpm/action-setup@v2
         with:
-          version: 8.6.6
+          version: 8.x
       - name: 'setup node'
         uses: actions/setup-node@v3
         with:
-          node-version: 18.16.1
+          node-version: 20.x
           cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
       - name: 'build frontend'
@@ -34,8 +34,12 @@ jobs:
           cd ..
       - name: fetch git tags
         run: git fetch --force --tags
+      - name: setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.3' # The Go version to download (if necessary) and use.
       - name: 'build and release'
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v5
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro':
           workdir: ./goserver
