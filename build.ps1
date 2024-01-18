@@ -53,7 +53,7 @@ if ($release -or $localRelease) {
 		goreleaser release --snapshot --rm-dist
 	}
 	else {
-		$token = Get-Content .\githubtoken
+		$token = Get-Content .\my.secrets
 		$env:GITHUB_TOKEN = $token
 		Write-Verbose -Message "release to github"
 		goreleaser release  --rm-dist
