@@ -50,13 +50,13 @@ if ($release -or $localRelease) {
 	Set-Location $goPath
 	if ($localRelease) {
 		Write-Verbose -Message "local release"
-		goreleaser release --snapshot --rm-dist
+		goreleaser release --snapshot --clean
 	}
 	else {
 		$token = Get-Content .\my.secrets
 		$env:GITHUB_TOKEN = $token
 		Write-Verbose -Message "release to github"
-		goreleaser release  --rm-dist
+		goreleaser release  --clean
 	}
 
 	Set-Location $workPath
