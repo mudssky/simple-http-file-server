@@ -146,6 +146,9 @@ func initViper() {
 				log.Fatalln("create home path config failed:", err.Error())
 			}
 
+			log.Println("reload config")
+			// 写入后重新读取配置
+			_ = viper.MergeInConfig()
 		default:
 			log.Fatalln("merge config file failed:", t.Error())
 		}
