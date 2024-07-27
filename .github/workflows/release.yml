@@ -1,8 +1,9 @@
 name: release
 
 on:
+  pull_request:
   push:
-    # 只有主分支提交tag时执行
+    # run only against tags
     tags:
       - '*'
 
@@ -14,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'checkout'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: 'setup pnpm'
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: 8.x
       - name: 'setup node'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: 'pnpm'
