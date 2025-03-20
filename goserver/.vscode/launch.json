@@ -1,0 +1,32 @@
+{
+  // 使用 IntelliSense 了解相关属性。
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    // 基础调试配置（当前文件）
+    {
+      "name": "Launch Current File",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${file}",
+      "env": {
+        "GIN_MODE": "debug" // 针对Gin框架的调试模式
+      }
+    },
+    // 完整项目调试配置
+    {
+      "name": "Launch Main Package",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/main.go", // 指定入口文件
+      "args": [""], // 命令行参数
+      "console": "integratedTerminal",
+      "buildFlags": "-tags=jsoniter",
+      "showLog": true,
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
