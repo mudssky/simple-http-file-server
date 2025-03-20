@@ -4,7 +4,7 @@ import (
 	_ "embed"
 )
 
-//go:embed  rabc_modal.conf
+//go:embed  rbac_modal.conf
 var CasbinModalStr string
 
 //go:embed policy.csv
