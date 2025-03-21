@@ -5,8 +5,8 @@ pub mod global;
 pub mod router;
 pub mod util;
 use std::net::SocketAddr;
-use tracing::{debug, info, Level};
-use tracing_subscriber;
+use tracing::{debug};
+
 
 /// 项目启动的主函数
 #[tokio::main]

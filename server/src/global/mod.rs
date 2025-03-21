@@ -1,4 +1,4 @@
-use anyhow::Result;
+
 use dotenv::dotenv;
 use once_cell::sync::OnceCell;
 use std::env;
